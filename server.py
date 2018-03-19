@@ -52,6 +52,11 @@ def addType(entity, type):
 
 
 # /////////////////////////////////////////////////////////////////////////
+def build_json_response(json_data):
+  response = app.response_class( response=json.dumps(json_data), status=200, mimetype='application/json')
+  return response
+
+# /////////////////////////////////////////////////////////////////////////
 @app.route('/cache_data')
 def cache_data():
 
@@ -80,7 +85,7 @@ def cache_data():
 
     data[country_id]['media'] = []
 
-  response = app.response_class( response=json.dumps(data), status=200, mimetype='application/json')
+  response = build_json_response(data)
   clear_cache()
   cache_data()
   return response
@@ -98,7 +103,7 @@ def clear_cache():
 
 @app.route('/show_cache')
 def show_cache():
-  response = app.response_class( response=json.dumps(data), status=200, mimetype='application/json')
+  response = build_json_response(data)
   return response
 
 @app.route('/country_entities/<country_id>')
@@ -129,7 +134,7 @@ def country_entities(country_id):
   # Need parameter for size of sample from each entity type (and default = [:10])
   # Return all_entities
 
-  response = app.response_class( response=json.dumps(all_entities), status=200, mimetype='application/json')
+  response = build_json_response(all_entities)
   return response
 
 
@@ -227,9 +232,8 @@ def discover(topic_id):
 def sentences(tag_sets_id):
   sample_size = 2000
   sentenceList = mc_admin.sentenceList('*', 'tags_id_media:' + str(tag_sets_id), rows=sample_size, sort=mc.SORT_RANDOM)
-  print json.dumps(sentenceList)
-  return json.dumps(sentenceList)
-  # return render_template('sentenceList.html', data=sentenceList)
+  response = build_json_response(sentenceList)
+  return response
 
 
 # /////////////////////////////////////////////////////////////////////////
