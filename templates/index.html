@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html >
+	<head>
+		<meta charset="UTF-8">
+		<title>Media Cloud Discover</title> 		
+		<link rel="stylesheet" href="/static/css/style.css"> 
+		<link href="https://fonts.googleapis.com/css?family=Roboto+Condensed" rel="stylesheet">
+		<link rel="shortcut icon" type="image/x-icon" href="/static/images/favicon.ico"/>
+
+		<script>
+			var dataFromServer = {{ data|tojson }};
+		</script>
+
+		<script src='/static/js/libs/three.min.js'></script>
+		<script src="/static/js/libs/Detector.js"></script> 
+		<script src="https://threejs.org/examples/js/controls/OrbitControls.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/tween.js/16.3.5/Tween.min.js"></script>
+		<script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+		<script src='https://cdn.rawgit.com/josephg/noisejs/master/perlin.js'></script>
+		<script type="text/javascript" src="/static/js/libs/dat.gui.min.js"></script>
+		<!-- <script type="text/javascript" src="/static/js/libs/stats.min.js"></script>	 -->
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js"></script>
+		<script type="text/javascript" src="/static/js/libs/globe.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.es6.js" charset="UTF-8"></script>	
+
+		<script src="/static/js/postprocessing/EffectComposer.js"></script>
+		<script src="/static/js/postprocessing/BloomPass.js"></script>
+		<script src="/static/js/shaders/VignetteShader.js"></script>
+		<script src="/static/js/shaders/CopyShader.js"></script>
+		<script src="/static/js/shaders/ConvolutionShader.js"></script>
+		<script src="/static/js/postprocessing/RenderPass.js"></script>
+		<script src="/static/js/postprocessing/ShaderPass.js"></script>
+
+		<script src="http://threejs.org/examples/js/renderers/SVGRenderer.js"></script>
+		<script src="http://threejs.org/examples/js/renderers/Projector.js"></script>
+		<script src="http://threejs.org/examples/js/loaders/SVGLoader.js"></script>
+
+		<script src="/static/js/sceneSubjects/GeneralLights.js"></script>
+		<script src="/static/js/sceneSubjects/SceneSubject.js"></script>
+		<script src="/static/js/sceneSubjects/TweenTest.js"></script>
+		<script src="/static/js/sceneSubjects/FontTest.js"></script>
+		<script src="/static/js/sceneSubjects/SVGTest.js"></script>
+		<script src="/static/js/sceneSubjects/Picker.js"></script>
+		<script src="/static/js/sceneSubjects/Sentences.js"></script>
+		<script src="/static/js/sceneSubjects/Word.js"></script>
+		<script src="/static/js/sceneSubjects/WordOverTime.js"></script>
+		<script src="/static/js/sceneSubjects/People.js"></script>
+		<script src="/static/js/sceneSubjects/Globe.js"></script>
+		<script src="/static/js/sceneSubjects/Landing.js"></script>
+
+		<!-- <script src="fonts/PT_Sans_Caption_Regular.js"></script> -->
+	</head>
+
+	<body>
+		<div id="header">Media Cloud Discover:
+			<!-- <span class="styled-select black rounded"> -->
+				<select id="countries" name="countries">
+				  <option value="9139487">United States</option>
+				  <option value="9319462">Denmark</option>
+				  <!-- <option value="9351677">Pakistan</option>
+				  <option value="9353688">Mexico</option> -->
+				</select>
+			<!-- </span> -->
+		</div>
+
+		<div id="globe-container"></div>
+		<div id="sentences"></div>
+		
+		<!-- Main THREE.js Canvas -->
+		<canvas id="canvas"></canvas>
+		
+		<div id="footer">
+			<div id="footer_metadata" style="float: left;"><i>Click on an entity to explore...</i></div>
+
+			<div id="explore_button"  style="float: right; margin-right: 40px; height: 100%;"><a id="explore" href="#" style="background-color: ##ffe732;">Explore</a>
+			</div>
+
+				<canvas id="chart"></canvas>
+		</div>
+
+		<script src="/static/js/MCEntity.js"></script>
+		<script src="/static/js/MCContext.js"></script>
+		<script src="/static/js/SceneManager.js"></script>    
+		<script src="/static/js/main.js"></script>
+
+	</body>
+</html>
