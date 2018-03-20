@@ -66,6 +66,7 @@ function SceneManager(canvas) {
 
             MC_CONTEXT.currentEntity = name;
             MC_CONTEXT.tag_sets_id = intersects[0].object.userData.tag_sets_id;
+            MC_CONTEXT.userData = intersects[0].object.userData;
             
 
         } else {
@@ -165,8 +166,8 @@ function SceneManager(canvas) {
         // - traverseAncestors( callback );
     }
 
-    const controls = new THREE.OrbitControls( this.camera );
-    controls.update();
+    // const controls = new THREE.OrbitControls( this.camera );
+    // controls.update();
 
 
     /////////////////////////////////////////////////////////////////////////
