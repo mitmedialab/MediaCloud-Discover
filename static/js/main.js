@@ -127,6 +127,8 @@ function addControls(gui) {
     gui.add(controls, 'mediaSource', media_list).name('Media Sources');
     gui.add(controls, 'hideView').name("Mute TweenTest");
     gui.add(controls, 'hidePicker').name("Mute Picker");
+
+    gui.close();
 }
 
 function bindEventListeners() {
