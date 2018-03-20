@@ -59,7 +59,7 @@ function Globe(scene) {
             xhr.send( null );
         };
     };
-    addGlobe();
+    // addGlobe();
 
 
     /////////////////////////////////////////////////////////////////////////
@@ -76,5 +76,4 @@ function Globe(scene) {
     	scene.add(subscene);
     }
     this.init();
-    console.log(`Current Context from Inside Scene Subject: ${MC_CONTEXT.currentScene}`);
 }

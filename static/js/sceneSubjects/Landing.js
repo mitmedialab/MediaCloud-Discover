@@ -20,5 +20,4 @@ function Landing(scene) {
     	scene.add(subscene);
     }
     this.init();
-    console.log(`Current Context from Inside Scene Subject: ${MC_CONTEXT.currentScene}`);
 }
