@@ -61,7 +61,6 @@ function SceneManager(canvas) {
         if(intersects.length > 0 && intersects[0].object.userData.name !== undefined) {
             var name = intersects[0].object.userData.name;
             var url = intersects[0].object.userData.url;
-            console.log(name);
             $( "#footer > #footer_metadata" ).html( `<h2>${name}</h2><br/><a href="${url}">${url}</a>` );
 
             MC_CONTEXT.currentEntity = name;
