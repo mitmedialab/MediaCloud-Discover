@@ -16,20 +16,28 @@ function Picker(scene) {
     scene.add(subscene);
 
     this.entities = new THREE.Group();
-    var loader = new THREE.FontLoader();
 
 
     // CLICK TRIGGERS //
 
+    var self = this;
+
+    // Trigger Scene Shift From Picker to Next Scene
     $("#explore_button").click(function(e){
         e.preventDefault();
-        alert(`Here, we will explore ${MC_CONTEXT.currentEntity}`);
+        console.log(MC_CONTEXT);
+        var sentenceScene = sceneManager.findSceneByName("Sentences");
+        sentenceScene.loadSentences(MC_CONTEXT.userData.tags_id, MC_CONTEXT.currentEntity);
     });
 
+    // Load Entities for New Selected Country
     $("#countries").change(function(e) {
         e.stopPropagation();
         e.preventDefault();
-        alert("Country Chosen");
+        
+        var item=$(this);
+        MC_CONTEXT.country_id = item.val();
+        self.loadEntities(MC_CONTEXT.country_id);
     });
 
     drawChart();
@@ -56,15 +64,12 @@ function Picker(scene) {
 
                 current_planet.rotation.x += 0.01;
                 current_planet.rotation.y += 0.01;
-                // TODO: Eventually set each entity to have its own
-                //       rotation speed, stored in userData, so it
-                //       is consistent but different for each.
 
-                // make text face camera here
-                // console.log(this.entities.children[i].children[1]);
+                // Make text face camera:
                 // this.entities.children[i].children[1].quaternion.copy(sceneManager.camera.quaternion);
-                // console.log(this.entities.children[i].children[0].userData);
 
+                // TODO: Figure out why the last label doesn't seem to exist every time. 
+                //       Maybe something on initialization.
                 current_label.lookAt( sceneManager.camera.position );
             }
         }
@@ -74,21 +79,53 @@ function Picker(scene) {
     /////////////////////////////////////////////////////////////////////////
     this.init = function() {
     	
-        this.entities = new THREE.Group();
-    	this.loadEntities(data_list['media']);
+        // this.entities = new THREE.Group();
+        // this.entities.name = 'entities';
+    	this.loadEntities(MC_CONTEXT.country_id);
     }
 
 
     /////////////////////////////////////////////////////////////////////////
 	// Instantiate Entity Objects and Add to Entities Array
 	//
-	this.loadEntities = function(data) {
+	this.loadEntities = function(country_id) {
+
+        console.log(`Loading Entities from ${country_id}.`)
 
         var built_entities = new THREE.Group();
+        built_entities.name = 'entities';
 
-        $.getJSON( "/country_entities/9319462", function( country_data ) {
+        var all_entities = subscene.children[0];
 
-            console.log(country_data);
+        // If scene already has entities loaded 
+        //  (i.e. after the initial load) 
+        //  fade all and remove
+        
+/*
+        if(all_entities !== undefined) {
+            
+            for (var i = 0; i < all_entities.children.length; i++) {
+                
+                // Each entity is a group containing geometry and a label
+                // This will fade the geometry.
+                // TODO: Either visible: false or fade labels as well
+                let e = all_entities.children[i].children[0];
+
+                var t = new TWEEN.Tween( e.material ).to( { opacity: 0 }, 1000 )
+                            .easing( TWEEN.Easing.Linear.None)
+                            .onComplete(function(){ 
+                                all_entities.remove(all_entities.children[i]);
+                            });
+                t.start();
+
+
+                // console.log(all_entities.children[i]);
+                // all_entities.remove(all_entities.children[i]);
+            }
+        }
+*/
+
+        $.getJSON( `/country_entities/${country_id}`, function( country_data ) {
 
             // Create Entities For Each Collection Data Element //
     	    for(var i = 0; i < country_data.length; i++) {
@@ -116,8 +153,7 @@ function Picker(scene) {
                 entity.userData.count = country_data[i].count;
                 entity.userData.tag_sets_id = country_data[i].tag_sets_id;
 
-                console.log(`Adding ${country_data[i].label}...`);
-                // entity.userData.id =             
+                // console.log(`Adding ${country_data[i].label}...`);
                 
                 // FIXME: Only for Media Sources? 
                 //        Or do we want to URL to Dashboard pages?
@@ -128,18 +164,31 @@ function Picker(scene) {
                 entity.position.y = THREE.Math.randFloatSpread( 200 );
                 entity.position.z = THREE.Math.randFloatSpread( 200 );
 
+                // Prepare for fade-out when removing; opacity stays at 1
+                entity.transparent = true;
+
                 // Build Entity Group //
                 entityGroup.add(entity);
-                addText(country_data[i].name, entity.position, entityGroup);
-                built_entities.add(entityGroup);
                 
-                // console.log(`Added ${entity.userData.name}`);
+                // FIXME: This takes an enormous amount of time, 
+                //          even loading the font separately.
+                //          Can we do this asynchronously?
+                //          Maybe using Promises:
+                //          https://stackoverflow.com/questions/41753818/three-js-add-textures-with-promises
+                addText( country_data[i].label, entity.position, entityGroup );
+                
+                built_entities.add( entityGroup );
     	    }
         });
 
-        // Add All Entities To Picker //
+        // FIXME: There is a huge delay here and no transition fade.
+        //          Can we use Promises to wait until the fade of 
+        //          all the entities is done, and then add the new?
+        //          This has an example of animation in Promises:
+        //          https://marmelab.com/blog/2017/06/15/animate-you-world-with-threejs-and-tweenjs.html
+        subscene.remove(all_entities);
         this.entities = built_entities;
-	    subscene.add(built_entities);
+        subscene.add(built_entities);
 	}
 
 
@@ -228,42 +277,33 @@ function Picker(scene) {
     }
 
 
+    // TODO: Holy Shit this is inefficient. Solution here:
+    //  https://stackoverflow.com/questions/42829635/how-to-load-a-font-only-once-ts-three-js?rq=1
+
+    var txtMesh = null;
+    var textMaterial = new THREE.MeshPhongMaterial( { color: 0xffffff } );
     /////////////////////////////////////////////////////////////////////////
-    function addText(t, pos, group) {
+    function addText( t, pos, group ) {
 
-        var mesh;
-
-        loader.load( 'https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/fonts/helvetiker_bold.typeface.json', 
-            function ( font ) {
-            var textGeo = new THREE.TextGeometry( t, {
-                font: font,
-                size: 2, // font size
-                height: 0, // how much extrusion (how thick / deep are the letters)
-                curveSegments: 12,
-                // curveSegments: 5,
-                // bevelThickness: 1,
-                // bevelSize: 1,
-                // bevelEnabled: true
-            });
-        
-            textGeo.computeBoundingBox();
-
-            var textMaterial = new THREE.MeshPhongMaterial( { color: 0xffffff } );  // specular: 0xffffff
-            mesh = new THREE.Mesh( textGeo, textMaterial );
-            mesh.position.x = pos.x + 10;
-            mesh.position.y = pos.y;
-            mesh.position.z = pos.z;
-
-            mesh.visible = false;
-            // mesh.castShadow = true;
-            // mesh.receiveShadow = true;
-            
-            // text_array.push(mesh);
-            // scene.add( mesh );
-            // console.log(mesh);
-            group.add(mesh);
-            
+        var textGeo = new THREE.TextGeometry( t, {
+            font: font,
+            size: 2,
+            height: 0,
+            curveSegments: 12,
         });
+        textGeo.computeBoundingBox();
+        // textGeo.computeVertexNormals();
+        // textGeo.center();
+        
+        txtMesh = new THREE.Mesh( textGeo, textMaterial );
+        txtMesh.position.x = pos.x + 10;
+        txtMesh.position.y = pos.y;
+        txtMesh.position.z = pos.z;
+        txtMesh.visible = false;
+        // mesh.castShadow = true;
+        // mesh.receiveShadow = true;
+
+        group.add( txtMesh );
     }
 
     this.init();
