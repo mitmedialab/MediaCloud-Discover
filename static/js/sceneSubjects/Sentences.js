@@ -37,12 +37,12 @@ function Sentences(scene) {
         //     X      - Then map the appropriate data in Picker.js so you can use it in the UI
 
 
-        //          - What does the '/sentences/id' call use for an identifier? 
-        //              - tags_id_media = tag_sets_id
-        //              - Below, the tag_sets_id = the Denmark collection
-        //                - Hopefully this works equally well with all of the 
+        //     X     - What does the '/sentences/id' call use for an identifier? 
+        //     X         - tags_id_media = tag_sets_id
+        //     X         - Below, the tag_sets_id = the Denmark collection
+        //     X           - Hopefully this works equally well with all of the 
         //                  other entity tags
-        //          - So store 'tag_sets_id' in MCContext
+        //     X     - So store 'tag_sets_id' in MCContext
         //          - Then access it from below and error if it hasn't been chosen yet
         
         //          - Then we're on our way to a parameterized data view on demand
@@ -63,30 +63,31 @@ function Sentences(scene) {
         // TODO: Add/Update Dashboard Link when entity is chosen
         // TODO: Change browser URL when changing scenes
         // TODO: Parameterize the 'mark' call to highlight the entity/name  
+    }
 
+    this.loadSentences = function(entity_id, search_term) {
 
-        $.getJSON( "/sentences/9319462", function( data ) {
-          
-            let subset = data['response']['docs'].slice(0, 9);
+        // TODO: Additionally constrain the sentence search to the current country_id / collection_id   
+        console.log(`Loading sentences from /sentences/${entity_id}`);
+
+        $.getJSON( `/sentences/${entity_id}`, function( sentence_data ) {
+
+            // TODO: Some error checking here on the response
+
+            console.log(sentence_data);
+      
+            let subset = sentence_data['response']['docs'].slice(0, 9);
             var items = [];
           
             $.each( subset, function( key, val ) {
                 items.push( `<li id='${key}'>${val['sentence']}</li>` );
             });
          
-            $( "<ul/>", 
-                {
-                    class: "sentence-list",
-                    html: items.join( "" )
-                }
-            ).mark('er').appendTo( "body" );
+            $("ul#sentence-list").empty().append(items.join( "" )).mark(search_term);
 
             data = null;
         });
-
-
     }
     
     this.init();
-    console.log(`Current Context from Inside Scene Subject: ${MC_CONTEXT.currentScene}`);
 }
