@@ -27,7 +27,7 @@ api_key = 'c300df092175a8c3e2c3b5638a3bdbd80214be36581b498d85b1e6d14146748f'
 #     CACHE_OPTIONS
 
 # https://pythonhosted.org/Flask-Cache/
-cache = Cache(app, config={'CACHE_TYPE': 'filesystem', 'CACHE_DIR': './cache', 'CACHE_DEFAULT_TIMEOUT': '7200'})
+cache = Cache(app, config={'CACHE_TYPE': 'filesystem', 'CACHE_DIR': './cache', 'CACHE_DEFAULT_TIMEOUT': '28800'}) # 8 hour cache
 
 
 # /////////////////////////////////////////////////////////////////////////
@@ -90,7 +90,7 @@ def cache_data():
   cache_data()
   return response
 
-@cache.cached(timeout=7200, key_prefix='cache_data')
+@cache.cached(timeout=28800, key_prefix='cache_data')
 def cache_data():
   return data
 
@@ -140,7 +140,6 @@ def country_entities(country_id):
 
 # /////////////////////////////////////////////////////////////////////////
 @app.route('/popular_tags/<int:collection_id>')
-# @cache.cached(timeout=3600)
 def popular_tags(collection_id):
 
   # US Collection Entities: http://localhost:5000/popular_tags/9139487
@@ -220,18 +219,19 @@ def projects(name):
 
 
 # /////////////////////////////////////////////////////////////////////////
-@app.route('/discover/<int:topic_id>')
-def discover(topic_id):
-  top_media = mc.topicMediaList(topic_id)
-  print json.dumps(top_media)
-  return render_template('index.html', data=top_media)
+@app.route('/discover/<int:country_id>')
+def discover(country_id=9139487):
+  return render_template('index.html', data=country_id)
 
 
 # /////////////////////////////////////////////////////////////////////////
-@app.route('/sentences/<int:tag_sets_id>')
-def sentences(tag_sets_id):
+@app.route('/sentences/<int:tags_id>/<string:term>')
+def sentences(tags_id, term):
   sample_size = 2000
-  sentenceList = mc_admin.sentenceList('*', 'tags_id_media:' + str(tag_sets_id), rows=sample_size, sort=mc.SORT_RANDOM)
+  # sentenceList = mc_admin.sentenceList('*', 'tags_id_media:' + str(tag_sets_id), rows=sample_size, sort=mc.SORT_RANDOM)
+  # sentenceList = mc_admin.sentenceList('*', 'tags_id_stories:' + str(tags_id) + ' AND tags_id_media:' + str(country_id), rows=sample_size, sort=mc.SORT_RANDOM)
+  # sentenceList = mc_admin.sentenceList('*', 'tags_id_stories:' + str(tags_id), rows=sample_size, sort=mc.SORT_RANDOM)
+  sentenceList = mc_admin.sentenceList(term, rows=sample_size, sort=mc.SORT_RANDOM)
   response = build_json_response(sentenceList)
   return response
 
