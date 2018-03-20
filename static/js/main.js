@@ -10,12 +10,10 @@ var data_list = dataFromServer;
 
 // CONTEXT SETUP //
 const MC_CONTEXT = new MCContext({"scene": "Picker"});
-console.log(`Current Scene: ${MC_CONTEXT.currentScene}`);
 
 // SCENE SETUP
 const canvas = document.getElementById("canvas");
-var sceneManager = new SceneManager(canvas);
-var picker = sceneManager.findSceneByName("Picker");
+var sceneManager = null;
 
 // CONTROLS SETUP //
 var controls = new function () {
@@ -62,6 +60,7 @@ var controls = new function () {
     // RANDOM CAMERA TWEEN //
     this.adjustCamera = function() {
 
+        var picker = sceneManager.findSceneByName("Picker");
         var t = new TWEEN.Tween( sceneManager.camera.position ).to( {
                                  x: Math.random() * 200 - 100,
                                  y: Math.random() * 200 - 100,
@@ -86,8 +85,22 @@ addControls(gui);
 gui.remember(controls);
 
 ////////////////////////////////////////////////////////////////////////////////////////
-bindEventListeners();
-render();
+var manager = new THREE.LoadingManager();
+
+// When all resources are loaded:
+manager.onLoad = function() {
+    sceneManager = new SceneManager(canvas);
+    bindEventListeners();
+    render();
+}
+
+let font = null;
+const loader = new THREE.FontLoader(manager);
+loader.load('/static/fonts/helvetiker_bold.typeface.json', function(response) {
+  font = response;
+});
+
+
 ////////////////////////////////////////////////////////////////////////////////////////
 
 function loadStartupData() {
