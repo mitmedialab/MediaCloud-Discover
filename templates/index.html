@@ -52,10 +52,11 @@
 	</head>
 
 	<body>
-		<div id="header">Media Cloud Discover:
+		<div id="header">
+			<span><img id="logo" src="/static/images/mediacloud-logo-white-2x.png"/>&nbsp;Discover:</span>
 			<!-- <span class="styled-select black rounded"> -->
 				<select id="countries" name="countries">
-				  <option value="9139487">United States</option>
+				  <option value="9139487" selected>United States</option>
 				  <option value="9319462">Denmark</option>
 				  <!-- <option value="9351677">Pakistan</option>
 				  <option value="9353688">Mexico</option> -->
@@ -65,6 +66,7 @@
 
 		<div id="globe-container"></div>
 		<div id="sentences"></div>
+		<ul id="sentence-list"></ul>
 		
 		<!-- Main THREE.js Canvas -->
 		<canvas id="canvas"></canvas>
@@ -75,7 +77,7 @@
 			<div id="explore_button"  style="float: right; margin-right: 40px; height: 100%;"><a id="explore" href="#" style="background-color: ##ffe732;">Explore</a>
 			</div>
 
-				<canvas id="chart"></canvas>
+			<canvas id="chart"></canvas>
 		</div>
 
 		<script src="/static/js/MCEntity.js"></script>
