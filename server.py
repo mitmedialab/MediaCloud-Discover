@@ -231,7 +231,7 @@ def sentences(tags_id, term):
   # sentenceList = mc_admin.sentenceList('*', 'tags_id_media:' + str(tag_sets_id), rows=sample_size, sort=mc.SORT_RANDOM)
   # sentenceList = mc_admin.sentenceList('*', 'tags_id_stories:' + str(tags_id) + ' AND tags_id_media:' + str(country_id), rows=sample_size, sort=mc.SORT_RANDOM)
   # sentenceList = mc_admin.sentenceList('*', 'tags_id_stories:' + str(tags_id), rows=sample_size, sort=mc.SORT_RANDOM)
-  sentenceList = mc_admin.sentenceList(term, rows=sample_size, sort=mc.SORT_RANDOM)
+  sentenceList = mc_admin.sentenceList("'{0}'".format(term), rows=sample_size, sort=mc.SORT_RANDOM)
   response = build_json_response(sentenceList)
   return response
 
