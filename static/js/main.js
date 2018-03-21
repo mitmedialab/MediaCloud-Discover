@@ -78,6 +78,12 @@ var controls = new function () {
                         });
         t.start();
     };
+
+    this.fadeAll = function() {
+
+        let picker = sceneManager.findSceneByName( 'Picker' );
+        picker.fadeAllEntities();
+    }
 };
 
 var gui = new dat.GUI();
@@ -123,10 +129,11 @@ function addControls(gui) {
 	gui.add(controls, 'randomSpin').name('Random Star Spin');
 	
     var f1 = gui.addFolder('PICKER');
-    f1.add(controls, 'entityOrbitToggle').name('Entity Orbit');
-    f1.add(controls, 'entitySpinToggle').name('Entity Spin');
-    f1.add(controls, 'starfieldOrbitToggle').name('Starfield Orbit');
-    f1.add(controls, 'displayLabels').name('Show Labels');
+    f1.add(controls, 'entityOrbitToggle').name( 'Entity Orbit' );
+    f1.add(controls, 'entitySpinToggle').name( 'Entity Spin' );
+    f1.add(controls, 'starfieldOrbitToggle').name( 'Starfield Orbit' );
+    f1.add(controls, 'displayLabels').name( 'Show Labels' );
+    f1.add(controls, 'fadeAll').name( 'Fade All Entities' );
 	
     // Camera Tween Parameters
     var f2 = gui.addFolder('CAMERA MOTION');
