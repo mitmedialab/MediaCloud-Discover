@@ -111,7 +111,6 @@ def country_entities(country_id):
   c = cache_data()
   country_data = c[country_id]
 
-
 # Pick 10 random elements
   random.shuffle(c[country_id]['people'])
   random_people = c[country_id]['people'][:10]
@@ -136,6 +135,16 @@ def country_entities(country_id):
 
   response = build_json_response(all_entities)
   return response
+
+
+@app.route('/word_count/<term>')
+def word_count(term):
+  ngram_size = 1
+  num_words = 20
+  sample_size = 2000
+
+  result = mc_admin.wordCount('*', term, ngram_size=ngram_size, num_words=num_words, sample_size=sample_size)
+  return jsonify(result)
 
 
 # /////////////////////////////////////////////////////////////////////////
