@@ -22,15 +22,22 @@ function Picker(scene) {
 
     var self = this;
 
-    // Trigger Scene Shift From Picker to Next Scene
-    $("#explore_button").click(function(e){
+    // Trigger Scene Shift From Picker to Next Scene //
+    $( "#explore_button" ).click(function( e ){
         e.preventDefault();
-        console.log(MC_CONTEXT);
+
+        // If user hasn't selected an entity yet, don't switch scenes //
+        if( MC_CONTEXT.userData === undefined ) {
+            alert('Please choose an entity...');
+            return;
+        }
+
+        self.fadeAllEntities();
         var sentenceScene = sceneManager.findSceneByName("Sentences");
         sentenceScene.loadSentences(MC_CONTEXT.userData.tags_id, MC_CONTEXT.currentEntity);
     });
 
-    // Load Entities for New Selected Country
+    // Load Entities for New Selected Country //
     $("#countries").change(function(e) {
         e.stopPropagation();
         e.preventDefault();
@@ -70,7 +77,7 @@ function Picker(scene) {
 
                 // TODO: Figure out why the last label doesn't seem to exist every time. 
                 //       Maybe something on initialization.
-                current_label.lookAt( sceneManager.camera.position );
+                // current_label.lookAt( sceneManager.camera.position );
             }
         }
     }
@@ -86,9 +93,36 @@ function Picker(scene) {
 
 
     /////////////////////////////////////////////////////////////////////////
+    this.fadeEntity = function( entity ) {
+        
+        var t = new TWEEN.Tween( entity.material ).to( { opacity: 0.0 }, 2000 )
+            .easing( TWEEN.Easing.Linear.None)
+            .onComplete( function() { 
+                scene.remove(entity);
+                let selectedObject = scene.getObjectByName(entity.name);
+                scene.remove( selectedObject );
+            });
+        t.start();
+    }
+
+
+    /////////////////////////////////////////////////////////////////////////
+    this.fadeAllEntities = function() {
+
+        if( subscene.children[0] !== undefined ) {
+            var entities = subscene.children[0].children;
+            for( key in entities ) {
+                // console.log( entities[key] );
+                this.fadeEntity( entities[key].children[0] );
+            }
+        }
+    }
+
+
+    /////////////////////////////////////////////////////////////////////////
 	// Instantiate Entity Objects and Add to Entities Array
 	//
-	this.loadEntities = function(country_id) {
+	this.loadEntities = function( country_id ) {
 
         console.log(`Loading Entities from ${country_id}.`)
 
@@ -147,6 +181,7 @@ function Picker(scene) {
                 //           Data to Entity Mappings            //
                 //////////////////////////////////////////////////
                 entity.userData.name = country_data[i].label;
+                entity.name = country_data[i].label;
                 entity.userData.type = country_data[i].type;
                 entity.userData.tags_id = country_data[i].tags_id;
                 entity.userData.tag = country_data[i].tag;
@@ -165,7 +200,7 @@ function Picker(scene) {
                 entity.position.z = THREE.Math.randFloatSpread( 200 );
 
                 // Prepare for fade-out when removing; opacity stays at 1
-                entity.transparent = true;
+                entity.material.transparent = true;
 
                 // Build Entity Group //
                 entityGroup.add(entity);
@@ -186,10 +221,34 @@ function Picker(scene) {
         //          all the entities is done, and then add the new?
         //          This has an example of animation in Promises:
         //          https://marmelab.com/blog/2017/06/15/animate-you-world-with-threejs-and-tweenjs.html
+        // this.fadeAllEntities();
         subscene.remove(all_entities);
         this.entities = built_entities;
         subscene.add(built_entities);
 	}
+
+    function addText( t, pos, group ) {
+
+        var textGeo = new THREE.TextGeometry( t, {
+            font: font,
+            size: 2,
+            height: 0,
+            curveSegments: 12,
+        });
+        textGeo.computeBoundingBox();
+        // textGeo.computeVertexNormals();
+        // textGeo.center();
+
+        txtMesh = new THREE.Mesh( textGeo, textMaterial );
+        txtMesh.position.x = pos.x + 10;
+        txtMesh.position.y = pos.y;
+        txtMesh.position.z = pos.z;
+        txtMesh.visible = false;
+        // mesh.castShadow = true;
+        // mesh.receiveShadow = true;
+
+        group.add( txtMesh );
+    }
 
 
     /////////////////////////////////////////////////////////////////////////
@@ -266,8 +325,8 @@ function Picker(scene) {
                 responsive: true,
                 layout: {
                     padding: {
-                        left: 200,
-                        right: 200,
+                        left: 0,
+                        right: 0,
                         top: 0,
                         bottom: 0
                     }
@@ -280,31 +339,7 @@ function Picker(scene) {
     // TODO: Holy Shit this is inefficient. Solution here:
     //  https://stackoverflow.com/questions/42829635/how-to-load-a-font-only-once-ts-three-js?rq=1
 
-    var txtMesh = null;
-    var textMaterial = new THREE.MeshPhongMaterial( { color: 0xffffff } );
-    /////////////////////////////////////////////////////////////////////////
-    function addText( t, pos, group ) {
 
-        var textGeo = new THREE.TextGeometry( t, {
-            font: font,
-            size: 2,
-            height: 0,
-            curveSegments: 12,
-        });
-        textGeo.computeBoundingBox();
-        // textGeo.computeVertexNormals();
-        // textGeo.center();
-        
-        txtMesh = new THREE.Mesh( textGeo, textMaterial );
-        txtMesh.position.x = pos.x + 10;
-        txtMesh.position.y = pos.y;
-        txtMesh.position.z = pos.z;
-        txtMesh.visible = false;
-        // mesh.castShadow = true;
-        // mesh.receiveShadow = true;
-
-        group.add( txtMesh );
-    }
 
     this.init();
 }

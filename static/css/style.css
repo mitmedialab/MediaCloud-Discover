@@ -7,6 +7,36 @@ html, body {
     font-family: 'Roboto Condensed', sans-serif;
 }
 
+#sentence-container {
+  width: 100%;
+  margin: 0px;
+  border: 5px;
+  padding: 0px;
+  position: absolute;
+  top: 150px;
+  overflow: hidden; 
+}
+
+#sentence-container ul {
+  list-style-type: none;
+  margin: 0px;
+  border: 0px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 0px;
+  padding-right: 0px;
+  width: 100%;
+  height: 100%;
+}
+
+#sentence-container li {
+  font-size: 16pt;
+  margin:0 0 10px 0;
+  padding: 10px;
+  background-color: rgba( 255, 255, 255, 0.6 );
+  width: 100%;
+}
+
 a:link, a:visited {
     background-color: rgb(247, 34, 212); /*#f44336;*/
     color: white;
@@ -16,14 +46,14 @@ a:link, a:visited {
     display: inline-block;
 }
 
-mark {
+/*mark {
     background: orange;
     color: white;
-}
+}*/
 
 #header {
   position: absolute; 
-  height: 50px; 
+  max-height: 70px; 
   width: 100%; 
   background-color: rgba(0, 0, 0, 0.7); 
   color: #FFF; 
@@ -45,16 +75,11 @@ mark {
   line-height: normal;
 }
 
-#sentence-list {
-  z-index: 10; 
-  position: absolute; 
-  top: 65px; 
-  left: 50%;
-  bottom: 400px;
-  color: white; 
-  font-size: 20pt; 
-  overflow: hidden;
-  background-color: rgba(0, 0, 0, 0.4);
+#sentences {
+  position: absolute;
+  top: 100px;
+  width: 90%;
+  background-color: transparent;
 }
 
 .styled-select {
@@ -75,12 +100,14 @@ mark {
 }
 
 .rounded {
-   -webkit-border-radius: 20px;
-   -moz-border-radius: 20px;
-   border-radius: 20px;
+   -webkit-border-radius: 10px;
+   -moz-border-radius: 10px;
+   border-radius: 10px;
 }
 
 .black { background-color: #000; }
+
+.white { background-color: #FFF; }
 
 svg path {
   shape-rendering: crispEdges;
@@ -95,19 +122,25 @@ svg path {
     position: absolute;
     bottom: 0;
     font-size: 14px; 
-    padding-left: 25px;
-    padding-right: 25px;
+    /*padding-left: 25px;*/
+    /*padding-right: 25px;*/
+}
+
+#footer_metadata {
+  float: left;
+}
+
+#explore_button {
+  float: right;
+  max-width: 12.5%;
 }
 
 #chart {
   position: absolute;
-  bottom: 0;
-  left: 50px;
-  right: 100px;
-  height: 150px;
+  left: 250px;
+  padding: 0px;
   /*border: 1px solid blue;*/
-  /*width: 100%;*/
-  /*padding: 25px;*/
+  max-width: 66%;
 }
 
 

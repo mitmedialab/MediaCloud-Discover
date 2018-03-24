@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html >
+<html>
 	<head>
 		<meta charset="UTF-8">
 		<title>Media Cloud Discover</title> 		
@@ -16,6 +16,7 @@
 		<script src="https://threejs.org/examples/js/controls/OrbitControls.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/tween.js/16.3.5/Tween.min.js"></script>
 		<script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+		<script src='/static/js/libs/jquery-ui.js'></script>
 		<script src='https://cdn.rawgit.com/josephg/noisejs/master/perlin.js'></script>
 		<script type="text/javascript" src="/static/js/libs/dat.gui.min.js"></script>
 		<!-- <script type="text/javascript" src="/static/js/libs/stats.min.js"></script>	 -->
@@ -34,6 +35,8 @@
 		<script src="http://threejs.org/examples/js/renderers/SVGRenderer.js"></script>
 		<script src="http://threejs.org/examples/js/renderers/Projector.js"></script>
 		<script src="http://threejs.org/examples/js/loaders/SVGLoader.js"></script>
+
+		<script src="/static/js/libs/Toolbox.js"></script>
 
 		<script src="/static/js/sceneSubjects/GeneralLights.js"></script>
 		<script src="/static/js/sceneSubjects/SceneSubject.js"></script>
@@ -54,27 +57,37 @@
 	<body>
 		<div id="header">
 			<span><img id="logo" src="/static/images/mediacloud-logo-white-2x.png"/>&nbsp;Discover:</span>
-			<!-- <span class="styled-select black rounded"> -->
+			<span class="styled-select white rounded">
 				<select id="countries" name="countries">
 				  <option value="9139487" selected>United States</option>
 				  <option value="9319462">Denmark</option>
 				  <!-- <option value="9351677">Pakistan</option>
 				  <option value="9353688">Mexico</option> -->
 				</select>
-			<!-- </span> -->
+			</span>
 		</div>
 
-		<div id="globe-container"></div>
-		<div id="sentences"></div>
-		<ul id="sentence-list"></ul>
-		
 		<!-- Main THREE.js Canvas -->
-		<canvas id="canvas"></canvas>
+		<canvas id="canvas" style="z-index: 10;"></canvas>
+
+		<div id="globe-container"></div>
+	
+		<!-- Sentence List -->
+<!-- 		<br>
+		<br>
+		<button id="hide"> Hide </button>
+  		<button id="show"> Show </button> 
+  		<br>
+		<br> -->
+		<div id="sentence-container">
+			<ul id="list">
+			</ul>
+		</div>
 		
 		<div id="footer">
-			<div id="footer_metadata" style="float: left;"><i>Click on an entity to explore...</i></div>
+			<div id="footer_metadata"><i>Click on an entity to explore...</i></div>
 
-			<div id="explore_button"  style="float: right; margin-right: 40px; height: 100%;"><a id="explore" href="#" style="background-color: ##ffe732;">Explore</a>
+			<div id="explore_button"><a id="explore" href="#" style="background-color: ##ffe732;">Explore</a>
 			</div>
 
 			<canvas id="chart"></canvas>
