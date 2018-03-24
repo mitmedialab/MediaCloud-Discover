@@ -222,9 +222,15 @@ function Picker(scene) {
         //          This has an example of animation in Promises:
         //          https://marmelab.com/blog/2017/06/15/animate-you-world-with-threejs-and-tweenjs.html
         // this.fadeAllEntities();
+
         subscene.remove(all_entities);
         this.entities = built_entities;
         subscene.add(built_entities);
+
+        $( '#sentence-container ul li' ).each(function (i) {
+            let $item = $(this);
+            $item.delay(75*i).hide( "slide", { direction: "right"  }, 1000 );
+        });
 	}
 
     function addText( t, pos, group ) {
