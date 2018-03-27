@@ -37,6 +37,10 @@ html, body {
   width: 100%;
 }
 
+h2.entity {
+  margin-bottom: 2px;
+}
+
 a:link, a:visited {
     background-color: rgb(247, 34, 212); /*#f44336;*/
     color: white;
@@ -108,6 +112,8 @@ a:link, a:visited {
 .black { background-color: #000; }
 
 .white { background-color: #FFF; }
+
+.type { color: rgb(160, 160, 160); }
 
 svg path {
   shape-rendering: crispEdges;
