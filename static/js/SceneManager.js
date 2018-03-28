@@ -60,8 +60,8 @@ function SceneManager(canvas) {
 
         if(intersects.length > 0 && intersects[0].object.userData.name !== undefined) {
             var name = intersects[0].object.userData.name;
-            var url = intersects[0].object.userData.url;
-            $( "#footer > #footer_metadata" ).html( `<h2>${name}</h2>` );
+            var type = intersects[0].object.userData.type;
+            $( "#footer > #footer_metadata" ).html( `<h2 class="entity">${name}</h2><span class="type">(${type})</span>` );
 
             MC_CONTEXT.currentEntity = name;
             MC_CONTEXT.tag_sets_id = intersects[0].object.userData.tag_sets_id;
