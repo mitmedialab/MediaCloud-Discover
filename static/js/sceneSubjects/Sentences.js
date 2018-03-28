@@ -84,7 +84,7 @@ function Sentences(scene) {
             $.each( subset, function( key, val ) {
                 console.log(`${key} - ${val['sentence']}`);
                 $( '#sentence-container ul' ).append(
-                    $( `<li id=${key}>` ).text( `List Item: ${val['sentence']}` )
+                    $( `<li id=${key}>` ).text( val['sentence'] )
                     .hide()
                 )
 
