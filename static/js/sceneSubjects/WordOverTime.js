@@ -5,6 +5,8 @@
 
 function WordOverTime(scene) {
 
+
+    /////////////////////////////////////////////////////////////////////
     this.loadWordCharts = function( word ) {
 
         $.getJSON( `/word_over_time/${word}`, function( freq_data ) {
@@ -45,20 +47,19 @@ function WordOverTime(scene) {
         }
 
         // TODO: Explore curve types
-        var curve = new THREE.CatmullRomCurve3( points );
-
+        const curve = new THREE.CatmullRomCurve3( points );
         const spline_points = curve.getPoints( 400 );
         const shape = new THREE.Shape( spline_points );
 
-        var geometry = new THREE.ExtrudeGeometry( shape, extrudeSettings2 );
-        var material = new THREE.MeshPhongMaterial( {
+        const geometry = new THREE.ExtrudeGeometry( shape, extrudeSettings2 );
+        const material = new THREE.MeshPhongMaterial( {
                             color: color,
-                            emissive: color,
+                            emissive: 0x072534,
                             side: THREE.DoubleSide,
                             flatShading: true
                         } );
 
-        var mesh = new THREE.Mesh( geometry, material );
+        const mesh = new THREE.Mesh( geometry, material );
         mesh.position.y = -100;
         mesh.position.x = -400;
         mesh.position.z = z_offset;
