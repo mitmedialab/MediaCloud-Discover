@@ -18,7 +18,6 @@ function WordOverTime(scene) {
             scene.add(mesh)
         });
     }
-    this.loadWordCharts( 'obama' );
 
 
     /////////////////////////////////////////////////////////////////////
@@ -41,7 +40,7 @@ function WordOverTime(scene) {
         // Define points along Z axis
         for( var i = 0; i < values.length; i++ ) {
             x = x + x_offset;
-            var v = new THREE.Vector3(x, values[i], 1);
+            let v = new THREE.Vector3(x, values[i], 1);
             console.log(v);
             points.push(v);
         }
@@ -78,7 +77,7 @@ function WordOverTime(scene) {
 
 	/////////////////////////////////////////////////////////////////////////
     this.init = function() {
-    	var subscene = new THREE.Object3D();
+    	const subscene = new THREE.Object3D();
     	subscene.name = "WordOverTime";
     	scene.add(subscene);
     }
