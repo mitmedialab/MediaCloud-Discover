@@ -104,7 +104,6 @@ function SceneManager(canvas) {
             
             new Picker(scene), 
             new Sentences(scene),
-            new Word(scene),
             new WordOverTime(scene),
             new People(scene),
             new Globe(scene),
