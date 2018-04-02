@@ -58,8 +58,8 @@ function SceneManager(canvas) {
         //3. compute intersections
         var intersects = raycaster.intersectObjects( this.scene.children, true );
 
-        if(intersects.length > 0 && intersects[0].object.userData.name !== undefined) {
-            var name = intersects[0].object.userData.name;
+        if(intersects.length > 0 && intersects[0].object.userData.label !== undefined) {
+            var name = intersects[0].object.userData.label;
             var type = intersects[0].object.userData.type;
             $( "#footer > #footer_metadata" ).html( `<h2 class="entity">${name}</h2><span class="type">(${type})</span>` );
 
