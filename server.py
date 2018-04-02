@@ -2,6 +2,7 @@ from flask import render_template
 from flask import Flask
 from flask_cache import Cache
 from flask import jsonify
+from os import environ
 import logging
 import datetime
 import mediacloud
@@ -15,7 +16,7 @@ mc = None
 mc_admin = None
 data = {}
 app = Flask(__name__)
-api_key = 'c300df092175a8c3e2c3b5638a3bdbd80214be36581b498d85b1e6d14146748f'
+api_key = environ.get('MC_API_KEY')
 logging.basicConfig(level=logging.DEBUG)
 
 
