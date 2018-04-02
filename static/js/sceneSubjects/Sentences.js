@@ -65,39 +65,20 @@ function Sentences(scene) {
         // TODO: Parameterize the 'mark' call to highlight the entity/name  
     }
 
-    this.loadSentences = function(entity_id, search_term) {
+    this.loadSentences = function( country_id, entity_id ) {
 
-        // TODO: Additionally constrain the sentence search to the current country_id / collection_id   
-        console.log(`Loading sentences from /sentences/${entity_id}/${search_term}`);
-
-        $.getJSON( `/sentences/${entity_id}/${encodeURI(search_term)}`, function( sentence_data ) {
-
-            // TODO: Some error checking here on the response if the
-            //          cache is empty or the country is not in the cache.
+        $.getJSON( `/sentences/${country_id}/${encodeURI( entity_id )}`, function( sentence_data ) {
 
             // TODO: Selecting subset of data returned here but we should 
             //          be doing this in server.py or in the query itself
             let subset = sentence_data['response']['docs'].slice(0, 9);
-
-            console.log('Adding Sentences...');
             
             $.each( subset, function( key, val ) {
-                console.log(`${key} - ${val['sentence']}`);
                 $( '#sentence-container ul' ).append(
                     $( `<li id=${key}>` ).text( val['sentence'] )
                     .hide()
                 )
-
-            // var items = [];          
-            // $.each( subset, function( key, val ) {
-            //     items.push( `<li id='${key}'>${val['sentence']}</li>` );
-            // });
-         
-            // TODO: Have UL / LI take up the whole screen and have them slide in from the left staggered
-
             // $("ul#sentence-list").empty().append(items.join( "" )).mark(search_term, {separateWordSearch: false});
-            // $("#sentence-list").empty().append(items.join( "" ));//.mark(search_term);
-
             });
 
             $( '#sentence-container ul li' ).each(function (i) {

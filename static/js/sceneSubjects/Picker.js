@@ -26,15 +26,28 @@ function Picker(scene) {
     $( "#explore_button" ).click(function( e ){
         e.preventDefault();
 
+        self.fadeAllEntities();
+        let sentenceScene = sceneManager.findSceneByName( "Sentences" );
+
         // If user hasn't selected an entity yet, don't switch scenes //
         if( MC_CONTEXT.userData === undefined ) {
+            
             alert('Please choose an entity...');
             return;
+
+        } else {
+
+            if(entity.userData.type == 'word') {
+                sentenceScene.loadSentences( MC_CONTEXT.country_id, MC_CONTEXT.userData.tags_id );
+            } else {
+                sentenceScene.loadSentences( MC_CONTEXT.country_id, MC_CONTEXT.userData.label );
+            }
+
         }
 
-        self.fadeAllEntities();
-        var sentenceScene = sceneManager.findSceneByName("Sentences");
-        sentenceScene.loadSentences(MC_CONTEXT.userData.tags_id, MC_CONTEXT.currentEntity);
+        // if entity is a term, call with the text of the term
+        // else, if the entity is an entity_id, call with the entity_id 
+        // as the second 
     });
 
     // Load Entities for New Selected Country //
@@ -180,16 +193,19 @@ function Picker(scene) {
                 //////////////////////////////////////////////////
                 //           Data to Entity Mappings            //
                 //////////////////////////////////////////////////
+
+                // Add all entity metadata to Mesh userData
+                entity.userData.append( country_data[i] );
+
                 entity.userData.name = country_data[i].label;
                 entity.name = country_data[i].label;
-                entity.userData.type = country_data[i].type;
-                entity.userData.tags_id = country_data[i].tags_id;
-                entity.userData.tag = country_data[i].tag;
-                entity.userData.count = country_data[i].count;
-                entity.userData.tag_sets_id = country_data[i].tag_sets_id;
 
-                // console.log(`Adding ${country_data[i].label}...`);
-                
+                // entity.userData.type = country_data[i].type;
+                // entity.userData.tags_id = country_data[i].tags_id;
+                // entity.userData.tag = country_data[i].tag;
+                // entity.userData.count = country_data[i].count;
+                // entity.userData.tag_sets_id = country_data[i].tag_sets_id;
+
                 // FIXME: Only for Media Sources? 
                 //        Or do we want to URL to Dashboard pages?
                 // entity.userData.url = data[i].url;
