@@ -38,9 +38,9 @@ function Picker(scene) {
         } else {
 
             if(entity.userData.type == 'word') {
-                sentenceScene.loadSentences( MC_CONTEXT.country_id, MC_CONTEXT.userData.tags_id );
-            } else {
                 sentenceScene.loadSentences( MC_CONTEXT.country_id, MC_CONTEXT.userData.label );
+            } else {
+                sentenceScene.loadSentences( MC_CONTEXT.country_id, MC_CONTEXT.userData.tags_id );
             }
 
         }
