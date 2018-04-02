@@ -298,16 +298,19 @@ def discover(country_id=9139487):
 
 
 # /////////////////////////////////////////////////////////////////////////
-@app.route('/sentences/<int:tags_id>/<string:term>')
-def sentences(tags_id, term):
+@app.route('/sentences/<int:collection_id>/<entity>')
+def sentences(collection_id, entity):
   sample_size = 2000
 
-  # TODO: Take into account case where we are querying a word/term 
-  #       and not an entity/tag. This for all of the endpoints.
-  sentenceList = mc_admin.sentenceList('*', [
-    'tags_id_media:{0}'.format(collection_id),
-    'tags_id_stories:{0}'.format(tags_id)], 
-    rows=sample_size, sort=mc.SORT_RANDOM)
+  if(entity.isdigit()):
+    sentenceList = mc_admin.sentenceList('*', [
+      'tags_id_media:({0})'.format(str(collection_id)),
+      'tags_id_stories:{0}'.format(entity)], 
+      rows=sample_size, sort=mc.SORT_RANDOM)
+  else:
+    sentenceList = mc_admin.sentenceList(entity, [
+      'tags_id_media:({0})'.format(str(collection_id))], 
+      rows=sample_size, sort=mc.SORT_RANDOM)
   
   return jsonify(sentenceList)
 
