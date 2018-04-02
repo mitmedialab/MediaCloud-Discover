@@ -28,6 +28,7 @@ function Sentences(scene) {
             //          be doing this in server.py or in the query itself
             let subset = sentence_data['response']['docs'].slice(0, 9);
             
+            // Load all sentences into list items and hide
             $.each( subset, function( key, val ) {
                 $( '#sentence-container ul' ).append(
                     $( `<li id=${key}>` ).text( val['sentence'] )
@@ -35,6 +36,7 @@ function Sentences(scene) {
                 )
             });
 
+            // Progressively reveal each item in list
             $( '#sentence-container ul li' ).each(function (i) {
                     let $item = $(this);
                     $item.delay(75*i).show( "slide", { direction: "right"  }, 1000 );
