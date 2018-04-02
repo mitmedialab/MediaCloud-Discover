@@ -261,6 +261,10 @@ function SceneManager(canvas) {
 
     /////////////////////////////////////////////////////////////////////////
     this.onWindowResize = function() {
+        
+        canvas.width = window.innerWidth; 
+        canvas.height = window.innerHeight;
+
         const { width, height } = canvas;
 
         screenDimensions.width = width;
