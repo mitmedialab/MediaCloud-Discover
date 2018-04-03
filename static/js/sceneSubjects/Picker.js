@@ -37,6 +37,7 @@ function Picker(scene) {
                 sentenceScene.loadSentences( MC_CONTEXT.country_id, MC_CONTEXT.userData.tags_id );
             }
 
+            $( '#explorer_link' ).html( `<a href="${MC_CONTEXT.explorerLink()}">Explore Data</a>` );
         }
     });
 

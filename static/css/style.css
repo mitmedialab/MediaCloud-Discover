@@ -12,6 +12,11 @@ div#content {
   height: 100%;
 }
 
+#explorer_link {
+  font-size: 14px;
+  float: right;
+}
+
 #sentence-container {
   margin: 0px;
   border: 5px;

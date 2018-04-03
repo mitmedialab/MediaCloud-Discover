@@ -20,8 +20,9 @@ function MCContext(data) {
 	this.currentScene = data.scene;
 
 	// TODO: Fill out links to Dashboard or Other
-	function dashboardLink() {
-
-		return 'https://https://dashboard.mediacloud.org/ ${this.var} / ${this.var} / ${this.var}'
+	this.explorerLink = function() {
+		const ud = this.userData;
+		const url = `https://explorer.mediacloud.org/#/queries/search?q=[{%22label%22:%22${ud.label}%22,%22q%22:%22${ud.label}%22,%22color%22:%22%231f77b4%22,%22startDate%22:%222018-01-02%22,%22endDate%22:%222018-04-02%22,%22sources%22:[],%22collections%22:[${this.country_id}]}]`;
+		return url;
 	}
 }
