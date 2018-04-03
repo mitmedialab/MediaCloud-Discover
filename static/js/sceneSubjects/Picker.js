@@ -124,6 +124,21 @@ function Picker(scene) {
     }
 
 
+    function entityColor(type) {
+
+        const colors = {
+            'label': 0x072534,
+            'organization': 0x0ff274,
+            'media': 0x4512b0,
+            'person': 0xea76e3,
+            'location': 0x332402,
+            'word': 0x0044ee
+        };
+
+        return colors[type];
+    }
+
+
     /////////////////////////////////////////////////////////////////////////
 	this.loadEntities = function( country_id ) {
 
@@ -144,7 +159,7 @@ function Picker(scene) {
                 // Create Entity Geometry
                 var geometry = new THREE.IcosahedronBufferGeometry(5, 0);
                 var material = new THREE.MeshPhongMaterial( {
-                         color: getRandomColor(),
+                         color: entityColor(country_data[i].type),
                          emissive: 0x072534,
                          side: THREE.DoubleSide,
                          flatShading: true
