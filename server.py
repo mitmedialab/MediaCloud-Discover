@@ -315,11 +315,13 @@ def sentences(collection_id, entity):
   if(entity.isdigit()):
     sentenceList = mc_admin.sentenceList('*', [
       'tags_id_media:({0})'.format(str(collection_id)),
-      'tags_id_stories:{0}'.format(entity)], 
+      'tags_id_stories:{0}'.format(entity),
+      'publish_date:NOW to NOW-3MONTH'], 
       rows=sample_size, sort=mc.SORT_RANDOM)
   else:
     sentenceList = mc_admin.sentenceList(entity, [
-      'tags_id_media:({0})'.format(str(collection_id))], 
+      'tags_id_media:({0})'.format(str(collection_id)),
+      'publish_date:NOW to NOW-3MONTH'], 
       rows=sample_size, sort=mc.SORT_RANDOM)
   
   return jsonify(sentenceList)
