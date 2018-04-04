@@ -150,6 +150,8 @@ function Picker(scene) {
 
         $.getJSON( `/country_entities/${country_id}`, function( country_data ) {
 
+            var geometry = new THREE.IcosahedronBufferGeometry(5, 0);
+
             // Create Entities For Each Collection Data Element
     	    for(var i = 0; i < country_data.length; i++) {
 
@@ -157,7 +159,6 @@ function Picker(scene) {
                 var entityGroup = new THREE.Group();
 
                 // Create Entity Geometry
-                var geometry = new THREE.IcosahedronBufferGeometry(5, 0);
                 var material = new THREE.MeshPhongMaterial( {
                          color: entityColor(country_data[i].type),
                          emissive: 0x072534,
