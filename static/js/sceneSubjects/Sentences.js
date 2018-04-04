@@ -36,8 +36,12 @@ function Sentences(scene) {
             // Load all sentences into list items and hide
             $.each( subset, function( key, val ) {
                 $( '#sentence-container ul' ).append(
-                    $( `<li id=${key}>` ).text( val['sentence'] )
-                    .append(`<br><span style="font-size: 10px;">${val['medium_name']} - <a href="${val['url']}">${val['publish_date']}</a></span>`)
+                    $( `<li id=${key}>` ).text( `“${val['sentence']}”` )
+                    .append(`<br><span style="font-size: 10px;">
+                        ${val['medium_name']} - 
+                        <a href="${val['url']}">
+                        ${$.datepicker.formatDate('dd M yy', new Date(val['publish_date']))}
+                        </a></span>`)
                     .hide()
                 );
             });
