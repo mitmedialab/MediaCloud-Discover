@@ -5,23 +5,47 @@
 
 function WordOverTime(scene) {
 
+    let mesh = null;
+    let grid = null;
 
     /////////////////////////////////////////////////////////////////////
     this.loadWordCharts = function( entity ) {
 
+        const z_offset = -250
+
+        scene.remove( mesh );
+        const thinking = sceneManager.findSceneByName( "Thinking" );
+        thinking.on();
+
         $.getJSON( `/word_over_time/${MC_CONTEXT.country_id}/${entity}`, function( freq_data ) {
             
-            var values = $.map(freq_data, function(value, key) { return value });
-            values = values.slice(0, values.length-3);
-            const mesh = createLineChart( values, -100, 0xffa700 );
+            let values = $.map( freq_data, function(value, key) { return value } );
+            values = values.slice( 0, values.length-3 );
+            mesh = createLineChart( values, 0xffa700 );
+
+            let group = new THREE.Group();
+            grid = new THREE.GridHelper( 700, 20, 0xffffff, 0xffffff );
+            grid.position.x += 360;
+            group.add( grid );
+            group.add( mesh );
+
+            group.position.y = -100;
+            group.position.x = -100;
+            group.position.z = z_offset;
+
+            group.rotation.x += 0.35;
+            // group.rotation.y += 0.5;
+
+            group.scale.set( 0.5, 0.5, 0.5 );
             
-            scene.add( mesh )
+            thinking.off();
+            scene.add( group );
         });
     }
 
 
     /////////////////////////////////////////////////////////////////////
-    function createLineChart(frequency_data, z_offset, color) {
+    function createLineChart(frequency_data, color) {
 
         let points = [];
         let x = 0, y = 0, x_offset = 20;
@@ -41,7 +65,6 @@ function WordOverTime(scene) {
         for( var i = 0; i < values.length; i++ ) {
             x = x + x_offset;
             let v = new THREE.Vector3(x, values[i], 1);
-            console.log(v);
             points.push(v);
         }
 
@@ -59,11 +82,6 @@ function WordOverTime(scene) {
                         } );
 
         const mesh = new THREE.Mesh( geometry, material );
-        mesh.position.y = -100;
-        mesh.position.x = -400;
-        mesh.position.z = z_offset;
-        mesh.receiveShadow = true;
-
         return mesh;
     }
 
