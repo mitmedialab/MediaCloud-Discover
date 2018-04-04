@@ -8,10 +8,14 @@ function Thinking(scene) {
 	let theta = 0.0;
 	
 	const geometry = new THREE.DodecahedronGeometry( 2, 1 );
-	const material = new THREE.MeshStandardMaterial( { color: new THREE.Color( 0.5, 0.7, 0.7 ), flatShading: false, wireframe: true } );
-	let mesh1      = new THREE.Mesh( geometry, material );
-	let mesh2      = new THREE.Mesh( geometry, material );
-	let mesh3      = new THREE.Mesh( geometry, material );
+	const material = new THREE.MeshStandardMaterial( { 
+		color: new THREE.Color( 0.5, 0.7, 0.7 ), 
+		flatShading: false, 
+		wireframe: true 
+	} );
+	let mesh1 = new THREE.Mesh( geometry, material );
+	let mesh2 = new THREE.Mesh( geometry, material );
+	let mesh3 = new THREE.Mesh( geometry, material );
 
 	const orbiters = [ mesh1, mesh2, mesh3 ];
 	
@@ -22,8 +26,6 @@ function Thinking(scene) {
 
 	scene.add(group);
 
-	// TODO: Show animation if waiting for something
-
 
 	/////////////////////////////////////////////////////////////////////////
 	this.on = function() {
@@ -31,6 +33,7 @@ function Thinking(scene) {
 	}
 
 
+	/////////////////////////////////////////////////////////////////////////
 	this.off = function() {
 		group.visible = false;
 	}

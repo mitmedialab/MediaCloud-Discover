@@ -60,8 +60,8 @@ def root():
 
 
 # /////////////////////////////////////////////////////////////////////////
-@app.route('/word_over_time/<string:word>')
-def recent_sentence_counts(word):
+@app.route('/word_over_time/<entity>')
+def recent_sentence_counts( entity ):
   '''
   Helper to fetch sentences counts over the last year for an arbitrary query
   '''
@@ -91,6 +91,7 @@ def addType(entity, type):
 def build_json_response(json_data):
   response = app.response_class( response=json.dumps(json_data), status=200, mimetype='application/json')
   return response
+
 
 # /////////////////////////////////////////////////////////////////////////
 @app.route('/cache_data')
@@ -126,10 +127,14 @@ def cache_data():
   cache_data()
   return response
 
+
+# /////////////////////////////////////////////////////////////////////////
 @cache.cached(timeout=28800, key_prefix='cache_data')
 def cache_data():
   return data
 
+
+# /////////////////////////////////////////////////////////////////////////
 @app.route('/clear_cache')
 def clear_cache():
   with app.app_context():
@@ -137,11 +142,15 @@ def clear_cache():
   currentDT = datetime.datetime.now()
   return "Cache Cleared at {0}...".format(str(currentDT))
 
+
+# /////////////////////////////////////////////////////////////////////////
 @app.route('/show_cache')
 def show_cache():
   response = build_json_response(data)
   return response
 
+
+# /////////////////////////////////////////////////////////////////////////
 @app.route('/country_entities/<country_id>')
 def country_entities(country_id):
   c = cache_data()
@@ -173,6 +182,7 @@ def country_entities(country_id):
   return response
 
 
+# /////////////////////////////////////////////////////////////////////////
 @app.route('/word_count/<term>')
 def word_count(term):
   ngram_size = 1
