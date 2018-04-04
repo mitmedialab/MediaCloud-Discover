@@ -31,12 +31,15 @@ function Sentences(scene) {
             //          be doing this in server.py or in the query itself
             let subset = sentence_data['response']['docs'].slice(0, 9);
             
+            $( '#sentence-container ul' ).empty();
+
             // Load all sentences into list items and hide
             $.each( subset, function( key, val ) {
                 $( '#sentence-container ul' ).append(
                     $( `<li id=${key}>` ).text( val['sentence'] )
+                    .append(`<br><span style="font-size: 10px;">${val['medium_name']} - <a href="${val['url']}">${val['publish_date']}</a></span>`)
                     .hide()
-                )
+                );
             });
 
             // Progressively reveal each item in list
