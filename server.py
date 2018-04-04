@@ -60,8 +60,8 @@ def root():
 
 
 # /////////////////////////////////////////////////////////////////////////
-@app.route('/word_over_time/<entity>')
-def recent_sentence_counts( entity ):
+@app.route('/word_over_time/<int:collection_id>/<entity>')
+def recent_sentence_counts( collection_id, entity ):
   '''
   Helper to fetch sentences counts over the last year for an arbitrary query
   '''
@@ -74,9 +74,27 @@ def recent_sentence_counts( entity ):
   start_datetime = datetime.datetime.strftime(start_date, '%Y-%m-%d')
   end_datetime = datetime.datetime.strftime(end_date, '%Y-%m-%d')
 
-  sentences_over_time = mc.sentenceCount(word, solr_filter=fq, split=True,
-    split_start_date=start_datetime,
-    split_end_date=end_datetime)['split']
+  if(entity.isdigit()):
+  
+    sentences_over_time = mc.sentenceCount('*', 
+      [
+        'tags_id_media:({0})'.format(str(collection_id)),
+        'tags_id_stories:{0}'.format(entity),
+        fq
+      ],
+      split=True,
+      split_start_date=start_datetime,
+      split_end_date=end_datetime)['split']
+
+  else:
+    sentences_over_time = mc.sentenceCount(entity, 
+      [
+        'tags_id_media:({0})'.format(str(collection_id)),
+        fq
+      ],
+      split=True,
+      split_start_date=start_datetime,
+      split_end_date=end_datetime)['split']
 
   return jsonify(sentences_over_time)
 

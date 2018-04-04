@@ -23,6 +23,8 @@ function Picker(scene) {
         self.fadeAllEntities();
         let sentenceScene = sceneManager.findSceneByName( "Sentences" );
 
+        let wotScene = sceneManager.findSceneByName( "WordOverTime" );
+
         // If user hasn't selected an entity yet, don't switch scenes //
         if( MC_CONTEXT.userData === undefined ) {
             
@@ -32,9 +34,11 @@ function Picker(scene) {
         } else {
 
             if(MC_CONTEXT.userData.type == 'word') {
-                sentenceScene.loadSentences( MC_CONTEXT.country_id, MC_CONTEXT.userData.label );
+                // sentenceScene.loadSentences( MC_CONTEXT.country_id, MC_CONTEXT.userData.label );
+                wotScene.loadWordCharts( MC_CONTEXT.userData.label );
             } else {
-                sentenceScene.loadSentences( MC_CONTEXT.country_id, MC_CONTEXT.userData.tags_id );
+                wotScene.loadWordCharts( MC_CONTEXT.userData.tags_id );
+                // sentenceScene.loadSentences( MC_CONTEXT.country_id, MC_CONTEXT.userData.tags_id );
             }
 
             $( '#explorer_link' ).html( `<a href="${MC_CONTEXT.explorerLink()}">Explore Data</a>` );

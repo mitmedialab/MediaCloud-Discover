@@ -7,15 +7,15 @@ function WordOverTime(scene) {
 
 
     /////////////////////////////////////////////////////////////////////
-    this.loadWordCharts = function( word ) {
+    this.loadWordCharts = function( entity ) {
 
-        $.getJSON( `/word_over_time/${word}`, function( freq_data ) {
+        $.getJSON( `/word_over_time/${MC_CONTEXT.country_id}/${entity}`, function( freq_data ) {
             
             var values = $.map(freq_data, function(value, key) { return value });
             values = values.slice(0, values.length-3);
             const mesh = createLineChart( values, -100, 0xffa700 );
             
-            scene.add(mesh)
+            scene.add( mesh )
         });
     }
 
