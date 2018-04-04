@@ -22,6 +22,9 @@ function Sentences(scene) {
     /////////////////////////////////////////////////////////////////////////
     this.loadSentences = function( country_id, entity_id ) {
 
+        const thinking = sceneManager.findSceneByName( "Thinking" );
+        thinking.on();
+
         $.getJSON( `/sentences/${country_id}/${encodeURI( entity_id )}`, function( sentence_data ) {
 
             // TODO: Selecting subset of data returned here but we should 
@@ -43,6 +46,7 @@ function Sentences(scene) {
                 });
             
             data = null;
+            thinking.off();
         });
     }
     

@@ -96,6 +96,7 @@ function SceneManager(canvas) {
     ////////////////////////////////////////////////////////////////////
     function createSceneSubjects(scene) {
         const sceneSubjects = [
+            new Thinking(scene),
             new GeneralLights(scene),
             new TweenTest(scene),
             new SceneSubject(scene),
