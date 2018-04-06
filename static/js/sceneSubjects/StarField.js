@@ -2,12 +2,12 @@
 // Where do we do other event handlers besides updates? In here?
 // How do we trigger a tween on click?
 
-function TweenTest(scene) {
+function StarField(scene) {
 	
 	// Parent Object
-	var context = new THREE.Object3D();
-	context.name = "TweenTest";
-    scene.add(context);
+	var subscene = new THREE.Object3D();
+	subscene.name = "StarField";
+    scene.add(subscene);
     // Wait, Layers in Three.js?
 
 	const particleCount = 1000;
@@ -45,7 +45,7 @@ function TweenTest(scene) {
 	var particleSystem = new THREE.Points( this.particles, starsMaterial );
 	
 	particleSystem.sortParticles = true;
-	context.add( particleSystem );
+	subscene.add( particleSystem );
 
 	// WIREFRAME
 	// const meshwire = new THREE.Mesh(new THREE.IcosahedronBufferGeometry(radius+0.5, 2), new THREE.MeshPhongMaterial({ }));
@@ -56,8 +56,21 @@ function TweenTest(scene) {
 	// meshwire.position.set(0, 0, -2);
 	// scene.add(meshwire);
 	
+
+	/////////////////////////////////////////////////////////////////////////
+	this.init = function() {
+
+	}
+
+
+    /////////////////////////////////////////////////////////////////////////
+    this.getName = function() {
+        return subscene.name;
+    }
+    
+
 	this.toggleVisible = function() {
-		context.visible = !context.visible;
+		subscene.visible = !subscene.visible;
 	}
 
 	this.update = function(time) {
