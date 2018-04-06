@@ -6,18 +6,26 @@
 function Landing(scene) {
 
 
+    var subscene = new THREE.Object3D();
+    subscene.name = "Landing";
+    scene.add(subscene);
+
     /////////////////////////////////////////////////////////////////////////
     this.update = function(time) {
 
-    	
+        // no-op    	
     }
+
+
+    /////////////////////////////////////////////////////////////////////////
+    this.getName = function() {
+        return subscene.name;
+    }    
 
 
 	/////////////////////////////////////////////////////////////////////////
     this.init = function() {
-    	var subscene = new THREE.Object3D();
-    	subscene.name = "Landing";
-    	scene.add(subscene);
+    	
     }
     this.init();
 }

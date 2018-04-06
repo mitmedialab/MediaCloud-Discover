@@ -5,6 +5,10 @@
 
 function Sentences(scene) {
 
+    var subscene = new THREE.Object3D();
+    subscene.name = "Sentences";
+    scene.add(subscene);
+
     /////////////////////////////////////////////////////////////////////////
     this.update = function(time) {
 
@@ -16,6 +20,12 @@ function Sentences(scene) {
     	var subscene = new THREE.Object3D();
     	subscene.name = "Sentences";
     	scene.add(subscene);
+    }
+
+
+    /////////////////////////////////////////////////////////////////////////
+    this.getName = function() {
+        return subscene.name;
     }
 
 

@@ -15,4 +15,16 @@ function SceneSubject(scene) {
 		// mesh.scale.set(scale, scale, scale);
 		mesh.rotation.y += 0.001;
 	}
+
+
+	/////////////////////////////////////////////////////////////////////////
+	this.init = function() {
+
+	}
+
+
+    /////////////////////////////////////////////////////////////////////////
+    this.getName = function() {
+        return this.subscene.name;
+    }
 }

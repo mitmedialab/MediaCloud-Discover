@@ -1,5 +1,9 @@
 function GeneralLights(scene) {
 	
+    var subscene = new THREE.Object3D();
+    subscene.name = "GeneralLights";
+    scene.add(subscene);
+
 	const light = new THREE.PointLight("#ffffff", 1);
     scene.add(light);
     
@@ -15,6 +19,18 @@ function GeneralLights(scene) {
 	// var plh2 = new THREE.PointLightHelper(light2,1);
 	// scene.add(plh2);
 	
+	/////////////////////////////////////////////////////////////////////////
+	this.init = function() {
+
+	}
+
+
+    /////////////////////////////////////////////////////////////////////////
+    this.getName = function() {
+        return subscene.name;
+    }
+
+
 	this.update = function(time) {
 		// light.intensity = (Math.sin(time)+1.5)/1.5;
 		// light.color.setHSL( Math.sin(time), 0.5, 0.5 );

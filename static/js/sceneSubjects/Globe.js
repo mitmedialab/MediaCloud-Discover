@@ -5,6 +5,10 @@
 
 function Globe(scene) {
 
+    var subscene = new THREE.Object3D();
+    subscene.name = "Globe";
+    scene.add(subscene);
+
     addGlobe = function() {
         if(!Detector.webgl)
         {
@@ -68,6 +72,12 @@ function Globe(scene) {
     	
     }
 
+
+    /////////////////////////////////////////////////////////////////////////
+    this.getName = function() {
+        return subscene.name;
+    }
+    
 
 	/////////////////////////////////////////////////////////////////////////
     this.init = function() {

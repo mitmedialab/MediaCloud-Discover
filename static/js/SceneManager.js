@@ -98,18 +98,24 @@ function SceneManager(canvas) {
         const sceneSubjects = [
             new Thinking(scene),
             new GeneralLights(scene),
-            new TweenTest(scene),
-            new SceneSubject(scene),
-            new FontTest(scene),
+            new StarField(scene),
+            // new SceneSubject(scene),
+            // new FontTest(scene),
             // new SVGTest(scene),
             
             new Picker(scene), 
             new Sentences(scene),
             new WordOverTime(scene),
-            new People(scene),
+            // new People(scene),
             new Globe(scene),
             new Landing(scene)
         ];
+
+        // Initialize all scenes
+        for (var i = 0; i < sceneSubjects.length; i++) {
+            console.log( `Initializing ${sceneSubjects[i].getName()}...`);
+            sceneSubjects[i].init();
+        }
 
         return sceneSubjects;
     }

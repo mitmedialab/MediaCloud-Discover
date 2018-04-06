@@ -5,8 +5,27 @@
 
 function WordOverTime(scene) {
 
+    var subscene = new THREE.Object3D();
+    subscene.name = "WordOverTime";
+    scene.add(subscene);
+
     let mesh = null;
     let grid = null;
+
+
+
+    /////////////////////////////////////////////////////////////////////
+    this.enter = function() {
+
+        this.loadWordCharts( MC_CONTEXT.userData.tags_id );
+    }
+
+
+    /////////////////////////////////////////////////////////////////////////
+    this.getName = function() {
+        return subscene.name;
+    }
+
 
     /////////////////////////////////////////////////////////////////////
     this.loadWordCharts = function( entity ) {

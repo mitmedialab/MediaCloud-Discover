@@ -5,6 +5,10 @@
 
 function Thinking(scene) {
 
+    var subscene = new THREE.Object3D();
+    subscene.name = "Thinking";
+    scene.add(subscene);
+
 	let theta = 0.0;
 	
 	const geometry = new THREE.DodecahedronGeometry( 2, 1 );
@@ -25,6 +29,12 @@ function Thinking(scene) {
 	group.add( mesh3 );
 
 	scene.add(group);
+
+
+    /////////////////////////////////////////////////////////////////////////
+    this.getName = function() {
+        return subscene.name;
+    }
 
 
 	/////////////////////////////////////////////////////////////////////////
