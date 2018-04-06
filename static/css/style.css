@@ -52,7 +52,8 @@ div#content {
 }
 
 #metadata {
-  background-color: rgba( 255, 255, 255, 0.6 );
+  background-color: rgba(0, 0, 0, 0.7); 
+  color: #FFF; 
   width: 30%;
   height: 80%;
   margin: 10px;
