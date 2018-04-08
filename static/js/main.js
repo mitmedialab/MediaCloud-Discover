@@ -100,17 +100,11 @@ function transitionScenes( lifecycle ) {
     
     // Transition Between Them
     if( from !== null ) {
-        if( DEBUG ) {
-            console.log( `Exiting ${lifecycle.from}.` );
-        }
         from.exit();
     }
 
     if( to !== null ) {
         to.enter();
-        if( DEBUG ) {
-            console.log( `Entering ${lifecycle.to}.` );
-        }
     }
 }
 
