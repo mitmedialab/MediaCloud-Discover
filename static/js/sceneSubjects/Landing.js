@@ -13,10 +13,16 @@ function Landing(scene) {
 
     /////////////////////////////////////////////////////////////////////
     this.enter = function() {
+
+        // Slide in summary div
+        $( '#landing' ).load( '/static/html/landing_content.html' );
+        $( '#landing' ).show( "slide", { direction: "right"  }, 300 );
     }
 
 
     this.exit = function() {
+
+        $( '#landing' ).hide( "slide", { direction: "right"  }, 300 );
     }
 
 
