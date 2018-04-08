@@ -15,7 +15,12 @@ function WordTime(scene) {
 
     /////////////////////////////////////////////////////////////////////
     this.enter = function() {
-        this.loadWordCharts( MC_CONTEXT.userData.tags_id );
+
+        if(MC_CONTEXT.userData.type == 'word') {
+            this.loadWordCharts( MC_CONTEXT.userData.label );
+        } else {
+            this.loadWordCharts( MC_CONTEXT.userData.tags_id );
+        }
     }
 
 

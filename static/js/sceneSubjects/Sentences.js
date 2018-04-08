@@ -30,12 +30,18 @@ function Sentences(scene) {
 
     /////////////////////////////////////////////////////////////////////
     this.enter = function() {
-        this.loadSentences( MC_CONTEXT.country_id, MC_CONTEXT.userData.tags_id );
+
+        if(MC_CONTEXT.userData.type == 'word') {
+            this.loadSentences( MC_CONTEXT.country_id, MC_CONTEXT.userData.label );
+        } else {
+            this.loadSentences( MC_CONTEXT.country_id, MC_CONTEXT.userData.tags_id );
+        }
     }
 
 
     this.exit = function() {
 
+        // TODO: Progressive hide here
     }
 
 
