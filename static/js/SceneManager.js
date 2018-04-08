@@ -94,13 +94,13 @@ function SceneManager(canvas) {
         if(intersects.length > 0 && intersects[0].object.userData.label !== undefined) {
             var name = intersects[0].object.userData.label;
             var type = intersects[0].object.userData.type;
-            $( "#footer > #footer_metadata" ).html( `<h2 class="entity">${name}</h2><span class="type">(${type})</span>` );
+            $( "#md_header" ).html( `<h2 class="entity">${name}</h2><span class="type">(${type})</span><br><hr>` );
 
             MC_CONTEXT.currentEntity = name;
             MC_CONTEXT.tag_sets_id = intersects[0].object.userData.tag_sets_id;
             MC_CONTEXT.userData = intersects[0].object.userData;
             
-
+            $( '#metadata' ).show( "slide", { direction: "left"  }, 500 );
         } else {
             $( "#footer > #footer_metadata" ).html('<i>Click on an entity to explore...</i>');
         }

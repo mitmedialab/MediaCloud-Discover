@@ -38,16 +38,16 @@ const fsm = new StateMachine({
         { name: 'toLanding',        from: '*',              to: 'Landing'       },
 
       // Forward
-        { name: 'forward',      from: 'Picker',         to: 'WordTime'          },
-        { name: 'forward',      from: 'WordTime',       to: 'Sentences'         },
-        { name: 'forward',      from: 'Sentences',      to: 'Globe'             },
-        { name: 'forward',      from: 'Globe',          to: 'Landing'           },
+        { name: 'forward',          from: 'Picker',         to: 'WordTime'      },
+        { name: 'forward',          from: 'WordTime',       to: 'Sentences'     },
+        { name: 'forward',          from: 'Sentences',      to: 'Globe'         },
+        { name: 'forward',          from: 'Globe',          to: 'Landing'       },
 
     // Back
-        { name: 'back',         from: 'Landing',        to: 'Globe'             },
-        { name: 'back',         from: 'Globe',          to: 'Sentences'         },
-        { name: 'back',         from: 'Sentences',      to: 'WordTime'          },
-        { name: 'back',         from: 'WordTime',           to: 'Picker'        }
+        { name: 'back',             from: 'Landing',        to: 'Globe'         },
+        { name: 'back',             from: 'Globe',          to: 'Sentences'     },
+        { name: 'back',             from: 'Sentences',      to: 'WordTime'      },
+        { name: 'back',             from: 'WordTime',       to: 'Picker'        }
 
     ],
 
@@ -57,36 +57,22 @@ const fsm = new StateMachine({
                 console.log( `Scene Transition:\t\t${lifecycle.from} > ${lifecycle.to}` );
             }
         },
-        // onForward: function( lifecycle ) {
-        //     transitionScenes( lifecycle );
-        // },
-        // onBack: function( lifecycle ) {
-        //     transitionScenes( lifecycle );
-        // },
         onPicker: function( lifecycle ) {
             transitionScenes( lifecycle );
 
-            // Hide The Metadata Panel
-            $( '#metadata' ).hide( "slide", { direction: "right"  }, 1000 );
+            // Hide The Metadata Panel on init or return to Picker
+            $( '#metadata' ).hide( "slide", { direction: "left"  }, 1000 );
         },
         onWordtime: function( lifecycle ) { 
-            
             transitionScenes( lifecycle );
-            // $( '#metadata' ).html( '<h1>Word</h1>' );
-
-            // Slide Out Metadata Panel
-            // $( '#metadata' ).show( "slide", { direction: "right"  }, 1000 );
         },
         onSentences: function( lifecycle ) { 
-            $( '#metadata' ).html( '<h1>Sentences</h1>' );
             transitionScenes( lifecycle );
         },
         onGlobe: function( lifecycle ) { 
-            $( '#metadata' ).html( '<h1>Globe</h1>' );
             transitionScenes( lifecycle );
         },
         onLanding: function( lifecycle ) { 
-            $( '#metadata' ).html( '<h1>Landing</h1>' );
             transitionScenes( lifecycle );
         }
     }
