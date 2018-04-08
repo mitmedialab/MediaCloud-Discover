@@ -10,6 +10,16 @@ function Landing(scene) {
     subscene.name = "Landing";
     scene.add(subscene);
 
+
+    /////////////////////////////////////////////////////////////////////
+    this.enter = function() {
+    }
+
+
+    this.exit = function() {
+    }
+
+
     /////////////////////////////////////////////////////////////////////////
     this.update = function(time) {
 
@@ -27,5 +37,4 @@ function Landing(scene) {
     this.init = function() {
     	
     }
-    this.init();
 }

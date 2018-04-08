@@ -32,7 +32,7 @@ function SceneManager(canvas) {
     // Make camera accessible from Scene Subjects via global context
     MC_CONTEXT.camera = this.camera;
     this.sceneSubjects = createSceneSubjects(this.scene);
-    buildPostProcessing();
+    // buildPostProcessing();
 
     // OBJECT SELECTION / RAYCASTING //
     var raycaster, mouse = { x : 0, y : 0 };
@@ -40,6 +40,39 @@ function SceneManager(canvas) {
     renderer.domElement.camera = this.camera;
     renderer.domElement.scene = this.scene;
     renderer.domElement.addEventListener( 'click', raycast, false );
+
+
+    /////////////////////////////////////////////////////////////////////////
+    $( '#logo' ).click( function( e ) {
+        fsm.toPicker();
+    });
+
+
+    // Load Entities for New Selected Country //
+    $("#countries").change(function(e) {
+        e.stopPropagation();
+        e.preventDefault();
+        
+        var item=$(this);
+        MC_CONTEXT.country_id = item.val();
+        fsm.toPicker();
+    });
+
+    
+    /////////////////////////////////////////////////////////////////////////
+    $( '#forward' ).click( function( e ) {
+        e.stopPropagation();
+        e.preventDefault();
+        fsm.forward();
+    });
+
+
+    /////////////////////////////////////////////////////////////////////////
+    $( '#back' ).click( function( e ) {
+        e.stopPropagation();
+        e.preventDefault();
+        fsm.back();
+    });
 
 
     /////////////////////////////////////////////////////////////////////////
@@ -99,21 +132,18 @@ function SceneManager(canvas) {
             new Thinking(scene),
             new GeneralLights(scene),
             new StarField(scene),
-            // new SceneSubject(scene),
-            // new FontTest(scene),
-            // new SVGTest(scene),
-            
             new Picker(scene), 
             new Sentences(scene),
-            new WordOverTime(scene),
-            // new People(scene),
+            new WordTime(scene),
             new Globe(scene),
             new Landing(scene)
         ];
 
-        // Initialize all scenes
+        // Initialize all Scene Objects
         for (var i = 0; i < sceneSubjects.length; i++) {
-            console.log( `Initializing ${sceneSubjects[i].getName()}...`);
+            if(DEBUG) {
+                console.log( `Initializing ${sceneSubjects[i].getName()}...`);
+            }
             sceneSubjects[i].init();
         }
 
@@ -141,7 +171,7 @@ function SceneManager(canvas) {
             }
         }
         
-        return "Not Found";
+        return null;
     }
 
     /////////////////////////////////////////////////////////////////////////

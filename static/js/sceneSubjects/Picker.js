@@ -23,7 +23,7 @@ function Picker(scene) {
         self.fadeAllEntities();
         let sentenceScene = sceneManager.findSceneByName( "Sentences" );
 
-        let wotScene = sceneManager.findSceneByName( "WordOverTime" );
+        let wotScene = sceneManager.findSceneByName( "WordTime" );
 
         // If user hasn't selected an entity yet, don't switch scenes //
         if( MC_CONTEXT.userData === undefined ) {
@@ -33,35 +33,57 @@ function Picker(scene) {
 
         } else {
 
-            if(MC_CONTEXT.userData.type == 'word') {
-                // sentenceScene.loadSentences( MC_CONTEXT.country_id, MC_CONTEXT.userData.label );
-                wotScene.loadWordCharts( MC_CONTEXT.userData.label );
-            } else {
-                wotScene.loadWordCharts( MC_CONTEXT.userData.tags_id );
-                // sentenceScene.loadSentences( MC_CONTEXT.country_id, MC_CONTEXT.userData.tags_id );
-            }
+            // if(MC_CONTEXT.userData.type == 'word') {
+            //     // sentenceScene.loadSentences( MC_CONTEXT.country_id, MC_CONTEXT.userData.label );
+            //     wotScene.loadWordCharts( MC_CONTEXT.userData.label );
+            // } else {
+            //     wotScene.loadWordCharts( MC_CONTEXT.userData.tags_id );
+            //     // sentenceScene.loadSentences( MC_CONTEXT.country_id, MC_CONTEXT.userData.tags_id );
+            // }
 
-            $( '#explorer_link' ).html( `<a href="${MC_CONTEXT.explorerLink()}">Explore Data</a>` );
+            // $( '#explorer_link' ).html( `<a href="${MC_CONTEXT.explorerLink()}">Explore Data</a>` );
+            
+            // // 1. Remove explore link to chart
+            // $( "#explore_button" ).remove();
+
+            // // 2. Add button for next scene transition to sentences
+
+
+            // // X. Build metadata panel content (from MC_CONTEXT)
+            // //      Can we build this as a separate file and then drop it into the div?
+
+            // $( '#metadata' ).show( "slide", { direction: "left"  }, 1000 );
+            // fsm.sentences();
+            // fsm.forward();
         }
     });
 
-
-    // Load Entities for New Selected Country //
-    $("#countries").change(function(e) {
-        e.stopPropagation();
-        e.preventDefault();
-        
-        var item=$(this);
-        MC_CONTEXT.country_id = item.val();
-        self.loadEntities(MC_CONTEXT.country_id);
-    });
-
     drawChart();
+
+
+    /////////////////////////////////////////////////////////////////////////
+    this.enter = function() {
+        self.init();
+    }
+
+
+    /////////////////////////////////////////////////////////////////////////
+    this.exit = function() {
+
+        this.toggleVisible();
+    }
+
 
     /////////////////////////////////////////////////////////////////////////
     this.toggleVisible = function() {
         subscene.visible = !subscene.visible;
         // TODO: Hide Chart & Context Contents Here As Well
+    }
+
+
+    /////////////////////////////////////////////////////////////////////////
+    this.getName = function() {
+        return subscene.name;
     }
 
 
@@ -94,9 +116,7 @@ function Picker(scene) {
 
     /////////////////////////////////////////////////////////////////////////
     this.init = function() {
-    	
-        // this.entities = new THREE.Group();
-        // this.entities.name = 'entities';
+        subscene.visible = true;
     	this.loadEntities(MC_CONTEXT.country_id);
     }
 
@@ -146,8 +166,10 @@ function Picker(scene) {
     /////////////////////////////////////////////////////////////////////////
 	this.loadEntities = function( country_id ) {
 
-        // Instantiate Entity Objects and Add to Entities Array
+        // Ensure scene is visible
+        subscene.visible = true;
 
+        // Instantiate Entity Objects and Add to Entities Array
         var built_entities = new THREE.Group();
         built_entities.name = 'entities';
         var all_entities = subscene.children[0];
@@ -193,7 +215,7 @@ function Picker(scene) {
                 //          Can we do this asynchronously?
                 //          Maybe using Promises:
                 //          https://stackoverflow.com/questions/41753818/three-js-add-textures-with-promises
-                addText( country_data[i].label, entity.position, entityGroup );
+                // addText( country_data[i].label, entity.position, entityGroup );
                 
                 built_entities.add( entityGroup );
     	    }
@@ -303,6 +325,4 @@ function Picker(scene) {
             }
         });
     }
-
-    this.init();
 }

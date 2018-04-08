@@ -28,6 +28,16 @@ function Sentences(scene) {
         return subscene.name;
     }
 
+    /////////////////////////////////////////////////////////////////////
+    this.enter = function() {
+        this.loadSentences( MC_CONTEXT.country_id, MC_CONTEXT.userData.tags_id );
+    }
+
+
+    this.exit = function() {
+
+    }
+
 
     /////////////////////////////////////////////////////////////////////////
     this.loadSentences = function( country_id, entity_id ) {
@@ -66,6 +76,4 @@ function Sentences(scene) {
             thinking.off();
         });
     }
-    
-    this.init();
 }

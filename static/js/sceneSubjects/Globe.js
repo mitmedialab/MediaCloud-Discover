@@ -9,6 +9,18 @@ function Globe(scene) {
     subscene.name = "Globe";
     scene.add(subscene);
 
+    /////////////////////////////////////////////////////////////////////
+    this.enter = function() {
+      
+    }
+
+
+    this.exit = function() {
+      
+    }
+
+
+
     addGlobe = function() {
         if(!Detector.webgl)
         {

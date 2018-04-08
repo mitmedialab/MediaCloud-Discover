@@ -3,21 +3,25 @@
 // Word Over Time Scene
 /////////////////////////////////////////////////////////////////////////
 
-function WordOverTime(scene) {
+function WordTime(scene) {
 
     var subscene = new THREE.Object3D();
-    subscene.name = "WordOverTime";
+    subscene.name = "WordTime";
     scene.add(subscene);
 
     let mesh = null;
     let grid = null;
-
-
+    let group = new THREE.Group();
 
     /////////////////////////////////////////////////////////////////////
     this.enter = function() {
-
         this.loadWordCharts( MC_CONTEXT.userData.tags_id );
+    }
+
+
+    this.exit = function() {
+
+        scene.remove( group );
     }
 
 
@@ -31,8 +35,8 @@ function WordOverTime(scene) {
     this.loadWordCharts = function( entity ) {
 
         const z_offset = -250
-
-        scene.remove( mesh );
+        scene.remove( group );
+        group = new THREE.Group();
         const thinking = sceneManager.findSceneByName( "Thinking" );
         thinking.on();
 
@@ -42,7 +46,6 @@ function WordOverTime(scene) {
             values = values.slice( 0, values.length-3 );
             mesh = createLineChart( values, 0xffa700 );
 
-            let group = new THREE.Group();
             grid = new THREE.GridHelper( 700, 20, 0xffffff, 0xffffff );
             grid.position.x += 360;
             group.add( grid );
@@ -115,9 +118,8 @@ function WordOverTime(scene) {
 	/////////////////////////////////////////////////////////////////////////
     this.init = function() {
     	const subscene = new THREE.Object3D();
-    	subscene.name = "WordOverTime";
+    	subscene.name = "WordTime";
     	scene.add(subscene);
     }
-    this.init();
 
 }

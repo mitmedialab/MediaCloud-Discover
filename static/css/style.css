@@ -17,6 +17,19 @@ div#content {
   float: right;
 }
 
+#back {
+  position: absolute;
+  bottom: 300px;
+  right: 440px;
+}
+
+#forward {
+  position: absolute;
+  bottom: 300px;
+  right: 140px;
+  z-index: 11;
+}
+
 #sentence-container {
   margin: 0px;
   border: 5px;

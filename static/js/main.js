@@ -8,12 +8,112 @@
 var media_list = [];
 var data_list = dataFromServer;
 
+
+// Set DEBUG Flag from URL (e.g. ...?debug=true)
+let DEBUG = false;
+var url = new URL(window.location.href);
+var debug_flag = url.searchParams.get("debug");
+
+if( debug_flag != null && debug_flag.toLowerCase() == 'true') {
+    DEBUG = true;
+}
+
 // CONTEXT SETUP //
 const MC_CONTEXT = new MCContext({"scene": "Picker"});
 
 // SCENE SETUP
 const canvas = document.getElementById("canvas");
-var sceneManager = null;
+var sceneManager = new SceneManager(canvas);
+
+const fsm = new StateMachine({
+    
+    init: 'Picker',
+    
+    transitions: [
+      
+        { name: 'toPicker',         from: '*',              to: 'Picker'        },
+        { name: 'toWordOverTime',   from: '*',              to: 'WordOverTime'  },
+        { name: 'toSentences',      from: '*',              to: 'Sentences'     },
+        { name: 'toGlobe',          from: '*',              to: 'Globe'         },
+        { name: 'toLanding',        from: '*',              to: 'Landing'       },
+
+      // Forward
+        { name: 'forward',      from: 'Picker',         to: 'WordTime'          },
+        { name: 'forward',      from: 'WordTime',       to: 'Sentences'         },
+        { name: 'forward',      from: 'Sentences',      to: 'Globe'             },
+        { name: 'forward',      from: 'Globe',          to: 'Landing'           },
+
+    // Back
+        { name: 'back',         from: 'Landing',        to: 'Globe'             },
+        { name: 'back',         from: 'Globe',          to: 'Sentences'         },
+        { name: 'back',         from: 'Sentences',      to: 'WordTime'          },
+        { name: 'back',         from: 'WordTime',           to: 'Picker'        }
+
+    ],
+
+    methods: {
+        onTransition: function( lifecycle ) {
+            if( DEBUG ) {
+                console.log( `Scene Transition:\t\t${lifecycle.from} > ${lifecycle.to}` );
+            }
+        },
+        // onForward: function( lifecycle ) {
+        //     transitionScenes( lifecycle );
+        // },
+        // onBack: function( lifecycle ) {
+        //     transitionScenes( lifecycle );
+        // },
+        onPicker: function( lifecycle ) {
+            transitionScenes( lifecycle );
+
+            // Hide The Metadata Panel
+            $( '#metadata' ).hide( "slide", { direction: "right"  }, 1000 );
+        },
+        onWordtime: function( lifecycle ) { 
+            
+            transitionScenes( lifecycle );
+            // $( '#metadata' ).html( '<h1>Word</h1>' );
+
+            // Slide Out Metadata Panel
+            // $( '#metadata' ).show( "slide", { direction: "right"  }, 1000 );
+        },
+        onSentences: function( lifecycle ) { 
+            $( '#metadata' ).html( '<h1>Sentences</h1>' );
+            transitionScenes( lifecycle );
+        },
+        onGlobe: function( lifecycle ) { 
+            $( '#metadata' ).html( '<h1>Globe</h1>' );
+            transitionScenes( lifecycle );
+        },
+        onLanding: function( lifecycle ) { 
+            $( '#metadata' ).html( '<h1>Landing</h1>' );
+            transitionScenes( lifecycle );
+        }
+    }
+  });
+
+function transitionScenes( lifecycle ) {
+
+    // Grab Scenes
+    let from = sceneManager.findSceneByName( lifecycle.from );
+    let to = sceneManager.findSceneByName( lifecycle.to );
+    
+    // Transition Between Them
+    if( from !== null ) {
+        if( DEBUG ) {
+            console.log( `Exiting ${lifecycle.from}.` );
+        }
+        from.exit();
+    }
+
+    if( to !== null ) {
+        to.enter();
+        if( DEBUG ) {
+            console.log( `Entering ${lifecycle.to}.` );
+        }
+    }
+}
+
 
 // CONTROLS SETUP //
 var controls = new function () {
@@ -33,7 +133,7 @@ var controls = new function () {
     this.cameraSpeed = 3100;
     this.mediaSource = 'default';
     this.hideView = function() {
-        let x = sceneManager.findSceneByName("TweenTest");
+        let x = sceneManager.findSceneByName("StarField");
         x.toggleVisible();
         // TODO: Ok, now that we know we can mute scenes, we probably should make our own SceneSubject class we
         //       inheret functions from in the prototype that does all this necessary stuff so we'll just get it for free.
@@ -86,25 +186,12 @@ var controls = new function () {
     }
 };
 
+
 var gui = new dat.GUI();
 addControls(gui);
 gui.remember(controls);
-
-////////////////////////////////////////////////////////////////////////////////////////
-var manager = new THREE.LoadingManager();
-
-// When all resources are loaded:
-manager.onLoad = function() {
-    sceneManager = new SceneManager(canvas);
-    bindEventListeners();
-    render();
-}
-
-let font = null;
-const loader = new THREE.FontLoader(manager);
-loader.load('/static/fonts/helvetiker_bold.typeface.json', function(response) {
-  font = response;
-});
+bindEventListeners();
+render();
 
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -145,7 +232,7 @@ function addControls(gui) {
     // console.log(media_list);
     // var f2 = gui.addFolder('Media');
     gui.add(controls, 'mediaSource', media_list).name('Media Sources');
-    gui.add(controls, 'hideView').name("Mute TweenTest");
+    gui.add(controls, 'hideView').name("Mute StarField");
     gui.add(controls, 'hidePicker').name("Mute Picker");
 
     gui.close();
