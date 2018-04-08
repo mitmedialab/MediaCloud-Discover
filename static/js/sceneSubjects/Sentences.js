@@ -41,7 +41,10 @@ function Sentences(scene) {
 
     this.exit = function() {
 
-        // TODO: Progressive hide here
+        $( '#sentence-container ul li' ).each(function (i) {
+            let $item = $(this);
+            $item.delay(75*i).hide( "slide", { direction: "right"  }, 750 );
+        });
     }
 
 

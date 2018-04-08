@@ -31,34 +31,8 @@ function Picker(scene) {
             alert('Please choose an entity...');
             return;
 
-        } else {
-
-            // if(MC_CONTEXT.userData.type == 'word') {
-            //     // sentenceScene.loadSentences( MC_CONTEXT.country_id, MC_CONTEXT.userData.label );
-            //     wotScene.loadWordCharts( MC_CONTEXT.userData.label );
-            // } else {
-            //     wotScene.loadWordCharts( MC_CONTEXT.userData.tags_id );
-            //     // sentenceScene.loadSentences( MC_CONTEXT.country_id, MC_CONTEXT.userData.tags_id );
-            // }
-
-            // $( '#explorer_link' ).html( `<a href="${MC_CONTEXT.explorerLink()}">Explore Data</a>` );
-            
-            // // 1. Remove explore link to chart
-            // $( "#explore_button" ).remove();
-
-            // // 2. Add button for next scene transition to sentences
-
-
-            // // X. Build metadata panel content (from MC_CONTEXT)
-            // //      Can we build this as a separate file and then drop it into the div?
-
-            // $( '#metadata' ).show( "slide", { direction: "left"  }, 1000 );
-            // fsm.sentences();
-            // fsm.forward();
         }
     });
-
-    // drawChart();
 
 
     /////////////////////////////////////////////////////////////////////////
@@ -102,13 +76,6 @@ function Picker(scene) {
 
                 current_planet.rotation.x += 0.01;
                 current_planet.rotation.y += 0.01;
-
-                // Make text face camera:
-                // this.entities.children[i].children[1].quaternion.copy(sceneManager.camera.quaternion);
-
-                // TODO: Figure out why the last label doesn't seem to exist every time. 
-                //       Maybe something on initialization.
-                // current_label.lookAt( sceneManager.camera.position );
             }
         }
     }
@@ -148,6 +115,7 @@ function Picker(scene) {
     }
 
 
+    /////////////////////////////////////////////////////////////////////////
     function entityColor(type) {
 
         const colors = {
@@ -231,11 +199,6 @@ function Picker(scene) {
         subscene.remove(all_entities);
         this.entities = built_entities;
         subscene.add(built_entities);
-
-        $( '#sentence-container ul li' ).each(function (i) {
-            let $item = $(this);
-            $item.delay(75*i).hide( "slide", { direction: "right"  }, 1000 );
-        });
 	}
 
     function addText( t, pos, group ) {
