@@ -12,46 +12,25 @@
 		</script>
 
 		<script src='/static/js/libs/three.min.js'></script>
-		<script src="/static/js/libs/Detector.js"></script> 
-		<script src="https://threejs.org/examples/js/controls/OrbitControls.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/tween.js/16.3.5/Tween.min.js"></script>
-		<script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+		<script src="/static/js/libs/Detector.js"></script>
+		<script src="/static/js/libs/Tween.min.js"></script>
+		
+		<script src="/static/js/libs/jquery-3.3.1.js"></script>
 		<script src='/static/js/libs/jquery-ui.js'></script>
-		<script src='https://cdn.rawgit.com/josephg/noisejs/master/perlin.js'></script>
-		<script type="text/javascript" src="/static/js/libs/dat.gui.min.js"></script>
-		<!-- <script type="text/javascript" src="/static/js/libs/stats.min.js"></script>	 -->
-		<script type="text/javascript" src="/static/js/libs/Chart.bundle.js"></script>
-		<script type="text/javascript" src="/static/js/libs/globe.js"></script>
-		 <script src='/static/js/libs/state-machine.js'></script>
 
-		<script src="/static/js/postprocessing/EffectComposer.js"></script>
-		<script src="/static/js/postprocessing/BloomPass.js"></script>
-		<script src="/static/js/shaders/VignetteShader.js"></script>
-		<script src="/static/js/shaders/CopyShader.js"></script>
-		<script src="/static/js/shaders/ConvolutionShader.js"></script>
-		<script src="/static/js/postprocessing/RenderPass.js"></script>
-		<script src="/static/js/postprocessing/ShaderPass.js"></script>
-
-		<script src="http://threejs.org/examples/js/renderers/SVGRenderer.js"></script>
-		<script src="http://threejs.org/examples/js/renderers/Projector.js"></script>
-		<script src="http://threejs.org/examples/js/loaders/SVGLoader.js"></script>
-
-		<script src="/static/js/libs/Toolbox.js"></script>
+		<script src='/static/js/libs/perlin.js'></script>
+		<script src="/static/js/libs/dat.gui.min.js"></script>
+		<script src="/static/js/libs/Chart.bundle.js"></script>
+		<script src='/static/js/libs/state-machine.js'></script>
 
 		<script src="/static/js/sceneSubjects/GeneralLights.js"></script>
-		<script src="/static/js/sceneSubjects/SceneSubject.js"></script>
 		<script src="/static/js/sceneSubjects/StarField.js"></script>
-		<script src="/static/js/sceneSubjects/FontTest.js"></script>
-		<script src="/static/js/sceneSubjects/SVGTest.js"></script>
 		<script src="/static/js/sceneSubjects/Picker.js"></script>
 		<script src="/static/js/sceneSubjects/Sentences.js"></script>
-		<script src="/static/js/sceneSubjects/WordOverTime.js"></script>
-		<script src="/static/js/sceneSubjects/People.js"></script>
+		<script src="/static/js/sceneSubjects/WordTime.js"></script>
 		<script src="/static/js/sceneSubjects/Globe.js"></script>
 		<script src="/static/js/sceneSubjects/Landing.js"></script>
 		<script src="/static/js/sceneSubjects/Thinking.js"></script>
-
-		<!-- <script src="fonts/PT_Sans_Caption_Regular.js"></script> -->
 	</head>
 
 	<body>
@@ -60,10 +39,12 @@
 				<span><img id="logo" src="/static/images/mediacloud-logo-white-2x.png"/>&nbsp;Discover:</span>
 				<span class="styled-select white rounded">
 					<select id="countries" name="countries">
-					  <option value="9139487" selected>United States</option>
-					  <option value="9319462">Denmark</option>
-					  <!-- <option value="9351677">Pakistan</option>
-					  <option value="9353688">Mexico</option> -->
+					  	<option value="9139487" selected>United States</option>
+					  	<option value="9319462">Denmark</option>
+					  	<!-- 
+							<option value="9351677">Pakistan</option>
+							<option value="9353688">Mexico</option> 
+						-->
 					</select>
 				</span>
 				<span id="explorer_link" style="float: right;"></span>
@@ -82,6 +63,9 @@
 				<ul id="list"></ul>
 			</div>
 			
+			<div><a href="#" id="back">Back</a></div>
+			<div><a href="#" id="forward">Forward</a></div>
+			
 			<div id="footer">
 				<div id="footer_metadata"><i>Click on an entity to explore...</i></div>
 
@@ -92,10 +76,8 @@
 			</div>
 		</div>
 
-		<script src="/static/js/MCEntity.js"></script>
 		<script src="/static/js/MCContext.js"></script>
 		<script src="/static/js/SceneManager.js"></script>    
 		<script src="/static/js/main.js"></script>
-
 	</body>
 </html>
