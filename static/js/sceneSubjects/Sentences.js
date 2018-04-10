@@ -58,6 +58,15 @@ function Sentences(scene) {
 
             // TODO: Selecting subset of data returned here but we should 
             //          be doing this in server.py or in the query itself
+
+            // FIXME: Sometimes we arrive here and get this error. Possible bug within server.py
+            // Sentences.js:61 Uncaught TypeError: Cannot read property 'slice' of undefined
+            //     at Object.success (Sentences.js:61)
+            //     at fire (jquery-3.3.1.js:3268)
+            //     at Object.fireWith [as resolveWith] (jquery-3.3.1.js:3398)
+            //     at done (jquery-3.3.1.js:9305)
+            //     at XMLHttpRequest.<anonymous> (jquery-3.3.1.js:9548)
+
             let subset = sentence_data['response']['docs'].slice(0, 9);
             
             $( '#sentence-container ul' ).empty();
