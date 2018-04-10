@@ -60,6 +60,18 @@ function SceneManager(canvas) {
 
     
     /////////////////////////////////////////////////////////////////////////
+    $( document ).on( "keypress", function ( e ) {
+        // console.log( e.which );
+        
+        // 'n' = Random Tween of Camera
+        if( e.which == 110 ) {
+            controls.adjustCamera();
+        }
+
+    });
+
+    
+    /////////////////////////////////////////////////////////////////////////
     $( '#forward' ).click( function( e ) {
         e.stopPropagation();
         e.preventDefault();
@@ -237,7 +249,6 @@ function SceneManager(canvas) {
         const farPlane = 1000; 
         const camera = new THREE.PerspectiveCamera(fieldOfView, aspectRatio, nearPlane, farPlane);
         camera.position.setZ(100);
-        // camera.position.setY(75);
 
         return camera;
     }
