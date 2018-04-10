@@ -80,9 +80,6 @@ function Thinking(scene) {
 
 	/////////////////////////////////////////////////////////////////////////
     this.init = function() {
-    	const subscene = new THREE.Object3D();
-    	subscene.name = "Thinking";
-    	scene.add(subscene);
+
     }
-    this.init();
 }
