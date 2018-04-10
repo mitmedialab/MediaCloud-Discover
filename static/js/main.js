@@ -7,7 +7,7 @@
 // DATA SETUP //
 var media_list = [];
 var data_list = dataFromServer;
-
+var fsm = null;
 
 // Set DEBUG Flag from URL (e.g. ...?debug=true)
 let DEBUG = false;
@@ -23,60 +23,88 @@ const MC_CONTEXT = new MCContext({"scene": "Picker"});
 
 // SCENE SETUP
 const canvas = document.getElementById("canvas");
-var sceneManager = new SceneManager(canvas);
 
-const fsm = new StateMachine({
-    
-    init: 'Picker',
-    
-    transitions: [
-      
-        { name: 'toPicker',         from: '*',              to: 'Picker'        },
-        { name: 'toWordOverTime',   from: '*',              to: 'WordOverTime'  },
-        { name: 'toSentences',      from: '*',              to: 'Sentences'     },
-        { name: 'toGlobe',          from: '*',              to: 'Globe'         },
-        { name: 'toLanding',        from: '*',              to: 'Landing'       },
+var manager = new THREE.LoadingManager();
 
-      // Forward
-        { name: 'forward',          from: 'Picker',         to: 'WordTime'      },
-        { name: 'forward',          from: 'WordTime',       to: 'Sentences'     },
-        { name: 'forward',          from: 'Sentences',      to: 'Globe'         },
-        { name: 'forward',          from: 'Globe',          to: 'Landing'       },
+// When all resources are loaded:
+manager.onLoad = function() {
+    sceneManager = new SceneManager(canvas);
+    fsm = createStateMachine();
+    bindEventListeners();
+    render();
+}
 
-    // Back
-        { name: 'back',             from: 'Landing',        to: 'Globe'         },
-        { name: 'back',             from: 'Globe',          to: 'Sentences'     },
-        { name: 'back',             from: 'Sentences',      to: 'WordTime'      },
-        { name: 'back',             from: 'WordTime',       to: 'Picker'        }
+let font = null;
+const loader = new THREE.FontLoader(manager);
+loader.load('/static/fonts/noto-sans.json', function(response) {
+  font = response;
+});
 
-    ],
 
-    methods: {
-        onTransition: function( lifecycle ) {
-            if( DEBUG ) {
-                console.log( `Scene Transition:\t\t${lifecycle.from} > ${lifecycle.to}` );
+function createStateMachine() {
+    const fsm = new StateMachine({
+        
+        init: 'Picker',
+        
+        transitions: [
+          
+            { name: 'toPicker',         from: '*',              to: 'Picker'        },
+            { name: 'toWordOverTime',   from: '*',              to: 'WordOverTime'  },
+            { name: 'toSentences',      from: '*',              to: 'Sentences'     },
+            { name: 'toGlobe',          from: '*',              to: 'Globe'         },
+            { name: 'toLanding',        from: '*',              to: 'Landing'       },
+
+          // Forward
+            { name: 'forward',          from: 'Picker',         to: 'WordTime'      },
+            { name: 'forward',          from: 'WordTime',       to: 'Sentences'     },
+            { name: 'forward',          from: 'Sentences',      to: 'Globe'         },
+            { name: 'forward',          from: 'Globe',          to: 'Landing'       },
+
+        // Back
+            { name: 'back',             from: 'Landing',        to: 'Globe'         },
+            { name: 'back',             from: 'Globe',          to: 'Sentences'     },
+            { name: 'back',             from: 'Sentences',      to: 'WordTime'      },
+            { name: 'back',             from: 'WordTime',       to: 'Picker'        }
+
+        ],
+
+        methods: {
+            onTransition: function( lifecycle ) {
+                if( DEBUG ) {
+                    console.log( `Scene Transition:\t\t${lifecycle.from} > ${lifecycle.to}` );
+                }
+
+                // Moving from/to the same state doesn't trigger on<TransitionName>
+                // Do it manually for when we are resetting the country selected.
+                if( lifecycle.to == 'Picker' && lifecycle.from == 'Picker' ) {
+                    let to = sceneManager.findSceneByName( lifecycle.to );
+                    to.enter();
+                    $( '#metadata' ).hide( "slide", { direction: "left"  }, 1000 );
+                }
+            },
+            onPicker: function( lifecycle ) {
+                transitionScenes( lifecycle );
+
+                // Hide The Metadata Panel on init or return to Picker
+                $( '#metadata' ).hide( "slide", { direction: "left"  }, 1000 );
+            },
+            onWordtime: function( lifecycle ) { 
+                transitionScenes( lifecycle );
+            },
+            onSentences: function( lifecycle ) { 
+                transitionScenes( lifecycle );
+            },
+            onGlobe: function( lifecycle ) { 
+                transitionScenes( lifecycle );
+            },
+            onLanding: function( lifecycle ) { 
+                transitionScenes( lifecycle );
             }
-        },
-        onPicker: function( lifecycle ) {
-            transitionScenes( lifecycle );
-
-            // Hide The Metadata Panel on init or return to Picker
-            $( '#metadata' ).hide( "slide", { direction: "left"  }, 1000 );
-        },
-        onWordtime: function( lifecycle ) { 
-            transitionScenes( lifecycle );
-        },
-        onSentences: function( lifecycle ) { 
-            transitionScenes( lifecycle );
-        },
-        onGlobe: function( lifecycle ) { 
-            transitionScenes( lifecycle );
-        },
-        onLanding: function( lifecycle ) { 
-            transitionScenes( lifecycle );
         }
-    }
-  });
+      });
+    return fsm;
+}
+
 
 function transitionScenes( lifecycle ) {
 
@@ -115,8 +143,6 @@ var controls = new function () {
     this.hideView = function() {
         let x = sceneManager.findSceneByName("StarField");
         x.toggleVisible();
-        // TODO: Ok, now that we know we can mute scenes, we probably should make our own SceneSubject class we
-        //       inheret functions from in the prototype that does all this necessary stuff so we'll just get it for free.
     }
 
     this.hidePicker = function() {
@@ -124,17 +150,11 @@ var controls = new function () {
         x.toggleVisible();
     }
 
-    // this.color0 = "#ffae23"; // CSS string
-    // this.color1 = [ 0, 128, 255 ]; // RGB array
-    // this.color2 = [ 0, 128, 255, 0.3 ]; // RGB with alpha
-    this.color3 = { h: 350, s: 0.9, v: 0.3 }; // Hue, saturation, value
-
     this.redraw = function () {
         
     };
 
     this.home = function() {
-        // View.home();
     }
 
     // RANDOM CAMERA TWEEN //
@@ -170,8 +190,6 @@ var controls = new function () {
 var gui = new dat.GUI();
 addControls(gui);
 gui.remember(controls);
-bindEventListeners();
-render();
 
 
 ////////////////////////////////////////////////////////////////////////////////////////
