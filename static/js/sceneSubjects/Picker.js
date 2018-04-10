@@ -10,33 +10,14 @@ function Picker(scene) {
     scene.add(subscene);
 
     this.entities = new THREE.Group();
-
+    var self = this;
 
     // CLICK TRIGGERS //
 
-    var self = this;
-
-    // Trigger Scene Shift From Picker to Next Scene //
-    $( "#explore_button" ).click(function( e ){
-        e.preventDefault();
-
-        self.fadeAllEntities();
-        let sentenceScene = sceneManager.findSceneByName( "Sentences" );
-
-        let wotScene = sceneManager.findSceneByName( "WordTime" );
-
-        // If user hasn't selected an entity yet, don't switch scenes //
-        if( MC_CONTEXT.userData === undefined ) {
-            
-            alert('Please choose an entity...');
-            return;
-
-        }
-    });
-
-
     /////////////////////////////////////////////////////////////////////////
     this.enter = function() {
+        const thinking = sceneManager.findSceneByName( "Thinking" );
+        thinking.off();
         self.init();
     }
 
@@ -65,7 +46,7 @@ function Picker(scene) {
     this.update = function(time) {
 
         if(controls.entityOrbitToggle) {
-            this.entities.rotation.y += 0.001;
+            // this.entities.rotation.y += 0.001;
         }
         
         if(controls.entitySpinToggle) {
@@ -76,6 +57,8 @@ function Picker(scene) {
 
                 current_planet.rotation.x += 0.01;
                 current_planet.rotation.y += 0.01;
+
+                current_label.lookAt( sceneManager.camera.position );
             }
         }
     }
@@ -85,6 +68,9 @@ function Picker(scene) {
     this.init = function() {
         subscene.visible = true;
     	this.loadEntities(MC_CONTEXT.country_id);
+        if( DEBUG ) {
+            console.log( `Loading Entities from ${MC_CONTEXT.country_id}...` );
+        }
     }
 
 
@@ -183,7 +169,14 @@ function Picker(scene) {
                 //          Can we do this asynchronously?
                 //          Maybe using Promises:
                 //          https://stackoverflow.com/questions/41753818/three-js-add-textures-with-promises
-                // addText( country_data[i].label, entity.position, entityGroup );
+                addText( country_data[i].label, entity.position, entityGroup );
+                
+                // FIXME:
+
+                // Need to detect CJK strings here and sub Noto CJK font 
+                //  for geometry generation
+                // addText( '义勇军进行曲', entity.position, entityGroup );
+
                 
                 built_entities.add( entityGroup );
     	    }
@@ -212,12 +205,12 @@ function Picker(scene) {
         textGeo.computeBoundingBox();
         // textGeo.computeVertexNormals();
         // textGeo.center();
-
+        let textMaterial = new THREE.MeshPhongMaterial( { color: 0xffffff, flatShading: true } );
         txtMesh = new THREE.Mesh( textGeo, textMaterial );
         txtMesh.position.x = pos.x + 10;
         txtMesh.position.y = pos.y;
         txtMesh.position.z = pos.z;
-        txtMesh.visible = false;
+        // txtMesh.visible = false;
         // mesh.castShadow = true;
         // mesh.receiveShadow = true;
 
