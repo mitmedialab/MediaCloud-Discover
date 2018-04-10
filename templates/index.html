@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<meta charset="UTF-8">
+		<meta http-equiv="content-type" content="text/html; charset=utf-8">
 		<title>Media Cloud Discover</title> 		
 		<link rel="stylesheet" href="/static/css/style.css"> 
 		<link href="https://fonts.googleapis.com/css?family=Roboto+Condensed" rel="stylesheet">
@@ -11,26 +11,27 @@
 			var dataFromServer = {{ data|tojson }};
 		</script>
 
-		<script src='/static/js/libs/three.min.js'></script>
-		<script src="/static/js/libs/Detector.js"></script>
-		<script src="/static/js/libs/Tween.min.js"></script>
+		<script type="text/javascript" src='/static/js/libs/three.min.js'></script>
+		<script type="text/javascript" src="/static/js/libs/Detector.js"></script>
+		<script type="text/javascript" src="/static/js/libs/Tween.min.js"></script>
 		
-		<script src="/static/js/libs/jquery-3.3.1.js"></script>
-		<script src='/static/js/libs/jquery-ui.js'></script>
+		<script type="text/javascript" src="/static/js/libs/jquery-3.3.1.js" charset="utf-8"></script>
+		<script type="text/javascript" src='/static/js/libs/jquery-ui.js' charset="utf-8"></script>
 
-		<script src='/static/js/libs/perlin.js'></script>
-		<script src="/static/js/libs/dat.gui.min.js"></script>
-		<script src="/static/js/libs/Chart.bundle.js"></script>
-		<script src='/static/js/libs/state-machine.js'></script>
+		<script type="text/javascript" src='/static/js/libs/perlin.js'></script>
+		<script type="text/javascript" src="/static/js/libs/dat.gui.min.js"></script>
+		<script type="text/javascript" src="/static/js/libs/Chart.bundle.js"></script>
+		<script type="text/javascript" src='/static/js/libs/state-machine.js'></script>
+		<script type="text/javascript" src='/static/js/libs/globe.js'></script>
 
-		<script src="/static/js/sceneSubjects/GeneralLights.js"></script>
-		<script src="/static/js/sceneSubjects/StarField.js"></script>
-		<script src="/static/js/sceneSubjects/Picker.js"></script>
-		<script src="/static/js/sceneSubjects/Sentences.js"></script>
-		<script src="/static/js/sceneSubjects/WordTime.js"></script>
-		<script src="/static/js/sceneSubjects/Globe.js"></script>
-		<script src="/static/js/sceneSubjects/Landing.js"></script>
-		<script src="/static/js/sceneSubjects/Thinking.js"></script>
+		<script type="text/javascript" src="/static/js/sceneSubjects/GeneralLights.js" charset="utf-8"></script>
+		<script type="text/javascript" src="/static/js/sceneSubjects/StarField.js" charset="utf-8"></script>
+		<script type="text/javascript" src="/static/js/sceneSubjects/Picker.js" charset="utf-8"></script>
+		<script type="text/javascript" src="/static/js/sceneSubjects/Sentences.js" charset="utf-8"></script>
+		<script type="text/javascript" src="/static/js/sceneSubjects/WordTime.js" charset="utf-8"></script>
+		<script type="text/javascript" src="/static/js/sceneSubjects/Globe.js" charset="utf-8"></script>
+		<script type="text/javascript" src="/static/js/sceneSubjects/Landing.js" charset="utf-8"></script>
+		<script type="text/javascript" src="/static/js/sceneSubjects/Thinking.js" charset="utf-8"></script>
 	</head>
 
 	<body>
@@ -41,6 +42,10 @@
 					<select id="countries" name="countries">
 					  	<option value="9139487" selected>United States</option>
 					  	<option value="9319462">Denmark</option>
+					  	<option value="38376339">Afghanistan</option>
+					  	<option value="34412056">Japan</option>
+					  	<option value="34412193">China</option>
+					  	<option value="34412118">India</option>
 					  	<!-- 
 							<option value="9351677">Pakistan</option>
 							<option value="9353688">Mexico</option> 
@@ -52,6 +57,7 @@
 
 			<!-- Main THREE.js Canvas -->
 			<canvas id="canvas" style="z-index: 10;"></canvas>
+			<div id="canvas_text" style="z-index: 11;"></div>
 
 			<div id="globe-container"></div>
 
@@ -76,8 +82,8 @@
 			<div id="landing"></div>
 		</div>
 
-		<script src="/static/js/MCContext.js"></script>
-		<script src="/static/js/SceneManager.js"></script>    
-		<script src="/static/js/main.js"></script>
+		<script type="text/javascript" src="/static/js/MCContext.js" charset="utf-8"></script>
+		<script type="text/javascript" src="/static/js/SceneManager.js" charset="utf-8"></script>    
+		<script type="text/javascript" src="/static/js/main.js" charset="utf-8"></script>
 	</body>
 </html>
