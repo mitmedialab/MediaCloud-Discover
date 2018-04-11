@@ -22,7 +22,7 @@ function SceneManager(canvas) {
     let clock = new THREE.Clock();
     
     this.scene = buildScene();
-    const renderer = buildRender(screenDimensions);
+    this.renderer = buildRender(screenDimensions);
     this.camera = buildCamera(screenDimensions);
     
     // So that we can pin things to the camera's location in the scene
@@ -37,9 +37,9 @@ function SceneManager(canvas) {
     // OBJECT SELECTION / RAYCASTING //
     var raycaster, mouse = { x : 0, y : 0 };
     raycaster = new THREE.Raycaster();
-    renderer.domElement.camera = this.camera;
-    renderer.domElement.scene = this.scene;
-    renderer.domElement.addEventListener( 'click', raycast, false );
+    this.renderer.domElement.camera = this.camera;
+    this.renderer.domElement.scene = this.scene;
+    this.renderer.domElement.addEventListener( 'click', raycast, false );
 
 
     /////////////////////////////////////////////////////////////////////////
@@ -300,7 +300,7 @@ function SceneManager(canvas) {
         // renderer.setRenderTarget( null );
         // renderer.clear();
         
-        renderer.render(this.scene, this.camera);
+        this.renderer.render(this.scene, this.camera);
         // composer.render();
 
         // renderer.shadowMap.enabled = false;
@@ -321,6 +321,6 @@ function SceneManager(canvas) {
         this.camera.aspect = width / height;
         this.camera.updateProjectionMatrix();
         
-        renderer.setSize(width, height);
+        this.renderer.setSize(width, height);
     }
 }
