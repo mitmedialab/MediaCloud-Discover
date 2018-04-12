@@ -11,6 +11,7 @@ function Picker(scene) {
 
     this.entities = new THREE.Group();
     var self = this;
+    let currentSelected = MC_CONTEXT.country_id;
 
     // CLICK TRIGGERS //
 
@@ -25,6 +26,9 @@ function Picker(scene) {
     /////////////////////////////////////////////////////////////////////////
     this.exit = function() {
 
+        // Tween back to original camera position for 3D location dependent
+        // visualization elements
+        returnToCameraOrigin();
         this.toggleVisible();
     }
 
@@ -98,6 +102,24 @@ function Picker(scene) {
                 this.fadeEntity( entities[key].children[0] );
             }
         }
+    }
+
+
+    function returnToCameraOrigin() {
+
+        var t = new TWEEN.Tween( sceneManager.camera.position ).to( {
+                                 x: 0,
+                                 y: 0,
+                                 z: 100
+                    }, 3000 )
+                    .easing( TWEEN.Easing.Quartic.InOut)
+                        .onUpdate(function(){
+                            sceneManager.camera.lookAt( new THREE.Vector3(0, 0, 0) );
+                        })
+                        .onComplete(function(){
+                            // no-op
+                        });
+        t.start();
     }
 
 
@@ -207,7 +229,7 @@ function Picker(scene) {
 
         var textGeo = new THREE.TextGeometry( t, {
             font: font,
-            size: 2,
+            size: 1.5,
             height: 0,
             curveSegments: 12,
         });
