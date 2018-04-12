@@ -448,7 +448,8 @@ function Globe( scene ) {
         }
         else
         {
-            const globe_image = '/static/images/world.jpg';
+            // const globe_image = '/static/images/world.jpg';
+            const globe_image = '/static/images/world_night.jpg';
             const container = document.getElementById('globe-container');
             const thinking = sceneManager.findSceneByName( "Thinking" );
             thinking.on();
