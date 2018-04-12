@@ -225,8 +225,6 @@ function Globe( scene ) {
         } else {
           this._baseGeometry = subgeo;
         }
-
-        console.log( subgeo );
       };
 
       function createPoints() {
@@ -258,8 +256,6 @@ function Globe( scene ) {
       }
 
       function addPoint(lat, lng, size, color, subgeo) {
-
-        console.log( `${lat} : ${lng} - Size: ${size}, Color: ${color}` );
 
         var phi = (90 - lat) * Math.PI / 180;
         var theta = (180 - lng) * Math.PI / 180;
