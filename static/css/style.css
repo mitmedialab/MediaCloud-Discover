@@ -66,8 +66,18 @@ div#content {
   font-size: 14pt;
   margin:0 0 10px 0;
   padding: 10px;
-  background-color: rgba( 255, 255, 255, 0.6 );
+  background-color: rgba( 0, 0, 0, 0.7 );
+  color: rgba( 200, 200, 200, 1.0 );
   width: 100%;
+}
+
+.sentence-metadata {
+  font-size: 10px;
+  color: #93C2FF;
+}
+
+#sentence-container li a {
+  color: white;
 }
 
 #landing {
@@ -87,7 +97,7 @@ div#content {
 #metadata {
   background-color: rgba(0, 0, 0, 0.7); 
   color: #FFF; 
-  width: 30%;
+  width: 25%;
   height: 80%;
   margin: 10px;
   border: 10px;

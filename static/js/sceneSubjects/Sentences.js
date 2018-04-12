@@ -9,9 +9,11 @@ function Sentences(scene) {
     subscene.name = "Sentences";
     scene.add(subscene);
 
+    const sentenceCountLimit = 8;
+
     /////////////////////////////////////////////////////////////////////////
     this.update = function(time) {
-
+        // nothing to update in render loop
     }
 
 
@@ -39,6 +41,7 @@ function Sentences(scene) {
     }
 
 
+    /////////////////////////////////////////////////////////////////////
     this.exit = function() {
 
         $( '#sentence-container ul li' ).each(function (i) {
@@ -67,7 +70,7 @@ function Sentences(scene) {
             //     at done (jquery-3.3.1.js:9305)
             //     at XMLHttpRequest.<anonymous> (jquery-3.3.1.js:9548)
 
-            let subset = sentence_data['response']['docs'].slice(0, 9);
+            const subset = sentence_data['response']['docs'].slice(0, sentenceCountLimit);
             
             $( '#sentence-container ul' ).empty();
 
@@ -75,7 +78,7 @@ function Sentences(scene) {
             $.each( subset, function( key, val ) {
                 $( '#sentence-container ul' ).append(
                     $( `<li id=${key}>` ).text( `“${val['sentence']}”` )
-                    .append(`<br><span style="font-size: 10px;">
+                    .append(`<br><span class="sentence-metadata">
                         ${val['medium_name']} - 
                         <a href="${val['url']}">
                         ${$.datepicker.formatDate('dd M yy', new Date(val['publish_date']))}
