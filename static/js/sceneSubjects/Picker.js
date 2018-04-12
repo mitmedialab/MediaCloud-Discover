@@ -105,12 +105,12 @@ function Picker(scene) {
     function entityColor(type) {
 
         const colors = {
-            'label': 0x072534,
-            'organization': 0x0ff274,
-            'media': 0x4512b0,
-            'person': 0xea76e3,
-            'location': 0x332402,
-            'word': 0x0044ee
+            'label': 0x1BBD01,
+            'organization': 0x17219E,
+            'media': 0xB20170,
+            'person': 0x020170,
+            'location': 0xE47D02,
+            'word': 0x6C0898
         };
 
         return colors[type];
@@ -147,8 +147,17 @@ function Picker(scene) {
                 } );
                 var entity = new THREE.Mesh(geometry, material);
 
-                // Add entity label as Object3D name for convenience
-                entity.name = country_data[i].label;
+                // Add entity label or term as Object3D name for convenience
+                if( country_data[i].type == 'media' ) {
+                    // Media name
+                    entity.name = country_data[i].name;
+                } else if( country_data[i].type == 'word' ) {
+                    // Word as Name
+                    entity.name = country_data[i].term;
+                } else {
+                    // All Other Entities
+                    entity.name = country_data[i].label;
+                }
                 
                 // Add all entity metadata fields to mesh userData
                 entity.userData = $.extend( entity.userData, country_data[i] );
@@ -169,7 +178,7 @@ function Picker(scene) {
                 //          Can we do this asynchronously?
                 //          Maybe using Promises:
                 //          https://stackoverflow.com/questions/41753818/three-js-add-textures-with-promises
-                addText( country_data[i].label, entity.position, entityGroup );
+                addText( entity.name, entity.position, entityGroup );
                 
                 // FIXME:
 
