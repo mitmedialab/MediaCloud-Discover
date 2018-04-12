@@ -129,6 +129,12 @@ def cache_data():
   for country_id, country_name in countries.items():
     data[country_id] = { 'name': country_name }
 
+    print('Getting Media for {0}...'.format(country_name))
+    data[country_id]['media'] = getBiggestMedia(country_id)
+
+    print('Getting Words for {0}...'.format(country_name))
+    data[country_id]['words'] = getTopWords(country_id)
+
     print('Getting NYT Labels for {0}...'.format(country_name))
     data[country_id]['labels'] = getEntities(country_id, NYT_LABELS_TAG_SET)
 
@@ -140,8 +146,6 @@ def cache_data():
 
     print('Getting People for {0}...'.format(country_name))
     data[country_id]['people'] = getEntities(country_id, CLIFF_PEOPLE_TAG_SET)
-
-    data[country_id]['media'] = []
 
   response = build_json_response(data)
   clear_cache()
@@ -194,7 +198,15 @@ def country_entities(country_id):
   random_places = c[country_id]['places'][:10]
   random_places = [addType(entity, 'location') for entity in random_places]
 
-  all_entities = random_labels + random_places + random_orgs + random_people
+  random.shuffle(c[country_id]['media'])
+  random_media = c[country_id]['media'][:10]
+  random_media = [addType(entity, 'media') for entity in random_media]
+
+  random.shuffle(c[country_id]['words'])
+  random_words = c[country_id]['words'][:10]
+  random_words = [addType(entity, 'word') for entity in random_words]
+
+  all_entities = random_labels + random_places + random_orgs + random_people + random_media + random_words
 
   # Need parameter for size of sample from each entity type (and default = [:10])
   # Return all_entities
@@ -297,7 +309,7 @@ def getTopWords(collection_id):
     num_words=100,
     sample_size=5000)
 
-  return jsonify(word)
+  return word
 
 
 # /////////////////////////////////////////////////////////////////////////
@@ -305,7 +317,7 @@ def getTopWords(collection_id):
 def getBiggestMedia(collection_id):
   media = mc_admin.mediaList(rows=10, tags_id=collection_id, sort='num_stories')
 
-  return jsonify(media)
+  return media
 
     # "name": "Daily Mail", 
     # "num_sentences_90": 42936.69, 
