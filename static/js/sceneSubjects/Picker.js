@@ -11,7 +11,8 @@ function Picker(scene) {
 
     this.entities = new THREE.Group();
     var self = this;
-    let currentSelected = MC_CONTEXT.country_id;
+    let countrySelected = MC_CONTEXT.country_id;
+    let countryLoaded = false;
 
     // CLICK TRIGGERS //
 
@@ -71,9 +72,16 @@ function Picker(scene) {
     /////////////////////////////////////////////////////////////////////////
     this.init = function() {
         subscene.visible = true;
-    	this.loadEntities(MC_CONTEXT.country_id);
-        if( DEBUG ) {
-            console.log( `Loading Entities from ${MC_CONTEXT.country_id}...` );
+
+        if(MC_CONTEXT.country_id == countrySelected && countryLoaded == true) {
+            subscene.visible = true;
+        } else {
+            subscene.visible = true;
+            this.loadEntities(MC_CONTEXT.country_id);
+            countryLoaded = true;
+            if( DEBUG ) {
+                console.log( `Loading Entities from ${MC_CONTEXT.country_id}...` );
+            }
         }
     }
 
@@ -124,22 +132,6 @@ function Picker(scene) {
 
 
     /////////////////////////////////////////////////////////////////////////
-    function entityColor(type) {
-
-        const colors = {
-            'label': 0x1BBD01,
-            'organization': 0x17219E,
-            'media': 0xB20170,
-            'person': 0x020170,
-            'location': 0xE47D02,
-            'word': 0x6C0898
-        };
-
-        return colors[type];
-    }
-
-
-    /////////////////////////////////////////////////////////////////////////
 	this.loadEntities = function( country_id ) {
 
         // Ensure scene is visible
@@ -150,7 +142,15 @@ function Picker(scene) {
         built_entities.name = 'entities';
         var all_entities = subscene.children[0];
 
+        if( DEBUG ) {
+            console.log(`Loading Entities for ${country_id}...`)
+        }
+
         $.getJSON( `/country_entities/${country_id}`, function( country_data ) {
+
+            if( DEBUG ) {
+                console.log( `Retrieved ${country_data.length} Entities...` );
+            }
 
             var geometry = new THREE.IcosahedronBufferGeometry(5, 0);
 
@@ -162,7 +162,7 @@ function Picker(scene) {
 
                 // Create Entity Geometry
                 var material = new THREE.MeshPhongMaterial( {
-                         color: entityColor(country_data[i].type),
+                         color: MC_CONTEXT.entityColor(country_data[i].type),
                          emissive: 0x072534,
                          side: THREE.DoubleSide,
                          flatShading: true
@@ -179,6 +179,10 @@ function Picker(scene) {
                 } else {
                     // All Other Entities
                     entity.name = country_data[i].label;
+                }
+
+                if( DEBUG ) {
+                    console.log( `Adding ${entity.name} to scene...` );
                 }
                 
                 // Add all entity metadata fields to mesh userData

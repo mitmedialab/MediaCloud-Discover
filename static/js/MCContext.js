@@ -11,7 +11,7 @@ function MCContext(data) {
 	this.userData;
 
 	// Defaulting Picker Entity Exploration to U.S. Collection
-	this.country_id = 9139487;
+	this.country_id = 34412193; // Switched to China during testing;  U.S. 9139487;
 
 	// For easy access to the camera
 	this.camera;
@@ -24,5 +24,23 @@ function MCContext(data) {
 		const ud = this.userData;
 		const url = `https://explorer.mediacloud.org/#/queries/search?q=[{%22label%22:%22${ud.label}%22,%22q%22:%22${ud.label}%22,%22color%22:%22%231f77b4%22,%22startDate%22:%222018-01-02%22,%22endDate%22:%222018-04-02%22,%22sources%22:[],%22collections%22:[${this.country_id}]}]`;
 		return url;
+	}
+
+	this.entityColor = function(type = undefined) {
+	
+		const colors = {
+            'label': 0x1BBD01,
+            'organization': 0x17219E,
+            'media': 0xB20170,
+            'person': 0x020170,
+            'location': 0xE47D02,
+            'word': 0x6C0898
+        };
+
+        if(type == undefined) {
+        	return colors[this.userData.type];
+        } else {
+        	return colors[type];
+        }
 	}
 }
