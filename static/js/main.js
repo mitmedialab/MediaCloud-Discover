@@ -86,7 +86,7 @@ function createStateMachine() {
                 transitionScenes( lifecycle );
 
                 // Hide The Metadata Panel on init or return to Picker
-                $( '#metadata' ).hide( "slide", { direction: "left"  }, 1000 );
+                $( '#metadata' ).hide( "slide", { direction: "left"  }, 300 );
             },
             onWordtime: function( lifecycle ) { 
                 transitionScenes( lifecycle );
