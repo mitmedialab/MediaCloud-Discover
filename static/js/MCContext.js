@@ -19,6 +19,7 @@ function MCContext(data) {
 	// Keeping track of what scene we are currently in
 	this.currentScene = data.scene;
 
+	/////////////////////////////////////////////////////////////////////
 	// TODO: Fill out links to Dashboard or Other
 	this.explorerLink = function() {
 		const ud = this.userData;
@@ -26,6 +27,8 @@ function MCContext(data) {
 		return url;
 	}
 
+
+	/////////////////////////////////////////////////////////////////////
 	this.entityColor = function(type = undefined) {
 	
 		const colors = {
@@ -43,4 +46,31 @@ function MCContext(data) {
         	return colors[type];
         }
 	}
+
+
+	/////////////////////////////////////////////////////////////////////
+	let tweenChain;
+
+	this.queueTween = function( t ) {
+		
+		if( tweenChain == undefined ) {
+			
+			tweenChain = t;
+			tweenChain.start();
+
+		} else {
+
+			if( tweenChain.isPlaying() ) {
+				
+				tweenChain.chain( t );
+				console.log( 'Tween Chained' );{}
+			
+			} else {
+
+				tweenChain = t;
+				tweenChain.start();
+			}
+		}
+	}
+
 }
