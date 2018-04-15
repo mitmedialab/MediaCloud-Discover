@@ -9,6 +9,12 @@ function WordTime(scene) {
     subscene.name = "WordTime";
     scene.add(subscene);
 
+    const opts = {
+        'exitDelay': 2000,
+        'distanceBehindCamera': 200,
+        'zOffset': -250
+    };
+
     let mesh = null;
     let grid = null;
     let group = new THREE.Group();
@@ -25,8 +31,20 @@ function WordTime(scene) {
 
 
     this.exit = function() {
-
-        scene.remove( group );
+        
+        // Slide behind camera out of view
+        var t = new TWEEN.Tween( group.position ).to( {
+                             y: -200,
+                             z: opts.distanceBehindCamera
+                }, opts.exitDelay )
+                .easing( TWEEN.Easing.Quartic.InOut)
+                    .onUpdate(function(){
+                        // sceneManager.camera.lookAt( group.position );
+                    })
+                    .onComplete(function(){
+                        scene.remove( group );
+                    });
+        t.start();
     }
 
 
@@ -39,7 +57,6 @@ function WordTime(scene) {
     /////////////////////////////////////////////////////////////////////
     this.loadWordCharts = function( entity ) {
 
-        const z_offset = -250
         scene.remove( group );
         group = new THREE.Group();
         const thinking = sceneManager.findSceneByName( "Thinking" );
@@ -49,24 +66,41 @@ function WordTime(scene) {
             
             let values = $.map( freq_data, function(value, key) { return value } );
             values = values.slice( 0, values.length-3 );
-            mesh = createLineChart( values, 0xffa700 );
+            mesh = createLineChart( values, MC_CONTEXT.entityColor() );
+            mesh.position.z = -3;
 
-            grid = new THREE.GridHelper( 700, 20, 0xffffff, 0xffffff );
-            grid.position.x += 360;
+            grid = new THREE.GridHelper( 1000, 20, 0xffffff, 0xffffff );
+            grid.position.x += 200;
             group.add( grid );
             group.add( mesh );
 
-            group.position.y = -100;
+            group.position.y = -200;
             group.position.x = -100;
-            group.position.z = z_offset;
+            group.position.z = opts.distanceBehindCamera;
 
-            group.rotation.x += 0.35;
+            group.rotation.x = 0.35;
             // group.rotation.y += 0.5;
 
             group.scale.set( 0.5, 0.5, 0.5 );
+
+            group.visible = false;
             
             thinking.off();
             scene.add( group );
+
+            // Slide from behind camera into view
+            var t = new TWEEN.Tween( group.position ).to( 
+                    {
+                        y: -100, z: opts.zOffset }, 2000 )
+                        
+                        .easing( TWEEN.Easing.Quartic.InOut)
+                        
+                        .onStart(function() {
+                            group.visible = true;
+                    }
+            );
+
+            MC_CONTEXT.queueTween( t );
         });
     }
 
@@ -76,7 +110,7 @@ function WordTime(scene) {
 
         let points = [];
         let x = 0, y = 0, x_offset = 20;
-        const extrudeSettings2 = { amount: 4, bevelEnabled: false };
+        const extrudeSettings2 = { amount: 100, bevelEnabled: false };
 
         // Map count values down to 0-100
         let out_min = 0;
