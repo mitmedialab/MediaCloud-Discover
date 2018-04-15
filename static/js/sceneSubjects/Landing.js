@@ -16,7 +16,7 @@ function Landing(scene) {
 
         // Slide in summary div
         $( '#landing' ).load( '/static/html/landing_content.html' );
-        $( '#landing' ).show( "slide", { direction: "right"  }, 300 );
+        $( '#landing' ).show( "slide", { direction: "right"  }, 1000 );
     }
 
 
