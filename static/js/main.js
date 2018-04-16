@@ -80,28 +80,49 @@ function createStateMachine() {
                     let to = sceneManager.findSceneByName( lifecycle.to );
                     to.enter();
                     $( '#metadata' ).hide( "slide", { direction: "left"  }, 1000 );
+                    $( '#forward' ).show();
                 }
             },
             onPicker: function( lifecycle ) {
+
+                $( '#md_body' ).load( '/static/html/picker_content.html' );
+                $( '#back' ).hide();
+                $( '#forward' ).show();
                 transitionScenes( lifecycle );
 
                 // Hide The Metadata Panel on init or return to Picker
                 $( '#metadata' ).hide( "slide", { direction: "left"  }, 300 );
+
             },
             onWordtime: function( lifecycle ) { 
+                
+                $( '#md_body' ).load( '/static/html/wordtime_content.html' );
+                $( '#back' ).show();
                 transitionScenes( lifecycle );
+
             },
             onSentences: function( lifecycle ) { 
+
+                $( '#md_body' ).load( '/static/html/sentences_content.html' );
                 transitionScenes( lifecycle );
+
             },
             onGlobe: function( lifecycle ) { 
+                
+                $( '#md_body' ).load( '/static/html/globe_content.html' );
+                $( '#forward' ).show();
                 transitionScenes( lifecycle );
+                
             },
             onLanding: function( lifecycle ) { 
+                
+                $( '#md_body' ).empty();
+                $( '#forward' ).hide();
                 transitionScenes( lifecycle );
             }
         }
       });
+
     return fsm;
 }
 
@@ -187,9 +208,9 @@ var controls = new function () {
 };
 
 
-var gui = new dat.GUI();
-addControls(gui);
-gui.remember(controls);
+// var gui = new dat.GUI();
+// addControls(gui);
+// gui.remember(controls);
 
 
 ////////////////////////////////////////////////////////////////////////////////////////
