@@ -48,6 +48,7 @@ function SceneManager(canvas) {
     });
 
 
+    /////////////////////////////////////////////////////////////////////////
     // Load Entities for New Selected Country //
     $("#countries").change(function(e) {
         e.stopPropagation();
@@ -58,10 +59,40 @@ function SceneManager(canvas) {
         fsm.toPicker();
     });
 
+
+    /////////////////////////////////////////////////////////////////////////
+    $( '#about' ).click( function( e ) {
+
+        console.log( 'About clicked...' );
+        $( '#metadata' ).hide( "slide", { direction: "left"  }, 500 );
+        $( '#about_pane' ).load( '/static/html/about_content.html' ).show();
+    });
+
+
+    /////////////////////////////////////////////////////////////////////////
+    $( '#md_close' ).click( function( e ) {
+
+        e.preventDefault();
+        e.stopPropagation();
+        $( '#metadata' ).hide( "slide", { direction: "left"  }, 500 );
+    });
+
     
     /////////////////////////////////////////////////////////////////////////
+    // Because of the dynamic content load, we need to bind an event to
+    // the document, such that it doesn't get wiped out on $.load(...)
+    /////////////////////////////////////////////////////////////////////////
+    $(document).on('click', "#about_close", function () {
+        
+        console.log( 'about close clicked' );
+        $('#about_pane').hide();
+        
+        return false;
+    });
+
+
+    /////////////////////////////////////////////////////////////////////////
     $( document ).on( "keypress", function ( e ) {
-        // console.log( e.which );
         
         // 'n' = Random Tween of Camera
         if( e.which == 110 ) {
@@ -106,7 +137,7 @@ function SceneManager(canvas) {
         if(intersects.length > 0 && intersects[0].object.name !== undefined) {
             var name = intersects[0].object.name;
             var type = intersects[0].object.userData.type;
-            $( "#md_header" ).html( `<h2 class="entity">${name}</h2><span class="type">(${type})</span><br><hr>` );
+            $( "#md_header" ).html( `<h2 class="entity">${name}</h2><div class="type">(${type})</div><br><hr>` );
 
             MC_CONTEXT.currentEntity = name;
             MC_CONTEXT.tag_sets_id = intersects[0].object.userData.tag_sets_id;

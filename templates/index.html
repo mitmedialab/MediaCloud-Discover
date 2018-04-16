@@ -13,7 +13,9 @@
 
 		<script type="text/javascript" src='/static/js/libs/three.min.js'></script>
 		<script type="text/javascript" src="/static/js/libs/Detector.js"></script>
-		<script type="text/javascript" src="/static/js/libs/Tween.min.js"></script>
+		<script type="text/javascript" src="/static/js/libs/Tween.js"></script>
+		<!-- <script type="text/javascript" src="/static/js/libs/Tween.min.js"></script> -->
+
 		
 		<script type="text/javascript" src="/static/js/libs/jquery-3.3.1.js" charset="utf-8"></script>
 		<script type="text/javascript" src='/static/js/libs/jquery-ui.js' charset="utf-8"></script>
@@ -36,6 +38,9 @@
 
 	<body>
 		<div id="content">
+			<div id="about_pane">
+				<div id="about_close" style="float: right;"><img id="about_close_icon" src="/static/images/close.png"></div>
+			</div>
 			<div id="header">
 				<span><img id="logo" src="/static/images/mediacloud-logo-white-2x.png"/>&nbsp;Discover:</span>
 				<span class="styled-select white rounded">
@@ -44,7 +49,7 @@
 					  	<option value="9319462">Denmark</option>
 					  	<option value="38376339">Afghanistan</option>
 					  	<option value="34412056">Japan</option>
-					  	<option value="34412193">China</option>
+					  	<option value="34412193" selected>China</option>
 					  	<option value="34412118">India</option>
 					  	<!-- 
 							<option value="9351677">Pakistan</option>
@@ -53,6 +58,7 @@
 					</select>
 				</span>
 				<span id="explorer_link" style="float: right;"></span>
+				<span id="about">About</span>
 			</div>
 
 			<!-- Main THREE.js Canvas -->
@@ -62,17 +68,17 @@
 			<div id="globe-container"></div>
 
 			<div id="metadata" style="display: none;">
-				<div id="md">
+
+					<div id="md_close" style="float: right;"><img id="md_close_icon" src="/static/images/close.png"></div>
 					<div id="md_header">
-						<h1>Metadata:</h1>
 					</div>
 					<div id="md_body">
 					</div>
 					<div id="md_footer">
 						<a href="#" id="back">Back</a>
-						<a href="#" id="forward">Forward</a>					
+						<a href="#" id="forward">Forward</a>				
 					</div>
-				</div>
+
 			</div>
 		
 			<div id="sentence-container">

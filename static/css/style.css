@@ -5,6 +5,8 @@ html, body {
     overflow: hidden;
     margin: 0;
     font-family: 'Roboto Condensed', sans-serif;
+    /* A loading animation would be good for the initial page load while the Picker builds */
+    /*background: #000000 url(/static/images/loading.gif) center center no-repeat;*/
 }
 
 div#content {
@@ -108,18 +110,26 @@ div#content {
 }
 
 #md_header, #md_body, #md_footer {
-  position: absolute;
+  position: relative;
   margin: 10px;
 }
 
+
 #md {
-  position: relative;
-  width: 100%;
-  height: 100%;
+  /*position: relative;*/
+  /*width: inherit;
+  height: inherit;*/
   
 }
 
+#md_close {
+  position: relative;
+  margin: 10px;
+  z-index: 10;
+}
+
 #md_footer {
+  position: absolute;
   bottom: 0;
   left: 0;
   width: 90%;
@@ -143,6 +153,34 @@ h2.entity {
     color: white;
 }*/
 
+span#about {
+  float: right; 
+  color: white; 
+  font-size: 14px; 
+  margin: 20px;
+  vertical-align: middle;
+}
+
+.about_show {
+  z-index: 12;
+  display: block;
+}
+
+#about_pane {
+  /*width: 90%;*/
+  height: 75%;
+  background-color: rgba(0, 0, 0, 0.9);
+  display: none;
+  color: #FFF; 
+  padding: 5px;
+  position: absolute;
+  top: 10%;
+  left: 10%;
+  right: 10%;
+  bottom: 10%;
+  padding: 50px;
+}
+
 #header {
   position: absolute; 
   max-height: 70px; 
@@ -150,7 +188,8 @@ h2.entity {
   background-color: rgba(0, 0, 0, 0.7); 
   color: #FFF; 
   font-size: 40px; 
-  padding: 10px;
+  /*padding: 5px;*/
+  /*max-width: 98%;*/
   line-height: 50px;
   display: inline-block;
 }
@@ -201,7 +240,22 @@ h2.entity {
 
 .white { background-color: #FFF; }
 
-.type { color: rgb(160, 160, 160); }
+#md_header .type { 
+  color: rgb(160, 160, 160);
+  /* 
+    rounded corners
+   */
+
+   /*
+    background color needs to be specified dynamically
+    */ 
+    padding:10px;
+    background-color: #FFF
+    color: #000;
+    -moz-border-radius:10px 10px 10px 10px;
+    border-radius:10px 10px 10px 10px;
+
+}
 
 svg path {
   shape-rendering: crispEdges;
