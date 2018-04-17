@@ -78,6 +78,10 @@ div#content {
   color: #93C2FF;
 }
 
+.sentence-metadata img {
+  vertical-align: middle;
+}
+
 #sentence-container li a {
   color: white;
 }

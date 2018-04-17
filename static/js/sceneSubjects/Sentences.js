@@ -50,6 +50,10 @@ function Sentences(scene) {
         });
     }
 
+    function googleFavIconUrl( domain ) {
+        return `https://www.google.com/s2/favicons?domain=${domain}`;
+    }
+
 
     /////////////////////////////////////////////////////////////////////////
     this.loadSentences = function( country_id, entity_id ) {
@@ -77,9 +81,9 @@ function Sentences(scene) {
             // Load all sentences into list items and hide
             $.each( subset, function( key, val ) {
                 $( '#sentence-container ul' ).append(
-                    $( `<li id=${key}>` ).text( `“${val['sentence']}”` )
+                    $( `<li id=${key}>` ).html( `“...${val['sentence']}...”` )
                     .append(`<br><span class="sentence-metadata">
-                        ${val['medium_name']} - 
+                        <img src="${ googleFavIconUrl(val['url']) }"> &nbsp;&nbsp; ${val['medium_name']} - 
                         <a href="${val['url']}">
                         ${$.datepicker.formatDate('dd M yy', new Date(val['publish_date']))}
                         </a></span>`)
