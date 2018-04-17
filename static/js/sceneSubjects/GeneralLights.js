@@ -4,21 +4,22 @@ function GeneralLights(scene) {
     subscene.name = "GeneralLights";
     scene.add(subscene);
 
-	const light = new THREE.PointLight("#ffffff", 1);
-    scene.add(light);
-    
- //    var plh = new THREE.PointLightHelper(light, 2);
-	// scene.add(plh);
+	// 3 THREE Lights
 
-	light2 = new THREE.PointLight( 0xffcc77, 1.0);
-	scene.add(light2);
-	light2.position.z = 30;
-	light2.position.x = 40;
-	light2.position.y = 20;
+	var lights = [];
+	lights[ 0 ] = new THREE.PointLight( 0xffffff, 1, 0 );
+	lights[ 1 ] = new THREE.PointLight( 0xffffff, 1, 0 );
+	lights[ 2 ] = new THREE.PointLight( 0xffffff, 1, 0 );
 
-	// var plh2 = new THREE.PointLightHelper(light2,1);
-	// scene.add(plh2);
-	
+	lights[ 0 ].position.set( 0, 200, 0 );
+	lights[ 1 ].position.set( 100, 200, 100 );
+	lights[ 2 ].position.set( - 100, - 200, - 100 );
+
+	scene.add( lights[ 0 ] );
+	scene.add( lights[ 1 ] );
+	scene.add( lights[ 2 ] );
+
+
 	/////////////////////////////////////////////////////////////////////////
 	this.init = function() {
 
