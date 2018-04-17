@@ -95,6 +95,8 @@ function Globe( scene ) {
 
         console.log( 'Creating Globe...' ); 
 
+        var barSize = 3.0;
+
         container.style.color = '#fff';
         container.style.font = '13px/20px Arial, sans-serif';
 
@@ -107,7 +109,7 @@ function Globe( scene ) {
 
         // scene = new THREE.Scene();
 
-        var geometry = new THREE.BoxGeometry(0.75, 0.75, 1);
+        var geometry = new THREE.BoxGeometry(barSize, barSize, 1);
         geometry.applyMatrix(new THREE.Matrix4().makeTranslation(0,0,-0.5));
 
         point = new THREE.Mesh(geometry);
@@ -425,11 +427,14 @@ function Globe( scene ) {
     }
 
 
+    /////////////////////////////////////////////////////////////////////
     this.exit = function() {
+      
       scene.remove(group);
     }
 
 
+    /////////////////////////////////////////////////////////////////////
     this.init = function() {
         // no-op; enter() creates globe
     }
@@ -471,7 +476,7 @@ function Globe( scene ) {
 
                     // Load globe with data points
                     for ( var i = 0; i < data.length; i ++ ) {
-                        globe.addData( data[i][1], {format: 'magnitude', name: data[i][0], 'sizeScale': 10} );
+                        globe.addData( data[i][1], {format: 'magnitude', name: data[i][0], 'sizeScale': 10.5} );
                     }
         
                     // Create Globe geometry
