@@ -461,7 +461,7 @@ function Globe( scene ) {
             thinking.on();
 
             // Call out to get Globe data points
-            $.getJSON( `getGlobeData/${MC_CONTEXT.country_id}`, function( data ) {
+            $.getJSON( `/getGlobeData/${MC_CONTEXT.country_id}`, function( data ) {
         
                 if( DEBUG ) {
                     console.log( 'Globe Data:' );
