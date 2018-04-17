@@ -69,13 +69,12 @@ div#content {
   margin:0 0 10px 0;
   padding: 10px;
   background-color: rgba( 0, 0, 0, 0.7 );
-  color: rgba( 200, 200, 200, 1.0 );
+  color: rgba( 255, 255, 255, 1.0 );
   width: 100%;
 }
 
 .sentence-metadata {
   font-size: 10px;
-  color: #93C2FF;
 }
 
 .sentence-metadata img {
@@ -83,7 +82,7 @@ div#content {
 }
 
 #sentence-container li a {
-  color: white;
+  color: rgba( 200, 200, 200, 1.0 );
 }
 
 #landing {
