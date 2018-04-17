@@ -285,7 +285,9 @@ svg path {
 
 #chart {
   position: absolute;
-  left: 250px;
+  left: 29%;
+  bottom: 100px;
+  max-height: 600px;
   padding: 0px;
   /*border: 1px solid blue;*/
   max-width: 66%;

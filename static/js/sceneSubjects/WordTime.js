@@ -22,29 +22,38 @@ function WordTime(scene) {
     /////////////////////////////////////////////////////////////////////
     this.enter = function() {
 
-        if(MC_CONTEXT.userData.type == 'word') {
-            this.loadWordCharts( MC_CONTEXT.userData.label );
-        } else {
-            this.loadWordCharts( MC_CONTEXT.userData.tags_id );
-        }
+        // INITIAL 3D IMPLEMENTATION:
+
+        // if(MC_CONTEXT.userData.type == 'word') {
+        //     this.loadWordCharts( MC_CONTEXT.userData.label );
+        // } else {
+        //     this.loadWordCharts( MC_CONTEXT.userData.tags_id );
+        // }
+
+        $( '#chart' ).show();
+        drawChart();
     }
 
 
     this.exit = function() {
         
+        // INITIAL 3D IMPLEMENTATION:
+
         // Slide behind camera out of view
-        var t = new TWEEN.Tween( group.position ).to( {
-                             y: -200,
-                             z: opts.distanceBehindCamera
-                }, opts.exitDelay )
-                .easing( TWEEN.Easing.Quartic.InOut)
-                    .onUpdate(function(){
-                        // sceneManager.camera.lookAt( group.position );
-                    })
-                    .onComplete(function(){
-                        scene.remove( group );
-                    });
-        t.start();
+        // var t = new TWEEN.Tween( group.position ).to( {
+        //                      y: -200,
+        //                      z: opts.distanceBehindCamera
+        //         }, opts.exitDelay )
+        //         .easing( TWEEN.Easing.Quartic.InOut)
+        //             .onUpdate(function(){
+        //                 // sceneManager.camera.lookAt( group.position );
+        //             })
+        //             .onComplete(function(){
+        //                 scene.remove( group );
+        //             });
+        // t.start();
+
+        $( '#chart' ).hide();
     }
 
 
@@ -156,9 +165,72 @@ function WordTime(scene) {
 
 	/////////////////////////////////////////////////////////////////////////
     this.init = function() {
-    	const subscene = new THREE.Object3D();
-    	subscene.name = "WordTime";
-    	scene.add(subscene);
+
+    }
+
+
+    /////////////////////////////////////////////////////////////////////////
+    function drawChart() {
+
+        var ctx = document.getElementById("chart");
+        console.log(ctx);
+        ctx.height = 125;
+
+        $.getJSON( `/word_over_time/${MC_CONTEXT.country_id}/${MC_CONTEXT.userData.tags_id}`, function( freq_data ) {
+
+            console.log( freq_data );
+            let values = $.map( freq_data, function(value, key) { return value } );
+            values = values.slice( 0, values.length-3 );
+
+            let labels = $.map( freq_data, function(value, key) { return $.datepicker.formatDate('dd M yy', new Date(key)) } );
+            labels = labels.slice( 0, values.length-3 );
+
+            var myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Mentions in the Last 30 Days',
+                        data: values,
+                        backgroundColor: [
+                            'rgba(255, 255, 255, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 255, 255,1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                display: false
+                            }
+                        }]
+                    },
+                    maintainAspectRatio: false,
+                    axes: {
+                        display: false
+                    },
+                    gridLines: {
+                        display: false
+                    },
+                    legend: {
+                        display: true
+                    },
+                    responsive: true,
+                    layout: {
+                        padding: {
+                            left: 0,
+                            right: 0,
+                            top: 0,
+                            bottom: 0
+                        }
+                    }
+                }
+            });
+        });
     }
 
 }
