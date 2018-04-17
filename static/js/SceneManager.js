@@ -134,18 +134,21 @@ function SceneManager(canvas) {
         //3. compute intersections
         var intersects = raycaster.intersectObjects( this.scene.children, true );
 
-        if(intersects.length > 0 && intersects[0].object.name !== undefined) {
+        if( intersects.length > 0 && intersects[0].object.name !== undefined ) {
+            
             var name = intersects[0].object.name;
             var type = intersects[0].object.userData.type;
-            $( "#md_header" ).html( `<h2 class="entity">${name}</h2><div class="type">(${type})</div><br><hr>` );
 
             MC_CONTEXT.currentEntity = name;
             MC_CONTEXT.tag_sets_id = intersects[0].object.userData.tag_sets_id;
             MC_CONTEXT.userData = intersects[0].object.userData;
             
+            $( "#md_header" ).html( `<h2 class="entity">${name}</h2><br><div class="type" style="background-color: ${MC_CONTEXT.entityColorHex()}">${type}</div><br><hr>` );
             $( '#metadata' ).show( "slide", { direction: "left"  }, 500 );
+        
         } else {
-            $( "#footer > #footer_metadata" ).html('<i>Click on an entity to explore...</i>');
+            
+            $( '#metadata' ).hide( "slide", { direction: "left"  }, 500 );
         }
 
         // TODO: Trigger load/display of context menu

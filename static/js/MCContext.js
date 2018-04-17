@@ -27,24 +27,32 @@ function MCContext(data) {
 		return url;
 	}
 
+	/////////////////////////////////////////////////////////////////////
+	const colors = {
+        'label': 0x1BBD01,
+        'organization': 0x17219E,
+        'media': 0xB20170,
+        'person': 0x020170,
+        'location': 0xE47D02,
+        'word': 0x6C0898
+    };
+
 
 	/////////////////////////////////////////////////////////////////////
 	this.entityColor = function(type = undefined) {
 	
-		const colors = {
-            'label': 0x1BBD01,
-            'organization': 0x17219E,
-            'media': 0xB20170,
-            'person': 0x020170,
-            'location': 0xE47D02,
-            'word': 0x6C0898
-        };
-
         if(type === undefined) {
         	return colors[this.userData.type];
         } else {
         	return colors[type];
         }
+	}
+
+
+	/////////////////////////////////////////////////////////////////////
+	this.entityColorHex = function() {
+    	
+    	return '#' + new THREE.Color(colors[this.userData.type]).getHexString();
 	}
 
 
