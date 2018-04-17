@@ -11,6 +11,7 @@ function Picker(scene) {
 
     this.entities = new THREE.Group();
     var self = this;
+    var built_entities;
     let countrySelected = MC_CONTEXT.country_id;
     let countryLoaded = false;
 
@@ -77,7 +78,17 @@ function Picker(scene) {
             subscene.visible = true;
         } else {
             subscene.visible = true;
-            this.loadEntities(MC_CONTEXT.country_id);
+
+            var self = this;
+
+            var promise = new Promise( function( resolve, reject ) {
+                self.loadEntities(MC_CONTEXT.country_id);
+            }).then( function() { 
+                if( DEBUG ) {
+                    console.log( 'Successfully Loaded Entities');
+                }
+            });
+
             countryLoaded = true;
             if( DEBUG ) {
                 console.log( `Loading Entities from ${MC_CONTEXT.country_id}...` );
@@ -106,20 +117,20 @@ function Picker(scene) {
         if( subscene.children[0] !== undefined ) {
             var entities = subscene.children[0].children;
             for( key in entities ) {
-                // console.log( entities[key] );
                 this.fadeEntity( entities[key].children[0] );
             }
         }
     }
 
 
+    /////////////////////////////////////////////////////////////////////////
     function returnToCameraOrigin() {
 
         var t = new TWEEN.Tween( sceneManager.camera.position ).to( {
                                  x: 0,
                                  y: 0,
                                  z: 100
-                    }, 3000 )
+                    }, 2500 )
                     .easing( TWEEN.Easing.Quartic.InOut)
                         .onUpdate(function(){
                             sceneManager.camera.lookAt( new THREE.Vector3(0, 0, 0) );
@@ -127,108 +138,129 @@ function Picker(scene) {
                         .onComplete(function(){
                             // no-op
                         });
-        t.start();
+        
+        MC_CONTEXT.queueTween( t );
     }
 
+    let materials = {};
+    ['word', 'media', 'label', 'organization', 'person', 'location'].forEach( function( type ) {
+        materials[type] = new THREE.MeshPhongMaterial( {
+                             color: MC_CONTEXT.entityColor( type ),
+                             side: THREE.DoubleSide,
+                             flatShading: true
+        } );
+    });
 
     /////////////////////////////////////////////////////////////////////////
 	this.loadEntities = function( country_id ) {
 
+        countrySelected = country_id;
+
         // Ensure scene is visible
         subscene.visible = true;
 
-        // Instantiate Entity Objects and Add to Entities Array
-        var built_entities = new THREE.Group();
-        built_entities.name = 'entities';
+        // Remove previous set of entities from scene
         var all_entities = subscene.children[0];
+        subscene.remove(all_entities);
+
+        // Instantiate Entity Objects and Add to Entities Array
+        built_entities = new THREE.Group();
+        built_entities.name = 'entities';
+        this.entities = built_entities;
+        subscene.add(built_entities);
 
         if( DEBUG ) {
             console.log(`Loading Entities for ${country_id}...`)
         }
 
-        $.getJSON( `/country_entities/${country_id}`, function( country_data ) {
-
-            if( DEBUG ) {
-                console.log( `Retrieved ${country_data.length} Entities...` );
-            }
-
-            var geometry = new THREE.IcosahedronBufferGeometry(5, 0);
-
-            // Create Entities For Each Collection Data Element
-    	    for(var i = 0; i < country_data.length; i++) {
-
-                // This Group Holds The Entity Geometry and Label
-                var entityGroup = new THREE.Group();
-
-                // Create Entity Geometry
-                var material = new THREE.MeshPhongMaterial( {
-                         color: MC_CONTEXT.entityColor(country_data[i].type),
-                         emissive: 0x072534,
-                         side: THREE.DoubleSide,
-                         flatShading: true
-                } );
-                var entity = new THREE.Mesh(geometry, material);
-
-                // Add entity label or term as Object3D name for convenience
-                if( country_data[i].type == 'media' ) {
-                    // Media name
-                    entity.name = country_data[i].name;
-                } else if( country_data[i].type == 'word' ) {
-                    // Word as Name
-                    entity.name = country_data[i].term;
-                } else {
-                    // All Other Entities
-                    entity.name = country_data[i].label;
-                }
-
-                if( DEBUG ) {
-                    console.log( `Adding ${entity.name} to scene...` );
-                }
-                
-                // Add all entity metadata fields to mesh userData
-                entity.userData = $.extend( entity.userData, country_data[i] );
-
-                // Randomize Initial Location //
-                entity.position.x = THREE.Math.randFloatSpread( 200 );
-                entity.position.y = THREE.Math.randFloatSpread( 200 );
-                entity.position.z = THREE.Math.randFloatSpread( 200 );
-
-                // Prepare for fade-out when removing; opacity stays at 1
-                entity.material.transparent = true;
-
-                // Build Entity Group //
-                entityGroup.add(entity);
-                
-                // FIXME: This takes an enormous amount of time, 
-                //          even loading the font separately.
-                //          Can we do this asynchronously?
-                //          Maybe using Promises:
-                //          https://stackoverflow.com/questions/41753818/three-js-add-textures-with-promises
-                addText( entity.name, entity.position, entityGroup );
-                
-                // FIXME:
-
-                // Need to detect CJK strings here and sub Noto CJK font 
-                //  for geometry generation
-                // addText( '义勇军进行曲', entity.position, entityGroup );
-
-                
-                built_entities.add( entityGroup );
-    	    }
-        });
-
-        // FIXME: There is a huge delay here and no transition fade.
-        //          Can we use Promises to wait until the fade of 
-        //          all the entities is done, and then add the new?
-        //          This has an example of animation in Promises:
-        //          https://marmelab.com/blog/2017/06/15/animate-you-world-with-threejs-and-tweenjs.html
-        // this.fadeAllEntities();
-
-        subscene.remove(all_entities);
-        this.entities = built_entities;
-        subscene.add(built_entities);
+        var promise = $.getJSON( `/country_entities/${country_id}` );
+        promise.done( processEntities );
 	}
 
+
+    function processEntities( country_data ) { 
+
+        if( DEBUG ) {
+            console.log( `Retrieved ${country_data.length} Entities...` );
+        }
+
+        const geometry = new THREE.IcosahedronBufferGeometry(5, 0);
+        let emptyGroup = new THREE.Group();
+
+        country_data.forEach( function( item ) {
+
+            // This Group Holds The Entity Geometry and Label
+            var entityGroup = emptyGroup.clone();
+            var entity = new THREE.Mesh( geometry, materials[item.type] );
+
+            // Add entity label or term as Object3D name for convenience
+            if( item.type == 'media' ) {
+                // Media name
+                entity.name = item.name;
+
+            } else if( item.type == 'word' ) {
+                // Word as Name
+                entity.name = item.term;
+
+            } else {
+                // All Other Entities
+                entity.name = item.label;
+            }
+
+            if( DEBUG ) {
+                console.log( `Adding ${entity.name} to scene...` );
+            }
+            
+            // Add all entity metadata fields to mesh userData
+            entity.userData = $.extend( entity.userData, item );
+
+            // Randomize Initial Location //
+            entity.position.x = THREE.Math.randFloatSpread( 200 );
+            entity.position.y = THREE.Math.randFloatSpread( 200 );
+            entity.position.z = THREE.Math.randFloatSpread( 200 );
+
+            // Prepare for fade-out when removing; opacity stays at 1
+            // entity.material.transparent = true;
+
+            // Build Entity Group //
+            entityGroup.add(entity);
+
+            // FIXME: Need to detect CJK strings here and sub Noto CJK font 
+            //  for geometry generation
+            // addText( '义勇军进行曲', entity.position, entityGroup );
+
+            var p = new Promise( ( resolve, reject ) => {
+
+                const shortenedName = nGramTrim( entity.name, 3 );
+                addText( shortenedName, entity.position, entityGroup );
+                resolve( entityGroup );
+            });
+
+            p.then( function( entityGroup ) { 
+
+                built_entities.add( entityGroup );
+                if( DEBUG ) {
+                    console.log( `Added ${entityGroup.children[0].name}.` );
+                }
+
+            }).catch( function( e ) { 
+                if( DEBUG ) {
+                    console.log( 'Error Adding Text' ); 
+                }
+            });
+
+            return p;
+        });
+    }
+
+    /////////////////////////////////////////////////////////////////////////
+    function nGramTrim( s, n = 3 ) {
+
+        return s.split( /\s+/ ).slice( 0, n ).join( " " );
+    }
+
+
+    /////////////////////////////////////////////////////////////////////////
     function addText( t, pos, group ) {
 
         var textGeo = new THREE.TextGeometry( t, {
@@ -263,57 +295,4 @@ function Picker(scene) {
       return color;
     }
 
-
-    /////////////////////////////////////////////////////////////////////////
-    function drawChart() {
-
-        var ctx = document.getElementById("chart");
-        ctx.height = 125;
-
-        var myChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: ["1/15", "1/30", "2/15", "2/30", "3/15", "3/30"],
-                datasets: [{
-                    label: 'Mentions in the Last Two Weeks',
-                    data: [12, 19, 3, 5, 2, 3],
-                    backgroundColor: [
-                        'rgba(255, 255, 255, 0.2)'
-                    ],
-                    borderColor: [
-                        'rgba(255, 255, 255,1)'
-                    ],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    yAxes: [{
-                        ticks: {
-                            display: false
-                        }
-                    }]
-                },
-                maintainAspectRatio: false,
-                axes: {
-                    display: false
-                },
-                gridLines: {
-                    display: false
-                },
-                legend: {
-                    display: true
-                },
-                responsive: true,
-                layout: {
-                    padding: {
-                        left: 0,
-                        right: 0,
-                        top: 0,
-                        bottom: 0
-                    }
-                }
-            }
-        });
-    }
 }
