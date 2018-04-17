@@ -40,7 +40,7 @@ function MCContext(data) {
             'word': 0x6C0898
         };
 
-        if(type == undefined) {
+        if(type === undefined) {
         	return colors[this.userData.type];
         } else {
         	return colors[type];

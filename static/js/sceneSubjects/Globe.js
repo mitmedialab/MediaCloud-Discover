@@ -20,9 +20,10 @@ function Globe( scene ) {
         group.scale.set( opts.globeScale, opts.globeScale, opts.globeScale );
 
         var colorFn = opts.colorFn || function(x) {
-            var c = new THREE.Color();
-            c.setHSL( ( 0.6 - ( x * 0.5 ) ), 1.0, 0.5 );
-            return c;
+            // var c = new THREE.Color();
+            // c.setHSL( ( 0.6 - ( x * 0.5 ) ), 1.0, 0.5 );
+            // return c;
+            return new THREE.Color( MC_CONTEXT.entityColor() );
         };
       
         var imgDir = opts.imgDir || '/globe/';
