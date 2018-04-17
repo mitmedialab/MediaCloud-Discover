@@ -176,6 +176,9 @@ function WordTime(scene) {
         console.log(ctx);
         ctx.height = 125;
 
+        const thinking = sceneManager.findSceneByName( "Thinking" );
+        thinking.on();
+
         $.getJSON( `/word_over_time/${MC_CONTEXT.country_id}/${MC_CONTEXT.userData.tags_id}`, function( freq_data ) {
 
             console.log( freq_data );
@@ -230,6 +233,8 @@ function WordTime(scene) {
                     }
                 }
             });
+
+            thinking.off();
         });
     }
 
