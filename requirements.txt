@@ -1,0 +1,5 @@
+Flask==0.12.2
+Flask-Cache==0.13.1
+mediacloud==2.52.0
+numpy==1.14.2
+gunicorn==19.7.1

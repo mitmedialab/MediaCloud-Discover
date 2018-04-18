@@ -1,2 +1,4 @@
-/cache
-/txt
+cache
+txt
+venv
+*.pyc
