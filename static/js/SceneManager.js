@@ -121,6 +121,18 @@ function SceneManager(canvas) {
 
 
     /////////////////////////////////////////////////////////////////////////
+    this.addChooseEvent = function() {
+        this.renderer.domElement.addEventListener( 'click', raycast, false );
+    }
+
+
+    /////////////////////////////////////////////////////////////////////////
+    this.removeChooseEvent = function() {
+        this.renderer.domElement.removeEventListener( 'click', raycast, false )
+    }
+
+
+    /////////////////////////////////////////////////////////////////////////
     function raycast(e) {
 
         // We'll need to do a conditional for what scene we're on here to determine how these clicks work.
@@ -136,7 +148,10 @@ function SceneManager(canvas) {
         //3. compute intersections
         var intersects = raycaster.intersectObjects( this.scene.children, true );
 
-        console.log(intersects);
+        if( DEBUG ) {
+            console.log( 'Intersecting Objects On Click:')
+            console.log(intersects);
+        }
 
         if( intersects.length > 0 && intersects[0].object.name !== undefined && intersects[0].object.name != "" ) {
 
@@ -146,6 +161,8 @@ function SceneManager(canvas) {
             MC_CONTEXT.currentEntity = name;
             MC_CONTEXT.tag_sets_id = intersects[0].object.userData.tag_sets_id;
             MC_CONTEXT.userData = intersects[0].object.userData;
+
+            console.log(intersects[0].object.userData);
             
             $( "#md_header" ).html( `<h2 class="entity">${name}</h2><br><div class="type" style="background-color: ${MC_CONTEXT.entityColorHex()}">${type}</div><br><hr>` );
             $( '#metadata' ).show( "slide", { direction: "left"  }, 500 );

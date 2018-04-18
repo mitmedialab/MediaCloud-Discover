@@ -15,7 +15,7 @@ function Landing(scene) {
     this.enter = function() {
 
         // Slide in summary div
-        $( '#landing' ).load( '/static/html/landing_content.html' );
+        $( '#landing' ).load( '/html/landing_content.html');
         $( '#landing' ).show( "slide", { direction: "right"  }, 1000 );
     }
 

@@ -53,6 +53,7 @@ function Picker(scene) {
 
         if(controls.entityOrbitToggle) {
             // this.entities.rotation.y += 0.001;
+            sceneManager.camera.rotation.y += 0.0005;
         }
         
         if(controls.entitySpinToggle) {
@@ -129,7 +130,7 @@ function Picker(scene) {
         var t = new TWEEN.Tween( sceneManager.camera.position ).to( {
                                  x: 0,
                                  y: 0,
-                                 z: 100
+                                 z: 0
                     }, 2500 )
                     .easing( TWEEN.Easing.Quartic.InOut)
                         .onUpdate(function(){
@@ -215,9 +216,9 @@ function Picker(scene) {
             entity.userData = $.extend( entity.userData, item );
 
             // Randomize Initial Location //
-            entity.position.x = THREE.Math.randFloatSpread( 200 );
-            entity.position.y = THREE.Math.randFloatSpread( 200 );
-            entity.position.z = THREE.Math.randFloatSpread( 200 );
+            entity.position.x = THREE.Math.randFloatSpread( 300 );
+            entity.position.y = THREE.Math.randFloatSpread( 100 );
+            entity.position.z = THREE.Math.randFloatSpread( 300 );
 
             // Prepare for fade-out when removing; opacity stays at 1
             // entity.material.transparent = true;

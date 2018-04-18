@@ -61,6 +61,11 @@ def root():
   return render_template('index.html', data='9139487')
 
 
+@app.route('/<int:country_id>/<int:entity_id>')
+def entity_select(country_id, entity_id):
+  return render_template('index.html', data={'country_id': country_id, 'entity_id': entity_id})
+
+
 # /////////////////////////////////////////////////////////////////////////
 @app.route('/word_over_time/<int:collection_id>/<entity>')
 def wordOverTime( collection_id, entity ):
@@ -358,9 +363,8 @@ def getGlobeData(collection_id):
 
 
 # /////////////////////////////////////////////////////////////////////////
-@app.route('/projects/<path:name>')
+@app.route('/html/<path:name>')
 def projects(name):
-	print 'Name: {0}'.format(name)
 	return render_template('/{0}'.format(name))
 
 

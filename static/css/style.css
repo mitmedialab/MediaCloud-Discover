@@ -24,8 +24,10 @@ div#content {
   bottom: 300px;
   right: 440px;*/
   vertical-align: bottom;
-  color: white;
+  color: black;
   float: left;
+  padding: 10px;
+  background-color: white;
 }
 
 #forward {
@@ -34,8 +36,16 @@ div#content {
   right: 140px;
   z-index: 11;*/
   vertical-align: bottom;
-  color: white;
+  color: black;
   float: right;
+  padding: 10px;
+  background-color: white;
+}
+
+#landing_explore {
+  color: black;
+  padding: 10px;
+  background-color: white;
 }
 
 #sentence-container {
@@ -216,33 +226,6 @@ span#about {
   width: 90%;
   background-color: transparent;
 }
-
-.styled-select {
-  no-repeat 96% 0;
-  height: 29px;
-  overflow: hidden;
-  width: 240px;
-}
-
-.styled-select select {
-   background: url(http://i62.tinypic.com/15xvbd5.png) no-repeat 96% 0;
-   background: transparent;
-   border: none;
-   font-size: 14px;
-   height: 29px;
-   padding: 5px; /* If you add too much padding here, the options won't show in IE */
-   width: 268px;
-}
-
-.rounded {
-   -webkit-border-radius: 10px;
-   -moz-border-radius: 10px;
-   border-radius: 10px;
-}
-
-.black { background-color: #000; }
-
-.white { background-color: #FFF; }
 
 #md_header .type { 
     padding: 8px;

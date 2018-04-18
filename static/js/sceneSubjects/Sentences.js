@@ -82,7 +82,7 @@ function Sentences(scene) {
             $.each( subset, function( key, val ) {
                 $( '#sentence-container ul' ).append(
                     $( `<li id=${key}>` ).html( `“...${val['sentence']}...”` )
-                    .append(`<br><span class="sentence-metadata">
+                    .append(`<br><span class="sentence-metadata" style="color: ${MC_CONTEXT.entityColorHex()};">
                         <img src="${ googleFavIconUrl(val['url']) }"> &nbsp;&nbsp; ${val['medium_name']} - 
                         <a href="${val['url']}">
                         ${$.datepicker.formatDate('dd M yy', new Date(val['publish_date']))}

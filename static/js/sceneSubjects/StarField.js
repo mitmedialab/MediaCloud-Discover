@@ -49,7 +49,7 @@ function StarField(scene) {
 	this.update = function(time) {
 
 		if(controls.starfieldOrbitToggle) {
-			particleSystem.rotation.y += 0.001;
+			particleSystem.rotation.y += 0.0002;
 		}
 	}
 }
