@@ -41,6 +41,8 @@ function SceneManager(canvas) {
     this.renderer.domElement.scene = this.scene;
     this.renderer.domElement.addEventListener( 'click', raycast, false );
 
+    $( '#chart' ).hide();
+
 
     /////////////////////////////////////////////////////////////////////////
     $( '#logo' ).click( function( e ) {
@@ -134,8 +136,10 @@ function SceneManager(canvas) {
         //3. compute intersections
         var intersects = raycaster.intersectObjects( this.scene.children, true );
 
-        if( intersects.length > 0 && intersects[0].object.name !== undefined ) {
-            
+        console.log(intersects);
+
+        if( intersects.length > 0 && intersects[0].object.name !== undefined && intersects[0].object.name != "" ) {
+
             var name = intersects[0].object.name;
             var type = intersects[0].object.userData.type;
 
@@ -282,7 +286,7 @@ function SceneManager(canvas) {
         const nearPlane = 1;
         const farPlane = 1000; 
         const camera = new THREE.PerspectiveCamera(fieldOfView, aspectRatio, nearPlane, farPlane);
-        camera.position.setZ(100);
+        // camera.position.setZ(100);
 
         return camera;
     }
