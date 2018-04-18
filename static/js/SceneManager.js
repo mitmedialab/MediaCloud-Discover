@@ -162,7 +162,10 @@ function SceneManager(canvas) {
             MC_CONTEXT.tag_sets_id = intersects[0].object.userData.tag_sets_id;
             MC_CONTEXT.userData = intersects[0].object.userData;
 
-            console.log(intersects[0].object.userData);
+            if( DEBUG ) {
+                console.log('Selected Entity:');
+                console.log(intersects[0].object.userData);
+            }
             
             $( "#md_header" ).html( `<h2 class="entity">${name}</h2><br><div class="type" style="background-color: ${MC_CONTEXT.entityColorHex()}">${type}</div><br><hr>` );
             $( '#metadata' ).show( "slide", { direction: "left"  }, 500 );
