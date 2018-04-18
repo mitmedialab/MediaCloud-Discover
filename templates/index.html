@@ -14,8 +14,6 @@
 		<script type="text/javascript" src='/static/js/libs/three.min.js'></script>
 		<script type="text/javascript" src="/static/js/libs/Detector.js"></script>
 		<script type="text/javascript" src="/static/js/libs/Tween.js"></script>
-		<!-- <script type="text/javascript" src="/static/js/libs/Tween.min.js"></script> -->
-
 		
 		<script type="text/javascript" src="/static/js/libs/jquery-3.3.1.js" charset="utf-8"></script>
 		<script type="text/javascript" src='/static/js/libs/jquery-ui.js' charset="utf-8"></script>
@@ -43,24 +41,18 @@
 			</div>
 			<div id="header">
 				<span><img id="logo" src="/static/images/mediacloud-logo-white-2x.png"/>&nbsp;Discover:</span>
-				<span class="styled-select white rounded">
+				<span>
 					<select id="countries" name="countries">
-					  	<option value="9139487" selected>United States</option>
+						<option value="34412193" selected>China</option>
+					  	<option value="9139487">United States</option>
 					  	<option value="9319462">Denmark</option>
-					  	<option value="38376339">Afghanistan</option>
-					  	<option value="34412056">Japan</option>
-					  	<option value="34412193" selected>China</option>
-					  	<option value="34412118">India</option>
-					  	<!-- 
-							<option value="9351677">Pakistan</option>
-							<option value="9353688">Mexico</option> 
-						-->
 					</select>
 				</span>
 				<span id="explorer_link" style="float: right;"></span>
 				<span id="about">About</span>
 			</div>
 
+			<h2 id="scene_title">Scene Title</h2>
 			<canvas id="chart"></canvas>
 
 			<!-- Main THREE.js Canvas -->
