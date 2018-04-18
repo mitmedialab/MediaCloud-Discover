@@ -12,13 +12,13 @@ import copy
 import random
 import numpy as np
 
-mc = None
 mc_admin = None
 data = {}
 app = Flask(__name__)
 api_key = environ.get('MC_API_KEY')
 logging.basicConfig(level=logging.DEBUG)
 
+logger = logging.getLogger(__name__)
 
 # Flask-Cache - filesystem
 
@@ -39,17 +39,12 @@ COUNTRY_ALPHA_TO_LAT_LONG = {'XKX': {'lat': 42.60, 'long': 20.9 }, 'SSD': {'lat'
 
 # /////////////////////////////////////////////////////////////////////////
 def init():
-   global mc
    global mc_admin
    global data
    
-   mc = mediacloud.api.MediaCloud(api_key)
    mc_admin = mediacloud.api.AdminMediaCloud(api_key)
-   print('Media Cloud Interface:')
-   print(api_key)
-   print(mc)
-   print('Media Cloud Admin Interface:')
-   print(mc_admin)
+   logger.info('Media Cloud Interface created')
+   logger.debug(api_key)
 
 
 # /////////////////////////////////////////////////////////////////////////
@@ -76,14 +71,14 @@ def wordOverTime( collection_id, entity ):
   start_date = datetime.date.today()-datetime.timedelta(last_n_days)
   end_date = datetime.date.today()-datetime.timedelta(1)  # yesterday
 
-  fq = mc.publish_date_query(start_date, end_date)
+  fq = mc_admin.publish_date_query(start_date, end_date)
 
   start_datetime = datetime.datetime.strftime(start_date, '%Y-%m-%d')
   end_datetime = datetime.datetime.strftime(end_date, '%Y-%m-%d')
 
   if(entity.isdigit()):
   
-    sentences_over_time = mc.sentenceCount('*', 
+    sentences_over_time = mc_admin.sentenceCount('*', 
       [
         'tags_id_media:{0}'.format(str(collection_id)),
         'tags_id_stories:{0}'.format(entity),
@@ -94,7 +89,7 @@ def wordOverTime( collection_id, entity ):
       split_end_date=end_datetime)['split']
 
   else:
-    sentences_over_time = mc.sentenceCount(entity, 
+    sentences_over_time = mc_admin.sentenceCount(entity, 
       [
         'tags_id_media:({0})'.format(str(collection_id)),
         fq
@@ -135,22 +130,22 @@ def cache_data():
   for country_id, country_name in countries.items():
     data[country_id] = { 'name': country_name }
 
-    print('Getting Media for {0}...'.format(country_name))
+    logger.info('Getting Media for {0}...'.format(country_name))
     data[country_id]['media'] = getBiggestMedia(country_id)
 
-    print('Getting Words for {0}...'.format(country_name))
+    logger.info('Getting Words for {0}...'.format(country_name))
     data[country_id]['words'] = getTopWords(country_id)
 
-    print('Getting NYT Labels for {0}...'.format(country_name))
+    logger.info('Getting NYT Labels for {0}...'.format(country_name))
     data[country_id]['labels'] = getEntities(country_id, NYT_LABELS_TAG_SET)
 
-    print('Getting Places for {0}...'.format(country_name))
+    logger.info('Getting Places for {0}...'.format(country_name))
     data[country_id]['places'] = getEntities(country_id, GEO_TAG_SET)
 
-    print('Getting Organizations for {0}...'.format(country_name))
+    logger.info('Getting Organizations for {0}...'.format(country_name))
     data[country_id]['orgs']   = getEntities(country_id, CLIFF_ORGS_TAG_SET)
 
-    print('Getting People for {0}...'.format(country_name))
+    logger.info('Getting People for {0}...'.format(country_name))
     data[country_id]['people'] = getEntities(country_id, CLIFF_PEOPLE_TAG_SET)
 
   response = build_json_response(data)
@@ -251,16 +246,16 @@ def popular_tags(collection_id):
 
 
   # Find the most use tags within a set over the last few months in the US Top Online set of sources
-  print('Getting NYT Labels...')
+  logger.info('Getting NYT Labels...')
   labels = getEntities(collection_id, NYT_LABELS_TAG_SET)
   
-  print('Getting Places...')
+  logger.info('Getting Places...')
   places = getEntities(collection_id, GEO_TAG_SET)
   
-  print('Getting Organizations...')
+  logger.info('Getting Organizations...')
   orgs   = getEntities(collection_id, CLIFF_ORGS_TAG_SET)
   
-  print('Getting People...')
+  logger.info('Getting People...')
   people = getEntities(collection_id, CLIFF_PEOPLE_TAG_SET)
 
   # Counts of each entity being returned:
@@ -290,7 +285,7 @@ def popular_tags(collection_id):
   random_places = [addType(entity, 'place') for entity in random_places]
 
   all_entities = random_labels + random_places + random_orgs + random_people
-  print(json.dumps(all_entities))
+  logger.info(json.dumps(all_entities))
   return render_template('popular_tags.html', data=all_entities)
 
 
@@ -384,12 +379,12 @@ def sentences(collection_id, entity):
       'tags_id_media:{0}'.format(str(collection_id)),
       'tags_id_stories:{0}'.format(entity),
       'publish_date:NOW to NOW-3MONTH'], 
-      rows=sample_size, sort=mc.SORT_RANDOM)
+      rows=sample_size, sort=mc_admin.SORT_RANDOM)
   else:
     sentenceList = mc_admin.sentenceList(entity, [
       'tags_id_media:{0}'.format(str(collection_id)),
       'publish_date:NOW to NOW-3MONTH'], 
-      rows=sample_size, sort=mc.SORT_RANDOM)
+      rows=sample_size, sort=mc_admin.SORT_RANDOM)
   
   return jsonify(sentenceList)
 
@@ -397,12 +392,12 @@ def sentences(collection_id, entity):
 # /////////////////////////////////////////////////////////////////////////
 @app.route('/topic_media/<int:topic_id>')
 def topic_media(topic_id):
-	# print('Calling for data...')
+	# logger.info('Calling for data...')
 
-	# top_media = mc.mediaList(timespans_id=1467)
+	# top_media = mc_admin.mediaList(timespans_id=1467)
 	# json.dumps(top_media)
 	
-  # top_media = mc.topicMediaList(topic_id)
+  # top_media = mc_admin.topicMediaList(topic_id)
   # return render_template('index.html', data=top_media)
 
   # In the absence of a stable connection to the MediaCloud server, run without data:
@@ -413,6 +408,7 @@ def topic_media(topic_id):
 
 
 # /////////////////////////////////////////////////////////////////////////
+init()
+
 if __name__ == '__main__':
-    init()
     app.run(debug=True, port=5000)
