@@ -20,10 +20,24 @@ function Thinking(scene) {
 	let mesh1 = new THREE.Mesh( geometry, material );
 	let mesh2 = new THREE.Mesh( geometry, material );
 	let mesh3 = new THREE.Mesh( geometry, material );
+	
+	const xShift = 15;
+	const zShift = -100;
+
+	mesh1.position.x = xShift;
+	mesh1.position.z = zShift;
+	
+	mesh2.position.x = xShift;
+	mesh2.position.z = zShift;
+	
+	mesh3.position.x = xShift;
+	mesh3.position.z = zShift;
 
 	const orbiters = [ mesh1, mesh2, mesh3 ];
 	
+
 	const group = new THREE.Group();
+	group.position.x = xShift;
 	group.add( mesh1 );
 	group.add( mesh2 );
 	group.add( mesh3 );
@@ -74,7 +88,7 @@ function Thinking(scene) {
 		// Orbit x/z
 		mesh3.position.x = radius_x * Math.cos( theta + 2.0 );
 		mesh3.position.y = radius_y * Math.cos( theta + 1.0 );
-		mesh3.position.z = radius_z * Math.sin( theta + 1.5 );
+		// mesh3.position.z = radius_z * Math.sin( theta + 1.5 );
     }
 
 
