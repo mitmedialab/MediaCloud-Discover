@@ -94,6 +94,7 @@ function createStateMachine() {
 
                 $( '#md_body' ).load( '/static/html/picker_content.html' );
                 $( '#back' ).hide();
+                $( '#scene_title' ).hide();
                 $( '#forward' ).show();
                 
                 sceneManager.addChooseEvent();
@@ -110,22 +111,29 @@ function createStateMachine() {
                 
                 $( '#md_body' ).load( '/static/html/wordtime_content.html' );
                 $( '#back' ).show();
+                $( '#scene_title' ).text('Word Over Time').show();
                 controls.entityOrbitToggle = false;
                 sceneManager.removeChooseEvent();
 
                 transitionScenes( lifecycle );
-                history.pushState( {}, 'Media Cloud Discover', `/${MC_CONTEXT.country_id}/${MC_CONTEXT.userData.tag_sets_id}` );
+                if( MC_CONTEXT.userData.type == 'word' ) {
+                    history.pushState( {}, 'Media Cloud Discover', `/${MC_CONTEXT.country_id}/${MC_CONTEXT.userData.term}` );
+                } else {
+                    history.pushState( {}, 'Media Cloud Discover', `/${MC_CONTEXT.country_id}/${MC_CONTEXT.userData.tag_sets_id}` );
+                }
 
             },
             onSentences: function( lifecycle ) { 
 
                 $( '#md_body' ).load( '/static/html/sentences_content.html' );
+                $( '#scene_title' ).text('Stories').show();
                 transitionScenes( lifecycle );
 
             },
             onGlobe: function( lifecycle ) { 
                 
                 $( '#md_body' ).load( '/static/html/globe_content.html' );
+                $( '#scene_title' ).text('Geographic Coverage').show();
                 $( '#forward' ).show();
                 transitionScenes( lifecycle );
                 
@@ -134,6 +142,7 @@ function createStateMachine() {
                 
                 $( '#md_body' ).empty();
                 $( '#forward' ).hide();
+                $( '#scene_title' ).hide();
                 transitionScenes( lifecycle );
             }
         }

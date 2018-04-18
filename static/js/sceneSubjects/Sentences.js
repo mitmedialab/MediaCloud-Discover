@@ -9,7 +9,7 @@ function Sentences(scene) {
     subscene.name = "Sentences";
     scene.add(subscene);
 
-    const sentenceCountLimit = 8;
+    const sentenceCountLimit = 7;
 
     /////////////////////////////////////////////////////////////////////////
     this.update = function(time) {

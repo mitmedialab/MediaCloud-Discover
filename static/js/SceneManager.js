@@ -159,7 +159,11 @@ function SceneManager(canvas) {
             var type = intersects[0].object.userData.type;
 
             MC_CONTEXT.currentEntity = name;
-            MC_CONTEXT.tag_sets_id = intersects[0].object.userData.tag_sets_id;
+            if(intersects[0].object.userData.type == 'word') {
+                MC_CONTEXT.tag_sets_id = intersects[0].object.userData.term;
+            } else {
+                MC_CONTEXT.tag_sets_id = intersects[0].object.userData.tag_sets_id;
+            }
             MC_CONTEXT.userData = intersects[0].object.userData;
 
             if( DEBUG ) {
