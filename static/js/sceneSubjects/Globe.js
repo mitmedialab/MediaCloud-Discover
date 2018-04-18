@@ -162,21 +162,21 @@ function Globe( scene ) {
 
         // container.appendChild(renderer.domElement);
 
-        // container.addEventListener('mousedown', onMouseDown, false);
+        container.addEventListener('mousedown', onMouseDown, false);
 
-        // container.addEventListener('mousewheel', onMouseWheel, false);
+        container.addEventListener('mousewheel', onMouseWheel, false);
 
-        // document.addEventListener('keydown', onDocumentKeyDown, false);
+        document.addEventListener('keydown', onDocumentKeyDown, false);
 
         // window.addEventListener('resize', onWindowResize, false);
 
-        // container.addEventListener('mouseover', function() {
-        //   overRenderer = true;
-        // }, false);
+        container.addEventListener('mouseover', function() {
+          overRenderer = true;
+        }, false);
 
-        // container.addEventListener('mouseout', function() {
-        //   overRenderer = false;
-        // }, false);
+        container.addEventListener('mouseout', function() {
+          overRenderer = false;
+        }, false);
       }
 
       function addData(data, opts) {
@@ -358,21 +358,21 @@ function Globe( scene ) {
         distanceTarget = distanceTarget < 350 ? 350 : distanceTarget;
       }
 
-      function render() {
-        zoom(curZoomSpeed);
+      // function render() {
+      //   zoom(curZoomSpeed);
 
-        rotation.x += (target.x - rotation.x) * 0.1;
-        rotation.y += (target.y - rotation.y) * 0.1;
-        distance += (distanceTarget - distance) * 0.3;
+      //   rotation.x += (target.x - rotation.x) * 0.1;
+      //   rotation.y += (target.y - rotation.y) * 0.1;
+      //   distance += (distanceTarget - distance) * 0.3;
 
-        camera.position.x = distance * Math.sin(rotation.x) * Math.cos(rotation.y);
-        camera.position.y = distance * Math.sin(rotation.y);
-        camera.position.z = distance * Math.cos(rotation.x) * Math.cos(rotation.y);
+      //   camera.position.x = distance * Math.sin(rotation.x) * Math.cos(rotation.y);
+      //   camera.position.y = distance * Math.sin(rotation.y);
+      //   camera.position.z = distance * Math.cos(rotation.x) * Math.cos(rotation.y);
 
-        camera.lookAt(mesh.position);
+      //   camera.lookAt(mesh.position);
 
-        // renderer.render(scene, camera);
-      }
+      //   // renderer.render(scene, camera);
+      // }
 
       init();
       // this.animate = animate;
@@ -413,7 +413,7 @@ function Globe( scene ) {
       this.scene = scene;
 
       group.position.z = opts.zPosition;
-      // group.position.x = 200;
+      group.position.x = 18;
       scene.add( group );
 
       return this;
@@ -473,7 +473,7 @@ function Globe( scene ) {
                 textureLoader.load( globe_image, function( texture ) {
 
                     // Make the Globe, passing scene, renderer, and texture
-                    var globe = new DAT.Globe( container, { 'animated': true, 'globeScale': 0.2, 'zPosition': 0 }, scene, sceneManager.renderer, texture );
+                    var globe = new DAT.Globe( container, { 'animated': true, 'globeScale': 0.2, 'zPosition': -100 }, scene, sceneManager.renderer, texture );
 
                     // Load globe with data points
                     for ( var i = 0; i < data.length; i ++ ) {
