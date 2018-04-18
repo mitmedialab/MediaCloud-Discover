@@ -21,7 +21,7 @@ function MCContext(data) {
 
 	// Defaulting Picker Entity Exploration to U.S. Collection
 	if(data['country_id'] === undefined) {
-		this.country_id = 34412193; // Switched to China during testing;  U.S. 9139487;
+		this.country_id = 9139487;
 	} else {
 		this.country_id = data['country_id'];
 	}
