@@ -173,7 +173,6 @@ function WordTime(scene) {
     function drawChart() {
 
         var ctx = document.getElementById("chart");
-        console.log(ctx);
         ctx.height = 125;
 
         const thinking = sceneManager.findSceneByName( "Thinking" );
@@ -181,7 +180,6 @@ function WordTime(scene) {
 
         $.getJSON( `/word_over_time/${MC_CONTEXT.country_id}/${MC_CONTEXT.userData.tags_id}`, function( freq_data ) {
 
-            console.log( freq_data );
             let values = $.map( freq_data, function(value, key) { return value } );
             values = values.slice( 0, values.length-3 );
 
