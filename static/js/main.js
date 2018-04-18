@@ -6,7 +6,7 @@
 
 // DATA SETUP //
 var media_list = [];
-var data_list = dataFromServer;
+var data = dataFromServer;
 var fsm = null;
 
 // Set DEBUG Flag from URL (e.g. ...?debug=true)
@@ -19,7 +19,9 @@ if( debug_flag != null && debug_flag.toLowerCase() == 'true') {
 }
 
 // CONTEXT SETUP //
-const MC_CONTEXT = new MCContext({"scene": "Picker"});
+
+const MC_CONTEXT = new MCContext( {'scene': 'Picker', 'country_id': data['country_id'], 'entity_id': data['entity_id']} );
+
 
 // SCENE SETUP
 const canvas = document.getElementById("canvas");
@@ -79,8 +81,13 @@ function createStateMachine() {
                 if( lifecycle.to == 'Picker' && lifecycle.from == 'Picker' ) {
                     let to = sceneManager.findSceneByName( lifecycle.to );
                     to.enter();
+
+                    controls.entityOrbitToggle = true;
+                    sceneManager.addChooseEvent();
+
                     $( '#metadata' ).hide( "slide", { direction: "left"  }, 1000 );
                     $( '#forward' ).show();
+                    history.pushState( {}, 'Media Cloud Discover', '/' );
                 }
             },
             onPicker: function( lifecycle ) {
@@ -88,17 +95,26 @@ function createStateMachine() {
                 $( '#md_body' ).load( '/static/html/picker_content.html' );
                 $( '#back' ).hide();
                 $( '#forward' ).show();
+                
+                sceneManager.addChooseEvent();
+                controls.entityOrbitToggle = true;
+                
                 transitionScenes( lifecycle );
 
                 // Hide The Metadata Panel on init or return to Picker
                 $( '#metadata' ).hide( "slide", { direction: "left"  }, 300 );
+                history.pushState( {}, 'Media Cloud Discover', '/' );
 
             },
             onWordtime: function( lifecycle ) { 
                 
                 $( '#md_body' ).load( '/static/html/wordtime_content.html' );
                 $( '#back' ).show();
+                controls.entityOrbitToggle = false;
+                sceneManager.removeChooseEvent();
+
                 transitionScenes( lifecycle );
+                history.pushState( {}, 'Media Cloud Discover', `/${MC_CONTEXT.country_id}/${MC_CONTEXT.userData.tag_sets_id}` );
 
             },
             onSentences: function( lifecycle ) { 
@@ -212,18 +228,6 @@ var controls = new function () {
 // addControls(gui);
 // gui.remember(controls);
 
-
-////////////////////////////////////////////////////////////////////////////////////////
-
-function loadStartupData() {
-    //
-    // Parse names out of the Top Media query
-    //
-    
-    for(var i = 0; i < data_list.length; i++) {
-        media_list[i] = data_list[i]["name"];
-    }
-}
 
 function addControls(gui) {
     //
