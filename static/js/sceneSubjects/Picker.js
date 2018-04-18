@@ -56,17 +56,15 @@ function Picker(scene) {
             sceneManager.camera.rotation.y += 0.0005;
         }
         
-        if(controls.entitySpinToggle) {
-            for(i = 0; i < this.entities.children.length; i++) {
-                
-                let current_planet = this.entities.children[i].children[0];
-                let current_label = this.entities.children[i].children[1];
+        for(i = 0; i < this.entities.children.length; i++) {
+            
+            let current_planet = this.entities.children[i].children[0]; 
+            let current_label = this.entities.children[i].children[1];
 
-                current_planet.rotation.x += 0.01;
-                current_planet.rotation.y += 0.01;
+            current_planet.rotation.x += 0.01;
+            current_planet.rotation.y += 0.01;
 
-                current_label.lookAt( sceneManager.camera.position );
-            }
+            current_label.lookAt( sceneManager.camera.position );
         }
     }
 
@@ -155,8 +153,14 @@ function Picker(scene) {
     /////////////////////////////////////////////////////////////////////////
 	this.loadEntities = function( country_id ) {
 
-        countrySelected = country_id;
+        if( DEBUG ) {
+            console.log(`Loading Entities for ${country_id}...`)
+        }
 
+        var promise = $.getJSON( `/country_entities/${country_id}` );
+        promise.done( processEntities );
+
+        countrySelected = country_id;
         // Ensure scene is visible
         subscene.visible = true;
 
@@ -169,13 +173,6 @@ function Picker(scene) {
         built_entities.name = 'entities';
         this.entities = built_entities;
         subscene.add(built_entities);
-
-        if( DEBUG ) {
-            console.log(`Loading Entities for ${country_id}...`)
-        }
-
-        var promise = $.getJSON( `/country_entities/${country_id}` );
-        promise.done( processEntities );
 	}
 
 
