@@ -54,7 +54,7 @@ with open('whitelist.json') as f:
     for item in whitelist:
     	with open('cache/{0}.json'.format( item['country_name'] ), 'w') as out:
     		
-			data = { 'name': item['country_name'] }
+			data = { 'name': item['country_name'], 'id': item['id'] }
 
 			logger.info('Getting Media for {0}...'.format(item['country_name']))
 			data['media'] = getBiggestMedia(item['id'])
