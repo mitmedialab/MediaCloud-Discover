@@ -3,30 +3,6 @@ function MCContext(data) {
 	// The name of the selected entity we are exploring
 	this.currentEntity;
 
-	if( data['country_id'] !== undefined && data['entity_id'] !== undefined ) {
-
-		console.log( 'Loading entity data...' );
-		// $.getJSON( `/getEntityData/${data['entity_id']}`, function( entity ) {
-
-		// 	var name = entity.object.name;
-	 //        var type = entity.object.userData.type;
-
-	 //        this.currentEntity = name;
-	 //        this.tag_sets_id = intersects[0].object.userData.tag_sets_id;
-	 //        this.userData = intersects[0].object.userData;
-	        
-	 //        $( "#md_header" ).html( `<h2 class="entity">${name}</h2><br><div class="type" style="background-color: ${MC_CONTEXT.entityColorHex()}">${type}</div><br><hr>` );
-	 //    });
-	}
-
-	// Defaulting Picker Entity Exploration to U.S. Collection
-	if(data['country_id'] === undefined) {
-		this.country_id = 9139487;
-	} else {
-		this.country_id = data['country_id'];
-	}
-	
-
 	// Not sure we need these if we're grabbing the whole userData object (below)
 	this.tag_sets_id;
 	this.tags_id;
@@ -39,6 +15,8 @@ function MCContext(data) {
 
 	// Keeping track of what scene we are currently in
 	this.currentScene = data.scene;
+
+	this.entityFromURL = false;
 
 	const self = this;
 
@@ -127,6 +105,79 @@ function MCContext(data) {
 				tweenChain.start();
 			}
 		}
+	}
+
+	/////////////////////////////////////////////////////////////////////
+	
+	// Load Entity from URL parameters
+	if( data['country_id'] !== undefined && data['entity_id'] !== undefined && data['entity_type'] !== undefined ) {
+
+		if( DEBUG ) {
+			console.log( 'Loading Entity Data from URL...' );
+			console.log( data );
+		}
+
+		this.entityFromURL = true;
+		self.country_id = data['country_id'];
+		let type = data['entity_type'];
+
+	 	// Is it Media?
+		if( data['entity_type'] == 'media' ) {
+		 	$.getJSON(`/media/${data['entity_id']}`, function( entity_data ) {
+		 		
+		 		if( DEBUG ) {
+		 			console.log( 'Loading Media from URL...' );
+		 			console.log( data );
+		 		}
+
+		 		let name = entity_data.name;
+
+		 		self.currentEntity = name;
+	            self.userData = entity_data;
+	            self.userData.type = 'media';
+
+	            $( "#md_header" ).html( `<h2 class="entity">${name}</h2><br><div class="type" style="background-color: ${self.entityColorHex()}">${type}</div><br><hr>` );
+		 	});
+		}
+		// Is it a Word?
+		else if( data['entity_type'] == 'word' ) {
+
+		 		let name = data['entity_id'];
+
+		 		self.currentEntity = name;
+	            self.userData = {'term': name };
+	            self.userData.type = 'word';
+
+	            $( "#md_header" ).html( `<h2 class="entity">${name}</h2><br><div class="type" style="background-color: ${self.entityColorHex()}">${type}</div><br><hr>` );
+		 }
+		 // Is it an Entity?
+		 else {
+
+			$.getJSON(`/entity/${data['entity_id']}`, function( entity_data ) {
+		 		
+		 		if( DEBUG ) {
+		 			console.log( 'Loading Entity from URL...' );
+		 			console.log( data );
+		 		}
+
+		 		let name = entity_data.label;
+
+		 		self.currentEntity = name;
+	            self.userData = entity_data;
+	            self.userData.type = data['entity_type'];
+
+	            $( "#md_header" ).html( `<h2 class="entity">${name}</h2><br><div class="type" style="background-color: ${self.entityColorHex()}">${type}</div><br><hr>` );
+		 	});
+		 }
+
+		$( '#metadata' ).show( "slide", { direction: "left"  }, 500 );
+	}
+
+	// Defaulting Picker Entity Exploration to U.S. Collection
+	if(data['country_id'] === undefined) {
+		this.country_id = 9139487;
+	} else {
+		this.country_id = data['country_id'];
 	}
 
 }

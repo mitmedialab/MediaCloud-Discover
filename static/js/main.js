@@ -19,8 +19,10 @@ if( debug_flag != null && debug_flag.toLowerCase() == 'true') {
     DEBUG = true;
 }
 
+// TODO: Could just pass data through to context instead of re-mapping the same named variables.....
+
 // CONTEXT SETUP //
-const MC_CONTEXT = new MCContext( {'scene': 'Picker', 'country_id': data['country_id'], 'entity_id': data['entity_id']} );
+const MC_CONTEXT = new MCContext( {'scene': 'Picker', 'country_id': data['country_id'], 'entity_id': data['entity_id'], 'entity_type': data['entity_type']} );
 
 
 // SCENE SETUP
@@ -87,7 +89,9 @@ function createStateMachine() {
                     controls.entityOrbitToggle = true;
                     sceneManager.addChooseEvent();
 
-                    $( '#metadata' ).hide( "slide", { direction: "left"  }, 1000 );
+                    if( !MC_CONTEXT.entityFromURL ) {
+                        $( '#metadata' ).hide( "slide", { direction: "left"  }, 1000 );
+                    }
                     $( '#forward' ).show();
                     history.pushState( {}, 'Media Cloud Discover', '/' );
                 }
@@ -105,7 +109,9 @@ function createStateMachine() {
                 transitionScenes( lifecycle );
 
                 // Hide The Metadata Panel on init or return to Picker
-                $( '#metadata' ).hide( "slide", { direction: "left"  }, 300 );
+                if( !MC_CONTEXT.entityFromURL ) {
+                    $( '#metadata' ).hide( "slide", { direction: "left"  }, 300 );
+                }
                 history.pushState( {}, 'Media Cloud Discover', '/' );
 
             },

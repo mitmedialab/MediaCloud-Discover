@@ -79,9 +79,9 @@ def root():
 
 
 # /////////////////////////////////////////////////////////////////////////
-@app.route('/<int:country_id>/<int:entity_id>')
-def entity_select(country_id, entity_id):
-  return render_template('index.html', data={'country_id': country_id, 'entity_id': entity_id})
+@app.route('/<int:country_id>/<string:entity_type>/<entity_id>')
+def entity_select(country_id, entity_type, entity_id):
+  return render_template('index.html', data={'country_id': country_id, 'entity_id': entity_id, 'entity_type': entity_type})
 
 
 # /////////////////////////////////////////////////////////////////////////
@@ -245,6 +245,13 @@ def getEntities(collection_id, tag_set):
 
 
 # /////////////////////////////////////////////////////////////////////////
+@app.route('/entity/<int:entity_id>')
+def entity(entity_id):
+  entity = mc_admin.tag(entity_id)
+  return jsonify(entity)
+
+
+# /////////////////////////////////////////////////////////////////////////
 @app.route('/getTopWords/<int:collection_id>')
 def getTopWords(collection_id):
   word = mc_admin.wordCount('*', [
@@ -255,6 +262,13 @@ def getTopWords(collection_id):
     sample_size=5000)
 
   return word
+
+
+# /////////////////////////////////////////////////////////////////////////
+@app.route('/media/<int:media_id>')
+def media(media_id):
+  data = mc_admin.media( media_id )
+  return jsonify(data)
 
 
 # /////////////////////////////////////////////////////////////////////////
