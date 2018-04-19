@@ -23,6 +23,11 @@ function MCContext(data) {
 	/////////////////////////////////////////////////////////////////////
 	this.entityID = function() {
 
+		if( self.userData == undefined ) {
+
+			return undefined;
+		}
+
 		if( self.userData.type == 'media' ) {
 
             return self.userData.media_id;
@@ -173,11 +178,18 @@ function MCContext(data) {
 		$( '#metadata' ).show( "slide", { direction: "left"  }, 500 );
 	}
 
-	// Defaulting Picker Entity Exploration to U.S. Collection
+	// Default Picker Country Dropdown to U.S. Collection
 	if(data['country_id'] === undefined) {
+		
+		// Default to U.S. for country selection
 		this.country_id = 9139487;
+		$( '#countries' ).val( this.country_id );
+
 	} else {
+				
 		this.country_id = data['country_id'];
 	}
+	
+	$( '#countries' ).val( this.country_id );
 
 }
