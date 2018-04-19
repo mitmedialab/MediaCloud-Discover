@@ -85,8 +85,8 @@ def entity_select(country_id, entity_id):
 
 
 # /////////////////////////////////////////////////////////////////////////
-@app.route('/word_over_time/<int:collection_id>/<entity>')
-def wordOverTime( collection_id, entity ):
+@app.route('/word_over_time/<int:collection_id>/<string:type>/<entity>')
+def wordOverTime( collection_id, type, entity ):
   '''
   Helper to fetch sentences counts over the last year for an arbitrary query
   '''
@@ -100,18 +100,32 @@ def wordOverTime( collection_id, entity ):
   end_datetime = datetime.datetime.strftime(end_date, '%Y-%m-%d')
 
   if(entity.isdigit()):
-  
-    sentences_over_time = mc_admin.sentenceCount('*', 
-      [
-        'tags_id_media:{0}'.format(str(collection_id)),
-        'tags_id_stories:{0}'.format(entity),
-        fq
-      ],
-      split=True,
-      split_start_date=start_datetime,
-      split_end_date=end_datetime)['split']
+    if(type == 'media'):
+      # Media Type
+      sentences_over_time = mc_admin.sentenceCount('*', 
+        [
+          'tags_id_media:{0}'.format(str(collection_id)),
+          'media_id:{0}'.format(entity),
+          fq
+        ],
+        split=True,
+        split_start_date=start_datetime,
+        split_end_date=end_datetime)['split']
+    
+    else:
+      # Entity Type
+      sentences_over_time = mc_admin.sentenceCount('*', 
+        [
+          'tags_id_media:{0}'.format(str(collection_id)),
+          'tags_id_stories:{0}'.format(entity),
+          fq
+        ],
+        split=True,
+        split_start_date=start_datetime,
+        split_end_date=end_datetime)['split']
 
   else:
+    # Word Type
     sentences_over_time = mc_admin.sentenceCount(entity, 
       [
         'tags_id_media:({0})'.format(str(collection_id)),
@@ -285,17 +299,27 @@ def projects(name):
 
 
 # /////////////////////////////////////////////////////////////////////////
-@app.route('/sentences/<int:collection_id>/<entity>')
-def sentences(collection_id, entity):
+@app.route('/sentences/<int:collection_id>/<string:type>/<entity>')
+def sentences(collection_id, type, entity):
   sample_size = 2000
 
   if(entity.isdigit()):
-    sentenceList = mc_admin.sentenceList('*', [
-      'tags_id_media:{0}'.format(str(collection_id)),
-      'tags_id_stories:{0}'.format(entity),
-      'publish_date:NOW to NOW-3MONTH'], 
-      rows=sample_size, sort=mc_admin.SORT_RANDOM)
+    # Media Type
+    if(type == 'media'):
+      sentenceList = mc_admin.sentenceList('*', [
+        'tags_id_media:{0}'.format(str(collection_id)),
+        'media_id:{0}'.format(entity),
+        'publish_date:NOW to NOW-3MONTH'], 
+        rows=sample_size, sort=mc_admin.SORT_RANDOM)
+    # Entity Type
+    else:
+      sentenceList = mc_admin.sentenceList('*', [
+        'tags_id_media:{0}'.format(str(collection_id)),
+        'tags_id_stories:{0}'.format(entity),
+        'publish_date:NOW to NOW-3MONTH'], 
+        rows=sample_size, sort=mc_admin.SORT_RANDOM)
   else:
+    # Word Type
     sentenceList = mc_admin.sentenceList(entity, [
       'tags_id_media:{0}'.format(str(collection_id)),
       'publish_date:NOW to NOW-3MONTH'], 

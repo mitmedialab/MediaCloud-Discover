@@ -40,6 +40,32 @@ function MCContext(data) {
 	// Keeping track of what scene we are currently in
 	this.currentScene = data.scene;
 
+	const self = this;
+
+	/////////////////////////////////////////////////////////////////////
+	this.entityID = function() {
+
+		if( self.userData.type == 'media' ) {
+
+            return self.userData.media_id;
+
+        } else if( self.userData.type == 'word' ) {
+
+        	return self.userData.term;
+
+        } else {
+
+        	return self.userData.tags_id;
+        }
+	}
+
+
+	/////////////////////////////////////////////////////////////////////
+	this.type = function() {
+		
+		return self.userData.type;
+	}
+
 
 	/////////////////////////////////////////////////////////////////////
 	// TODO: Fill out links to Dashboard or Other
@@ -59,7 +85,6 @@ function MCContext(data) {
         'word': 0x6C0898
     };
 
-    let self = this;
 
 	/////////////////////////////////////////////////////////////////////
 	this.entityColor = function(type) {

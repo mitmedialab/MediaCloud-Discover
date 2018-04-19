@@ -116,11 +116,8 @@ function createStateMachine() {
                 sceneManager.removeChooseEvent();
 
                 transitionScenes( lifecycle );
-                if( MC_CONTEXT.userData.type == 'word' ) {
-                    history.pushState( {}, 'Media Cloud Discover', `/${MC_CONTEXT.country_id}/${MC_CONTEXT.userData.term}` );
-                } else {
-                    history.pushState( {}, 'Media Cloud Discover', `/${MC_CONTEXT.country_id}/${MC_CONTEXT.userData.tag_sets_id}` );
-                }
+
+                history.pushState( {}, 'Media Cloud Discover', `/${MC_CONTEXT.country_id}/${MC_CONTEXT.type()}/${MC_CONTEXT.entityID()}` );
 
             },
             onSentences: function( lifecycle ) { 

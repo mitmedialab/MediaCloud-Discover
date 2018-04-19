@@ -6,7 +6,6 @@
 //  - Constructing the initial scene
 //  - Detecting mouse clicks in 3D space (Raycasting)
 //  - Configuring the camera
-//  - Post-Processing
 //  - Muting & Soloing Scenes
 //  - Main Rendering Loop
 //
@@ -32,7 +31,6 @@ function SceneManager(canvas) {
     // Make camera accessible from Scene Subjects via global context
     MC_CONTEXT.camera = this.camera;
     this.sceneSubjects = createSceneSubjects(this.scene);
-    // buildPostProcessing();
 
     // OBJECT SELECTION / RAYCASTING //
     var raycaster, mouse = { x : 0, y : 0 };
@@ -135,8 +133,6 @@ function SceneManager(canvas) {
     /////////////////////////////////////////////////////////////////////////
     function raycast(e) {
 
-        // We'll need to do a conditional for what scene we're on here to determine how these clicks work.
-
         //1. sets the mouse position with a coordinate system where the center
         //   of the screen is the origin
         mouse.x = ( e.clientX / window.innerWidth ) * 2 - 1;
@@ -159,11 +155,6 @@ function SceneManager(canvas) {
             var type = intersects[0].object.userData.type;
 
             MC_CONTEXT.currentEntity = name;
-            if(intersects[0].object.userData.type == 'word') {
-                MC_CONTEXT.tag_sets_id = intersects[0].object.userData.term;
-            } else {
-                MC_CONTEXT.tag_sets_id = intersects[0].object.userData.tag_sets_id;
-            }
             MC_CONTEXT.userData = intersects[0].object.userData;
 
             if( DEBUG ) {
@@ -178,25 +169,6 @@ function SceneManager(canvas) {
             
             $( '#metadata' ).hide( "slide", { direction: "left"  }, 500 );
         }
-
-        // TODO: Trigger load/display of context menu
-
-
-        // If we need to deal with a number of objects in the click path in the future:
-
-        // for ( var i = 0; i < intersects.length; i++ ) {
-            // console.log( intersects[ i ] ); 
-            /*
-                An intersection has the following properties :
-                    - object : intersected object (THREE.Mesh)
-                    - distance : distance from camera to intersection (number)
-                    - face : intersected face (THREE.Face3)
-                    - faceIndex : intersected face index (number)
-                    - point : intersection point (THREE.Vector3)
-                    - uv : intersection point in the object's UV coordinates (THREE.Vector2)
-            */
-        // }
-
     }
 
 
@@ -223,9 +195,10 @@ function SceneManager(canvas) {
 
         return sceneSubjects;
     }
+    
 
     ////////////////////////////////////////////////////////////////////
-    // Output All Objects In Scene
+    // Output All Objects In Scene to Console
     //
     this.logScene = function() {
 
@@ -235,8 +208,6 @@ function SceneManager(canvas) {
     }
 
     /////////////////////////////////////////////////////////////////////////
-    // Look Up Scene Subject By Name
-    //
     this.findSceneByName = function(name) {
 
         for(var i = 0; i < this.sceneSubjects.length; i++) {
@@ -247,36 +218,6 @@ function SceneManager(canvas) {
         
         return null;
     }
-
-    /////////////////////////////////////////////////////////////////////////
-    // Turn Off Indicated Set Of Scene Subjects
-    //
-    this.muteSubjects = function(sceneStates) {
-
-        // 1. Go through a boolean scene state array (or eventually maybe pass a set of things to mute or show or solo)
-        // 2. Build an array of scenes to show (based on what list? maybe just pass the list of objects?) 
-        // 3. Wipe the scene of all objects I guess?
-        // 4. this.sceneSubjects = createSceneSubjects(scene);
-
-        // OR
-
-        // Make every scene have a group object that all scene objects are a child of?
-
-        // OR
-
-        // Traverse hierarchy and set visible to false for anything 
-        // THREE.SceneUtils.traverseHierarchy( object, function ( object ) { object.visible = false; } );
-        
-        // all children:
-        // myObject3D.traverse( function ( object ) { object.visible = false; } );
-
-        // there is also:
-        // - traverseVisible( callback );
-        // - traverseAncestors( callback );
-    }
-
-    // const controls = new THREE.OrbitControls( this.camera );
-    // controls.update();
 
 
     /////////////////////////////////////////////////////////////////////////
@@ -317,55 +258,15 @@ function SceneManager(canvas) {
 
 
     /////////////////////////////////////////////////////////////////////////
-    function buildPostProcessing() {
-
-        // POSTPROCESSING
-
-        renderer.autoClear = false;
-
-        var renderTargetParameters = {
-            minFilter: THREE.LinearFilter,
-            magFilter: THREE.LinearFilter,
-            format: THREE.RGBFormat,
-            stencilBuffer: false
-        };
-        renderTarget = new THREE.WebGLRenderTarget( canvas.width, canvas.height, renderTargetParameters );
-
-        var renderModel = new THREE.RenderPass( this.scene, this.camera );
-        var effectBloom = new THREE.BloomPass( 0.75 );
-        var effectVignette = new THREE.ShaderPass( THREE.VignetteShader );
-        effectVignette.renderToScreen = true;
-
-        composer = new THREE.EffectComposer( renderer, renderTarget );
-        composer.addPass( renderModel );
-        // composer.addPass( effectBloom );
-        // composer.addPass( effectVignette );
-    }
-
-
-    /////////////////////////////////////////////////////////////////////////
     this.update = function() {
-        // controls.update();
 
-        // UPDATE EACH SCENE SUBJECT
+        // Call update() on each scene object
         for(let i=0; i < this.sceneSubjects.length; i++) {
-        	// TODO: Figure out how to mute scenes
-            // if(this.sceneSubjects[i].show)
+
             this.sceneSubjects[i].update(clock.getElapsedTime());
         }
-
-        // Render and/or Post-Processing
-
-        // renderer.autoClear = false;
-        // renderer.shadowMap.enabled = true;
-        // camera.lookAt( cameraTarget );
-        // renderer.setRenderTarget( null );
-        // renderer.clear();
         
         this.renderer.render(this.scene, this.camera);
-        // composer.render();
-
-        // renderer.shadowMap.enabled = false;
     }
 
 
