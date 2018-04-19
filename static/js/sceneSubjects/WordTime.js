@@ -9,24 +9,29 @@ function WordTime(scene) {
     subscene.name = "WordTime";
     scene.add(subscene);
 
-    const opts = {
-        'exitDelay': 2000,
-        'distanceBehindCamera': 200,
-        'zOffset': -250
-    };
+    const chart_div = document.getElementById( 'wordtime' );
+    let chart = document.getElementById( 'chart' );
+    let last_country_id = MC_CONTEXT.country_id;
+    let last_entity_id = MC_CONTEXT.entityID();
+    let chartBuilt = false;
 
-    let mesh = null;
-    let grid = null;
-    let group = new THREE.Group();
 
     /////////////////////////////////////////////////////////////////////
     this.enter = function() {
+        
+        if( last_country_id == MC_CONTEXT.country_id && last_entity_id == MC_CONTEXT.entityID() && chartBuilt ) {
 
-        $( '#chart' ).show();
-        drawChart();
+            $( '#chart' ).show();
+        
+        } else {
+            
+            $( '#chart' ).show();
+            drawChart();
+        }
     }
 
 
+    /////////////////////////////////////////////////////////////////////////
     this.exit = function() {
 
         $( '#chart' ).hide();
@@ -55,10 +60,20 @@ function WordTime(scene) {
 
     /////////////////////////////////////////////////////////////////////////
     function drawChart() {
+        
+        if( DEBUG ) {
+            console.log( 'Creating New Canvas and Rebuilding Chart' );
+        }
 
-        var ctx = $( '#chart' );
-        ctx.empty();
+        last_country_id = MC_CONTEXT.country_id;
+        last_entity_id = MC_CONTEXT.entityID();
+
+        var ctx = document.getElementById("chart");
+        ctx.remove();
+        ctx = document.createElement( 'canvas' );
+        ctx.id = 'chart';
         ctx.height = 125;
+        document.body.appendChild( ctx );
 
         const thinking = sceneManager.findSceneByName( "Thinking" );
         thinking.on();
@@ -118,7 +133,10 @@ function WordTime(scene) {
             });
 
             thinking.off();
+            
         });
+
+        chartBuilt = true;
     }
 
 }
