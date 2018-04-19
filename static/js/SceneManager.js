@@ -44,6 +44,8 @@ function SceneManager(canvas) {
 
     /////////////////////////////////////////////////////////////////////////
     $( '#logo' ).click( function( e ) {
+        
+        MC_CONTEXT.entityFromURL = false;
         fsm.toPicker();
     });
 
@@ -151,22 +153,42 @@ function SceneManager(canvas) {
             console.log(intersects);
         }
 
-        if( intersects.length > 0 && intersects[0].object.name !== undefined && intersects[0].object.name != "" ) {
+        // If we have at least one entity that intersects with the click location, process...
+        if( intersects.length > 0 ) {
 
-            var name = intersects[0].object.name;
-            var type = intersects[0].object.userData.type;
+            // Look through each intersecting object and check to see if it's valid
+            var chosen;
 
-            MC_CONTEXT.currentEntity = name;
-            MC_CONTEXT.userData = intersects[0].object.userData;
-
-            if( DEBUG ) {
-                console.log('Selected Entity:');
-                console.log(intersects[0].object.userData);
+            for( var i = 0; i < intersects.length; i++ ) {
+                
+                if( intersects[i].object.name !== undefined && intersects[i].object.name != "" ) {
+                    chosen = i;
+                    break;
+                }
             }
+
+            // If we found a valid object, set it as the active entity
+            if( chosen !== undefined ) {
+                var name = intersects[chosen].object.name;
+                var type = intersects[chosen].object.userData.type;
+
+                MC_CONTEXT.currentEntity = name;
+                MC_CONTEXT.userData = intersects[chosen].object.userData;
+
+                if( DEBUG ) {
+                    console.log('Selected Entity:');
+                    console.log(intersects[chosen].object.userData);
+                }
+                
+                $( "#md_header" ).html( `<h2 class="entity">${name}</h2><br><div class="type" style="background-color: ${MC_CONTEXT.entityColorHex()}">${type}</div><br><hr>` );
+                $( '#metadata' ).show( "slide", { direction: "left"  }, 500 );
+                MC_CONTEXT.entityFromURL = false;
             
-            $( "#md_header" ).html( `<h2 class="entity">${name}</h2><br><div class="type" style="background-color: ${MC_CONTEXT.entityColorHex()}">${type}</div><br><hr>` );
-            $( '#metadata' ).show( "slide", { direction: "left"  }, 500 );
-            MC_CONTEXT.entityFromURL = false;
+            } else {
+
+                // Otherwise, just hide the metadata panel when click is in open space
+                $( '#metadata' ).hide( "slide", { direction: "left"  }, 500 );
+            }
         
         } else {
             
