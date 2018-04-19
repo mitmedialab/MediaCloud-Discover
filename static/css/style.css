@@ -35,6 +35,7 @@ div#content {
   float: left;
   padding: 10px;
   background-color: white;
+  text-decoration: none;
 }
 
 #forward {
@@ -47,6 +48,7 @@ div#content {
   float: right;
   padding: 10px;
   background-color: white;
+  text-decoration: none;
 }
 
 #landing_explore {
@@ -152,7 +154,7 @@ div#content {
   position: absolute;
   bottom: 0;
   left: 0;
-  width: 90%;
+  width: 95%;
 }
 
 h2.entity {
