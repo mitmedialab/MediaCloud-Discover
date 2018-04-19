@@ -414,7 +414,6 @@ function Globe( scene ) {
         } else {
           
           var object = scene.getObjectByName( '3DGlobe', true );
-          console.log(object);
           scene.remove(object);
 
           group = new THREE.Group();
