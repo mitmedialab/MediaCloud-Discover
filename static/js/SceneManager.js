@@ -86,6 +86,7 @@ function SceneManager(canvas) {
         
         console.log( 'about close clicked' );
         $('#about_pane').hide();
+        $( '#metadata' ).show( "slide", { direction: "left"  }, 500 );
         
         return false;
     });
