@@ -90,7 +90,7 @@ function WordTime(scene) {
                     scales: {
                         yAxes: [{
                             ticks: {
-                                display: false
+                                display: true
                             }
                         }]
                     },
