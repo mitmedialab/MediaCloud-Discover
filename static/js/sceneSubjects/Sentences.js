@@ -10,6 +10,9 @@ function Sentences(scene) {
     scene.add(subscene);
 
     const sentenceCountLimit = 7;
+    let last_country_id = MC_CONTEXT.country_id;
+    let last_entity_id = MC_CONTEXT.entityID();
+    let sentencesBuilt = false;
 
     /////////////////////////////////////////////////////////////////////////
     this.update = function(time) {
@@ -32,8 +35,17 @@ function Sentences(scene) {
 
     /////////////////////////////////////////////////////////////////////
     this.enter = function() {
+        if( last_country_id == MC_CONTEXT.country_id && last_entity_id == MC_CONTEXT.entityID() && sentencesBuilt ) {
+
+            $( '#sentence-container ul li' ).each(function (i) {
+                let $item = $(this);
+                $item.delay(75*i).show( "slide", { direction: "right"  }, 1000 );
+            });
         
-        this.loadSentences();
+        } else {
+            
+            this.loadSentences();
+        }
     }
 
 
@@ -57,6 +69,9 @@ function Sentences(scene) {
         const thinking = sceneManager.findSceneByName( "Thinking" );
         thinking.on();
 
+        last_country_id = MC_CONTEXT.country_id;
+        last_entity_id = MC_CONTEXT.entityID();
+
         $.getJSON( `/sentences/${MC_CONTEXT.country_id}/${MC_CONTEXT.type()}/${encodeURI( MC_CONTEXT.entityID() )}`, function( sentence_data ) {
 
             const subset = sentence_data['response']['docs'].slice( 0, sentenceCountLimit );
@@ -78,12 +93,14 @@ function Sentences(scene) {
 
             // Progressively reveal each item in list
             $( '#sentence-container ul li' ).each(function (i) {
-                    let $item = $(this);
-                    $item.delay(75*i).show( "slide", { direction: "right"  }, 1000 );
-                });
+                let $item = $(this);
+                $item.delay(75*i).show( "slide", { direction: "right"  }, 1000 );
+            });
             
             data = null;
             thinking.off();
         });
+
+        sentencesBuilt = true;
     }
 }
