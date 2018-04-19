@@ -56,7 +56,8 @@ function WordTime(scene) {
     /////////////////////////////////////////////////////////////////////////
     function drawChart() {
 
-        var ctx = document.getElementById("chart");
+        var ctx = $( '#chart' );
+        ctx.empty();
         ctx.height = 125;
 
         const thinking = sceneManager.findSceneByName( "Thinking" );
