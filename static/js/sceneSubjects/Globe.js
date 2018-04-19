@@ -9,12 +9,14 @@ function Globe( scene ) {
     subscene.name = "Globe";
     scene.add(subscene);
 
+    let loadedGlobeCountry;
+
 
     /////////////////////////////////////////////////////////////////////////
     var DAT = DAT || {};
     var group = new THREE.Group();
 
-    DAT.Globe = function(container, opts, scene, renderer, texture) {
+    DAT.Globe = function(container, opts, scene, renderer, texture, group) {
       opts = opts || {};
     
         group.scale.set( opts.globeScale, opts.globeScale, opts.globeScale );
@@ -94,7 +96,9 @@ function Globe( scene ) {
       /////////////////////////////////////////////////////////////////////////
       function init() {
 
-        console.log( 'Creating Globe...' ); 
+        if( DEBUG ) {
+          console.log( 'Creating Globe...' ); 
+        }
 
         var barSize = 3.0;
 
@@ -386,7 +390,14 @@ function Globe( scene ) {
 
       group.position.z = opts.zPosition;
       group.position.x = 18;
+      
+      if( DEBUG ) {
+        console.log( 'Adding New Globe.' );
+      }
+
+      group.name = '3DGlobe';
       scene.add( group );
+      group.visible = true;
 
       return this;
     }
@@ -396,14 +407,27 @@ function Globe( scene ) {
     this.enter = function() {
         
         // Create Globe pulling data based on MC_CONTEXT state
-        addGlobe();
+        if( loadedGlobeCountry !== undefined && loadedGlobeCountry == MC_CONTEXT.country_id ) {
+
+          group.visible = true;
+        
+        } else {
+          
+          var object = scene.getObjectByName( '3DGlobe', true );
+          console.log(object);
+          scene.remove(object);
+
+          group = new THREE.Group();
+          
+          addGlobe();
+        }
     }
 
 
     /////////////////////////////////////////////////////////////////////
     this.exit = function() {
       
-      scene.remove(group);
+      group.visible = false;
     }
 
 
@@ -426,11 +450,12 @@ function Globe( scene ) {
         }
         else
         {
-            // const globe_image = '/static/images/world.jpg';
             const globe_image = '/static/images/world_night.jpg';
             const container = document.getElementById('globe-container');
             const thinking = sceneManager.findSceneByName( "Thinking" );
             thinking.on();
+
+            loadedGlobeCountry = MC_CONTEXT.country_id;
 
             // Call out to get Globe data points
             $.getJSON( `/getGlobeData/${MC_CONTEXT.country_id}`, function( data ) {
@@ -445,7 +470,7 @@ function Globe( scene ) {
                 textureLoader.load( globe_image, function( texture ) {
 
                     // Make the Globe, passing scene, renderer, and texture
-                    var globe = new DAT.Globe( container, { 'animated': true, 'globeScale': 0.2, 'zPosition': -100 }, scene, sceneManager.renderer, texture );
+                    var globe = new DAT.Globe( container, { 'animated': true, 'globeScale': 0.2, 'zPosition': -100 }, scene, sceneManager.renderer, texture, group );
 
                     // Load globe with data points
                     for ( var i = 0; i < data.length; i ++ ) {
