@@ -91,9 +91,9 @@ function createStateMachine() {
 
                     if( !MC_CONTEXT.entityFromURL ) {
                         $( '#metadata' ).hide( "slide", { direction: "left"  }, 1000 );
+                        history.pushState( {}, 'Media Cloud Discover', '/' );
                     }
                     $( '#forward' ).show();
-                    history.pushState( {}, 'Media Cloud Discover', '/' );
                 }
             },
             onPicker: function( lifecycle ) {
@@ -111,9 +111,8 @@ function createStateMachine() {
                 // Hide The Metadata Panel on init or return to Picker
                 if( !MC_CONTEXT.entityFromURL ) {
                     $( '#metadata' ).hide( "slide", { direction: "left"  }, 300 );
+                    history.pushState( {}, 'Media Cloud Discover', '/' );
                 }
-                history.pushState( {}, 'Media Cloud Discover', '/' );
-
             },
             onWordtime: function( lifecycle ) { 
                 
