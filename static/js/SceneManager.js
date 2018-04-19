@@ -56,6 +56,7 @@ function SceneManager(canvas) {
         
         var item=$(this);
         MC_CONTEXT.country_id = item.val();
+        MC_CONTEXT.entityFromURL = false;
         fsm.toPicker();
     });
 
@@ -165,6 +166,7 @@ function SceneManager(canvas) {
             
             $( "#md_header" ).html( `<h2 class="entity">${name}</h2><br><div class="type" style="background-color: ${MC_CONTEXT.entityColorHex()}">${type}</div><br><hr>` );
             $( '#metadata' ).show( "slide", { direction: "left"  }, 500 );
+            MC_CONTEXT.entityFromURL = false;
         
         } else {
             
