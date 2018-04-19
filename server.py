@@ -266,15 +266,6 @@ def getBiggestMedia(collection_id):
 
 
 # /////////////////////////////////////////////////////////////////////////
-@app.route('/getCountryGeoData/<int:collection_id>')
-def getCountryGeoData(collection_id):
-  geo_tags = mc_admin.sentenceFieldCount('tags_id_media:{0}'.format(collection_id), tag_sets_id=1011)
-  country_tags = [t for t in geo_tags if int(t['tag'].split('_')[1]) in COUNTRY_GEONAMES_ID_TO_APLHA3.keys()]
-  for t in country_tags:
-    t['alpha3'] = COUNTRY_GEONAMES_ID_TO_APLHA3[int(t['tag'].split('_')[1])]
-    t.update(COUNTRY_ALPHA_TO_LAT_LONG[t['alpha3']])
-  return jsonify(country_tags)
-
 @app.route('/getGlobeData/<int:collection_id>')
 def getGlobeData(collection_id):
   lat_long_mag = []
@@ -282,11 +273,16 @@ def getGlobeData(collection_id):
   geo_tags = mc_admin.sentenceFieldCount('tags_id_media:{0}'.format(collection_id), tag_sets_id=1011)
   country_tags = [t for t in geo_tags if int(t['tag'].split('_')[1]) in COUNTRY_GEONAMES_ID_TO_APLHA3.keys()]
   for t in country_tags:
-    alpha3 = COUNTRY_GEONAMES_ID_TO_APLHA3[int(t['tag'].split('_')[1])]
-    latlong = COUNTRY_ALPHA_TO_LAT_LONG[alpha3]
-    lat_long_mag.append(latlong['lat'])
-    lat_long_mag.append(latlong['long'])
-    lat_long_mag.append(t['count'])
+    try:
+      alpha3 = COUNTRY_GEONAMES_ID_TO_APLHA3[int(t['tag'].split('_')[1])]
+      latlong = COUNTRY_ALPHA_TO_LAT_LONG[alpha3]
+      lat_long_mag.append(latlong['lat'])
+      lat_long_mag.append(latlong['long'])
+      lat_long_mag.append(t['count'])
+      logger.info(t)
+    except Exception, e:
+      logger.error('Failed on country lookup for {0}'.format(t))
+      country_tags.remove(t)
   
   data = [['seriesA', lat_long_mag]]
   return jsonify(data)
