@@ -105,11 +105,6 @@ function Globe( scene ) {
         w = container.offsetWidth || window.innerWidth;
         h = container.offsetHeight || window.innerHeight;
 
-        // camera = new THREE.PerspectiveCamera(30, w / h, 1, 10000);
-        // camera.position.z = distance;
-
-        // scene = new THREE.Scene();
-
         var geometry = new THREE.BoxGeometry(barSize, barSize, 1);
         geometry.applyMatrix(new THREE.Matrix4().makeTranslation(0,0,-0.5));
 
@@ -120,8 +115,6 @@ function Globe( scene ) {
 
         shader = Shaders['earth'];
         var uniforms = THREE.UniformsUtils.clone(shader.uniforms);
-
-        // uniforms['texture'].value = THREE.ImageUtils.loadTexture(imgDir+'world.jpg');
             
             uniforms['texture'].value = texture;
 
@@ -346,11 +339,6 @@ function Globe( scene ) {
         }
       }
 
-      // function onWindowResize( event ) {
-      //   camera.aspect = container.offsetWidth / container.offsetHeight;
-      //   camera.updateProjectionMatrix();
-      //   renderer.setSize( container.offsetWidth, container.offsetHeight );
-      // }
 
       function zoom(delta) {
         distanceTarget -= delta;
@@ -358,24 +346,8 @@ function Globe( scene ) {
         distanceTarget = distanceTarget < 350 ? 350 : distanceTarget;
       }
 
-      // function render() {
-      //   zoom(curZoomSpeed);
-
-      //   rotation.x += (target.x - rotation.x) * 0.1;
-      //   rotation.y += (target.y - rotation.y) * 0.1;
-      //   distance += (distanceTarget - distance) * 0.3;
-
-      //   camera.position.x = distance * Math.sin(rotation.x) * Math.cos(rotation.y);
-      //   camera.position.y = distance * Math.sin(rotation.y);
-      //   camera.position.z = distance * Math.cos(rotation.x) * Math.cos(rotation.y);
-
-      //   camera.lookAt(mesh.position);
-
-      //   // renderer.render(scene, camera);
-      // }
 
       init();
-      // this.animate = animate;
 
 
       this.__defineGetter__('time', function() {

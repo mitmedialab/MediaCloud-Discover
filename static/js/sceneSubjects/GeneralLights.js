@@ -4,7 +4,7 @@ function GeneralLights(scene) {
     subscene.name = "GeneralLights";
     scene.add(subscene);
 
-	// 3 THREE Lights
+	// There Are, 3, THREE Lights
 
 	var lights = [];
 	lights[ 0 ] = new THREE.PointLight( 0xffffff, 1, 0 );
@@ -33,7 +33,6 @@ function GeneralLights(scene) {
 
 
 	this.update = function(time) {
-		// light.intensity = (Math.sin(time)+1.5)/1.5;
-		// light.color.setHSL( Math.sin(time), 0.5, 0.5 );
+		// no-op
 	}
 }

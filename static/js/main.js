@@ -1,5 +1,6 @@
 
 // STATS SETUP //
+// For monitoring frame rate and resources (worth keeping) //
 // var stats = new Stats();
 // stats.showPanel( 0 ); // 0: fps, 1: ms, 2: mb, 3+: custom
 // document.body.appendChild( stats.dom );
@@ -19,7 +20,6 @@ if( debug_flag != null && debug_flag.toLowerCase() == 'true') {
 }
 
 // CONTEXT SETUP //
-
 const MC_CONTEXT = new MCContext( {'scene': 'Picker', 'country_id': data['country_id'], 'entity_id': data['entity_id']} );
 
 
@@ -28,7 +28,8 @@ const canvas = document.getElementById("canvas");
 
 var manager = new THREE.LoadingManager();
 
-// When all resources are loaded:
+
+/////////////////////////////////////////////////////////////////////////
 manager.onLoad = function() {
     sceneManager = new SceneManager(canvas);
     fsm = createStateMachine();
@@ -43,6 +44,7 @@ loader.load('/static/fonts/noto-sans.json', function(response) {
 });
 
 
+/////////////////////////////////////////////////////////////////////////
 function createStateMachine() {
     const fsm = new StateMachine({
         
@@ -149,6 +151,7 @@ function createStateMachine() {
 }
 
 
+/////////////////////////////////////////////////////////////////////////
 function transitionScenes( lifecycle ) {
 
     // Grab Scenes
@@ -166,7 +169,7 @@ function transitionScenes( lifecycle ) {
 }
 
 
-// CONTROLS SETUP //
+/////////////////////////////////////////////////////////////////////////
 var controls = new function () {
     
     this.radius = 2000;
@@ -208,13 +211,11 @@ var controls = new function () {
                                  x: Math.random() * 200 - 100,
                                  y: Math.random() * 200 - 100,
                                  z: Math.random() * 200 - 100
-                                 // position: picker.entities.children[0].position
 
                     }, controls.cameraSpeed )
                     .easing( TWEEN.Easing.Quartic.InOut)
                         .onUpdate(function(){
                             sceneManager.camera.lookAt( new THREE.Vector3(0, 0, 0) );
-                            // sceneManager.camera.lookAt(picker.entities.children[0].position);
                         })
                         .onComplete(function(){
                             // no-op
@@ -230,15 +231,16 @@ var controls = new function () {
 };
 
 
+// Adjustment Control Panel for Development (Worth Keeping)
 // var gui = new dat.GUI();
 // addControls(gui);
 // gui.remember(controls);
 
 
+/////////////////////////////////////////////////////////////////////////
 function addControls(gui) {
-    //
+
     // Build DAT.gui Controls & Parameters
-    //
 
     // Individual Environment Parameter Controls
 	gui.add(controls, 'radius', 0, 5000).onChange(controls.redraw);
@@ -258,8 +260,6 @@ function addControls(gui) {
     f2.open();
     
     // Data Dropdown
-    // console.log(media_list);
-    // var f2 = gui.addFolder('Media');
     gui.add(controls, 'mediaSource', media_list).name('Media Sources');
     gui.add(controls, 'hideView').name("Mute StarField");
     gui.add(controls, 'hidePicker').name("Mute Picker");
@@ -267,28 +267,29 @@ function addControls(gui) {
     gui.close();
 }
 
+
+/////////////////////////////////////////////////////////////////////////
 function bindEventListeners() {
 	window.onresize = resizeCanvas;
 	resizeCanvas();
 }
 
+
+/////////////////////////////////////////////////////////////////////////
 function resizeCanvas() {
 	canvas.style.width = '100%';
 	canvas.style.height= '100%';
-	
-	// canvas.width  = canvas.offsetWidth;
-	// canvas.height = canvas.offsetHeight;
     
     sceneManager.onWindowResize();
 }
 
+
+/////////////////////////////////////////////////////////////////////////
 function render() {
 	// stats.begin();
-    
     requestAnimationFrame(render);
     TWEEN.update();
     // controls.update();
     sceneManager.update();
-
     // stats.end();
 }
