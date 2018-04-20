@@ -199,7 +199,7 @@ def cache_data():
 @app.route('/country_entities/<country_id>')
 def country_entities(country_id):
 
-  FROM_EACH_TYPE = 6
+  FROM_EACH_TYPE = 8
 
   # Pick random entities
   random.shuffle(data[country_id]['people'])

@@ -65,6 +65,7 @@ function Picker(scene) {
             current_planet.rotation.y += 0.01;
 
             current_label.lookAt( sceneManager.camera.position );
+            this.entities.children[i].lookAt( sceneManager.camera.position );
         }
     }
 
@@ -214,7 +215,7 @@ function Picker(scene) {
 
             // Randomize Initial Location //
             entity.position.x = THREE.Math.randFloatSpread( 300 );
-            entity.position.y = THREE.Math.randFloatSpread( 100 );
+            entity.position.y = THREE.Math.randFloatSpread( 70 );
             entity.position.z = THREE.Math.randFloatSpread( 300 );
 
             // Prepare for fade-out when removing; opacity stays at 1
@@ -272,8 +273,8 @@ function Picker(scene) {
         // textGeo.center();
         let textMaterial = new THREE.MeshPhongMaterial( { color: 0xffffff, flatShading: true } );
         txtMesh = new THREE.Mesh( textGeo, textMaterial );
-        txtMesh.position.x = pos.x + 10;
-        txtMesh.position.y = pos.y;
+        txtMesh.position.x = pos.x + 7;
+        txtMesh.position.y = pos.y - 5;
         txtMesh.position.z = pos.z;
         // txtMesh.visible = false;
         // mesh.castShadow = true;
