@@ -10,6 +10,7 @@ function Globe( scene ) {
     scene.add(subscene);
 
     let loadedGlobeCountry;
+    this.globe = undefined;
 
 
     /////////////////////////////////////////////////////////////////////////
@@ -350,6 +351,19 @@ function Globe( scene ) {
         distanceTarget = distanceTarget < 350 ? 350 : distanceTarget;
       }
 
+      function changeColor( color ) {
+
+        // for (var i = 0; i < point.geometry.faces.length; i++) {
+        for (var i = 0; i < this._baseGeometry.faces.length; i++) {
+
+          // this._baseGeometry.faces[i].color = color;
+          this._baseGeometry.faces[i].color.setRGB( color.r, color.g, color.b );
+        }
+
+        // face.color.setRGB( Math.random(), Math.random(), Math.random() );
+        this._baseGeometry.colorsNeedUpdate = true;
+      }
+
 
       init();
 
@@ -384,6 +398,7 @@ function Globe( scene ) {
       });
 
       this.addData = addData;
+      this.changeColor = changeColor;
       this.createPoints = createPoints;
       this.renderer = renderer;
       this.scene = scene;
@@ -408,6 +423,11 @@ function Globe( scene ) {
         
         // Create Globe pulling data based on MC_CONTEXT state
         if( loadedGlobeCountry !== undefined && loadedGlobeCountry == MC_CONTEXT.country_id ) {
+
+          console.log( 'Changing color...' );
+          console.log( this.globe );
+          let color = new THREE.Color( MC_CONTEXT.entityColor() );
+          this.globe.changeColor( color );
 
           group.visible = true;
         
@@ -435,6 +455,7 @@ function Globe( scene ) {
         // no-op; enter() creates globe
     }
 
+    const self = this;
 
     function addGlobe() {
         
@@ -469,15 +490,15 @@ function Globe( scene ) {
                 textureLoader.load( globe_image, function( texture ) {
 
                     // Make the Globe, passing scene, renderer, and texture
-                    var globe = new DAT.Globe( container, { 'animated': true, 'globeScale': 0.2, 'zPosition': -100 }, scene, sceneManager.renderer, texture, group );
+                    self.globe = new DAT.Globe( container, { 'animated': true, 'globeScale': 0.2, 'zPosition': -100 }, scene, sceneManager.renderer, texture, group );
 
                     // Load globe with data points
                     for ( var i = 0; i < data.length; i ++ ) {
-                        globe.addData( data[i][1], {format: 'magnitude', name: data[i][0], 'sizeScale': 10.5} );
+                        self.globe.addData( data[i][1], {format: 'magnitude', name: data[i][0], 'sizeScale': 10.5} );
                     }
         
                     // Create Globe geometry
-                    globe.createPoints();
+                    self.globe.createPoints();
 
                     thinking.off();
                 });
