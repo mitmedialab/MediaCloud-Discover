@@ -424,8 +424,7 @@ function Globe( scene ) {
         // Create Globe pulling data based on MC_CONTEXT state
         if( loadedGlobeCountry !== undefined && loadedGlobeCountry == MC_CONTEXT.country_id ) {
 
-          console.log( 'Changing color...' );
-          console.log( this.globe );
+          // Update globe data geometry color to match current entity type
           let color = new THREE.Color( MC_CONTEXT.entityColor() );
           this.globe.changeColor( color );
 
