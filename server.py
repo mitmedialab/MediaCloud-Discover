@@ -22,11 +22,11 @@ logger = logging.getLogger(__name__)
 
 # https://pythonhosted.org/Flask-Cache/
 # Flask-Cache Filesystem Mode Parameters:
-#     CACHE_DEFAULT_TIMEOUT
-#     CACHE_DIR
-#     CACHE_THRESHOLD
-#     CACHE_ARGS
-#     CACHE_OPTIONS
+#        CACHE_DEFAULT_TIMEOUT
+#        CACHE_DIR
+#        CACHE_THRESHOLD
+#        CACHE_ARGS
+#        CACHE_OPTIONS
 
 cache = Cache(app, config={'CACHE_TYPE': 'filesystem', 'CACHE_DIR': './cache', 'CACHE_DEFAULT_TIMEOUT': '28800'}) # 8 hour cache
 
@@ -36,270 +36,270 @@ COUNTRY_ALPHA_TO_LAT_LONG = {'XKX': {'lat': 42.60, 'long': 20.9 }, 'SSD': {'lat'
 
 # /////////////////////////////////////////////////////////////////////////
 def init():
-   global mc_admin
-   global data
-   
-   mc_admin = mediacloud.api.AdminMediaCloud(api_key)
-   logger.info('Media Cloud Interface created')
-   logger.debug(api_key)
-   logger.info('Loading entity cache...')
-   loadCountryCache()
-   logger.info('Loading complete.')
+    global mc_admin
+    global data
+    
+    mc_admin = mediacloud.api.AdminMediaCloud(api_key)
+    logger.info('Media Cloud Interface created')
+    logger.debug(api_key)
+    logger.info('Loading entity cache...')
+    loadCountryCache()
+    logger.info('Loading complete.')
 
 
 # Get list of cached countries, load them into country_cache
 # /////////////////////////////////////////////////////////////////////////
 def loadCountryCache():
-  with open('whitelist.json') as f:
-    whitelist = json.load(f)
-    for item in whitelist:
-      filename = 'cache/{0}.json'.format( item['country_name'] )
-      try:
-        with open(filename, 'r') as country_json:
-            logger.debug('Loading cache from {0}...'.format(filename))
-            
-            country_data = json.load(country_json)
-            data[country_data['id']] = country_data
+    with open('whitelist.json') as f:
+       whitelist = json.load(f)
+       for item in whitelist:
+          filename = 'cache/{0}.json'.format( item['country_name'] )
+          try:
+             with open(filename, 'r') as country_json:
+                    logger.debug('Loading cache from {0}...'.format(filename))
+                    
+                    country_data = json.load(country_json)
+                    data[country_data['id']] = country_data
 
-            logger.debug('Cache file {0} loaded.'.format(filename))
-      # If JSON cannot be read, skip country
-      except (ValueError, KeyError, IOError) as e:
-        logger.error('Cannot read cache file {0}'.format(filename))
-        logger.error(e)
-        pass
+                    logger.debug('Cache file {0} loaded.'.format(filename))
+          # If JSON cannot be read, skip country
+          except (ValueError, KeyError, IOError) as e:
+             logger.error('Cannot read cache file {0}'.format(filename))
+             logger.error(e)
+             pass
 
 
 # /////////////////////////////////////////////////////////////////////////
-# //  Application Root
-# //  Default to United States context
+# //    Application Root
+# //    Default to United States context
 # /////////////////////////////////////////////////////////////////////////
 @app.route('/')
 def root():
-  return render_template('index.html', data='9139487')
+    return render_template('index.html', data='9139487')
 
 
 # /////////////////////////////////////////////////////////////////////////
 @app.route('/<int:country_id>/<string:entity_type>/<entity_id>')
 def entity_select(country_id, entity_type, entity_id):
-  return render_template('index.html', data={'country_id': country_id, 'entity_id': entity_id, 'entity_type': entity_type})
+    return render_template('index.html', data={'country_id': country_id, 'entity_id': entity_id, 'entity_type': entity_type})
 
 
 # /////////////////////////////////////////////////////////////////////////
 @app.route('/word_over_time/<int:collection_id>/<string:type>/<entity>')
 def wordOverTime( collection_id, type, entity ):
-  '''
-  Helper to fetch sentences counts over the last year for an arbitrary query
-  '''
-  last_n_days = 30
-  start_date = datetime.date.today()-datetime.timedelta(last_n_days)
-  end_date = datetime.date.today()-datetime.timedelta(1)  # yesterday
+    '''
+    Helper to fetch sentences counts over the last year for an arbitrary query
+    '''
+    last_n_days = 30
+    start_date = datetime.date.today()-datetime.timedelta(last_n_days)
+    end_date = datetime.date.today()-datetime.timedelta(1)    # yesterday
 
-  fq = mc_admin.publish_date_query(start_date, end_date)
+    fq = mc_admin.publish_date_query(start_date, end_date)
 
-  start_datetime = datetime.datetime.strftime(start_date, '%Y-%m-%d')
-  end_datetime = datetime.datetime.strftime(end_date, '%Y-%m-%d')
+    start_datetime = datetime.datetime.strftime(start_date, '%Y-%m-%d')
+    end_datetime = datetime.datetime.strftime(end_date, '%Y-%m-%d')
 
-  if(entity.isdigit()):
-    if(type == 'media'):
-      # Media Type
-      sentences_over_time = mc_admin.sentenceCount('*', 
-        [
-          'tags_id_media:{0}'.format(str(collection_id)),
-          'media_id:{0}'.format(entity),
-          fq
-        ],
-        split=True,
-        split_start_date=start_datetime,
-        split_end_date=end_datetime)['split']
-    
+    if(entity.isdigit()):
+       if(type == 'media'):
+          # Media Type
+          sentences_over_time = mc_admin.sentenceCount('*', 
+             [
+                'tags_id_media:{0}'.format(str(collection_id)),
+                'media_id:{0}'.format(entity),
+                fq
+             ],
+             split=True,
+             split_start_date=start_datetime,
+             split_end_date=end_datetime)['split']
+       
+       else:
+          # Entity Type
+          sentences_over_time = mc_admin.sentenceCount('*', 
+             [
+                'tags_id_media:{0}'.format(str(collection_id)),
+                'tags_id_stories:{0}'.format(entity),
+                fq
+             ],
+             split=True,
+             split_start_date=start_datetime,
+             split_end_date=end_datetime)['split']
+
     else:
-      # Entity Type
-      sentences_over_time = mc_admin.sentenceCount('*', 
-        [
-          'tags_id_media:{0}'.format(str(collection_id)),
-          'tags_id_stories:{0}'.format(entity),
-          fq
-        ],
-        split=True,
-        split_start_date=start_datetime,
-        split_end_date=end_datetime)['split']
+       # Word Type
+       sentences_over_time = mc_admin.sentenceCount(entity, 
+          [
+             'tags_id_media:({0})'.format(str(collection_id)),
+             fq
+          ],
+          split=True,
+          split_start_date=start_datetime,
+          split_end_date=end_datetime)['split']
 
-  else:
-    # Word Type
-    sentences_over_time = mc_admin.sentenceCount(entity, 
-      [
-        'tags_id_media:({0})'.format(str(collection_id)),
-        fq
-      ],
-      split=True,
-      split_start_date=start_datetime,
-      split_end_date=end_datetime)['split']
-
-  return jsonify(sentences_over_time)
+    return jsonify(sentences_over_time)
 
 
 # /////////////////////////////////////////////////////////////////////////
 def addType(entity, type):
-  entity['type'] = type
-  return entity
+    entity['type'] = type
+    return entity
 
 
 # /////////////////////////////////////////////////////////////////////////
 def build_json_response(json_data):
-  response = app.response_class( response=json.dumps(json_data), status=200, mimetype='application/json')
-  return response
+    response = app.response_class( response=json.dumps(json_data), status=200, mimetype='application/json')
+    return response
 
 
 # /////////////////////////////////////////////////////////////////////////
 @app.route('/cache_data')
 def cache_data():
 
-  # Tag sets that hold tags on stories...
-  NYT_LABELS_TAG_SET = 1963               # one tag per theme in a story (Jasmin's transfer-learning model)
-  GEO_TAG_SET = 1011                      # one tag per country/state stories are about (disambiguated)
-  CLIFF_ORGS_TAG_SET = 2388               # one tag for each org mentioned in stories
-  CLIFF_PEOPLE_TAG_SET = 2389             # one tag for each perosn mentioned in stories
+    # Tag sets that hold tags on stories...
+    NYT_LABELS_TAG_SET = 1963                        # one tag per theme in a story (Jasmin's transfer-learning model)
+    GEO_TAG_SET = 1011                                    # one tag per country/state stories are about (disambiguated)
+    CLIFF_ORGS_TAG_SET = 2388                        # one tag for each org mentioned in stories
+    CLIFF_PEOPLE_TAG_SET = 2389                    # one tag for each perosn mentioned in stories
 
-  countries = { '34412193': 'China' }
+    countries = { '34412193': 'China' }
 
-  for country_id, country_name in countries.items():
-    data[country_id] = { 'name': country_name }
+    for country_id, country_name in countries.items():
+       data[country_id] = { 'name': country_name }
 
-    logger.info('Getting Media for {0}...'.format(country_name))
-    data[country_id]['media'] = getBiggestMedia(country_id)
+       logger.info('Getting Media for {0}...'.format(country_name))
+       data[country_id]['media'] = getBiggestMedia(country_id)
 
-    logger.info('Getting Words for {0}...'.format(country_name))
-    data[country_id]['words'] = getTopWords(country_id)
+       logger.info('Getting Words for {0}...'.format(country_name))
+       data[country_id]['words'] = getTopWords(country_id)
 
-    logger.info('Getting NYT Labels for {0}...'.format(country_name))
-    data[country_id]['labels'] = getEntities(country_id, NYT_LABELS_TAG_SET)
+       logger.info('Getting NYT Labels for {0}...'.format(country_name))
+       data[country_id]['labels'] = getEntities(country_id, NYT_LABELS_TAG_SET)
 
-    logger.info('Getting Places for {0}...'.format(country_name))
-    data[country_id]['places'] = getEntities(country_id, GEO_TAG_SET)
+       logger.info('Getting Places for {0}...'.format(country_name))
+       data[country_id]['places'] = getEntities(country_id, GEO_TAG_SET)
 
-    logger.info('Getting Organizations for {0}...'.format(country_name))
-    data[country_id]['orgs']   = getEntities(country_id, CLIFF_ORGS_TAG_SET)
+       logger.info('Getting Organizations for {0}...'.format(country_name))
+       data[country_id]['orgs']    = getEntities(country_id, CLIFF_ORGS_TAG_SET)
 
-    logger.info('Getting People for {0}...'.format(country_name))
-    data[country_id]['people'] = getEntities(country_id, CLIFF_PEOPLE_TAG_SET)
+       logger.info('Getting People for {0}...'.format(country_name))
+       data[country_id]['people'] = getEntities(country_id, CLIFF_PEOPLE_TAG_SET)
 
-  response = build_json_response(data)
-  clear_cache()
-  cache_data()
-  return response
+    response = build_json_response(data)
+    clear_cache()
+    cache_data()
+    return response
 
 
 # /////////////////////////////////////////////////////////////////////////
 @cache.cached(timeout=28800, key_prefix='cache_data')
 def cache_data():
-  return data
+    return data
 
 
 # /////////////////////////////////////////////////////////////////////////
 @app.route('/country_entities/<country_id>')
 def country_entities(country_id):
 
-  FROM_EACH_TYPE = 8
+    FROM_EACH_TYPE = 8
 
-  # Pick random entities
-  random.shuffle(data[country_id]['people'])
-  random_people = data[country_id]['people'][: FROM_EACH_TYPE]
-  random_people = [addType(entity, 'person') for entity in random_people]
+    # Pick random entities
+    random.shuffle(data[country_id]['people'])
+    random_people = data[country_id]['people'][: FROM_EACH_TYPE]
+    random_people = [addType(entity, 'person') for entity in random_people]
 
-  random.shuffle(data[country_id]['labels'])
-  random_labels = data[country_id]['labels'][: FROM_EACH_TYPE]
-  random_labels = [addType(entity, 'label') for entity in random_labels]
-  
-  random.shuffle(data[country_id]['orgs'])
-  random_orgs = data[country_id]['orgs'][: FROM_EACH_TYPE]
-  random_orgs = [addType(entity, 'organization') for entity in random_orgs]
+    random.shuffle(data[country_id]['labels'])
+    random_labels = data[country_id]['labels'][: FROM_EACH_TYPE]
+    random_labels = [addType(entity, 'label') for entity in random_labels]
+    
+    random.shuffle(data[country_id]['orgs'])
+    random_orgs = data[country_id]['orgs'][: FROM_EACH_TYPE]
+    random_orgs = [addType(entity, 'organization') for entity in random_orgs]
 
-  random.shuffle(data[country_id]['places'])
-  random_places = data[country_id]['places'][: FROM_EACH_TYPE]
-  random_places = [addType(entity, 'location') for entity in random_places]
+    random.shuffle(data[country_id]['places'])
+    random_places = data[country_id]['places'][: FROM_EACH_TYPE]
+    random_places = [addType(entity, 'location') for entity in random_places]
 
-  random.shuffle(data[country_id]['media'])
-  random_media = data[country_id]['media'][: FROM_EACH_TYPE]
-  random_media = [addType(entity, 'media') for entity in random_media]
+    random.shuffle(data[country_id]['media'])
+    random_media = data[country_id]['media'][: FROM_EACH_TYPE]
+    random_media = [addType(entity, 'media') for entity in random_media]
 
-  random.shuffle(data[country_id]['words'])
-  random_words = data[country_id]['words'][: FROM_EACH_TYPE]
-  random_words = [addType(entity, 'word') for entity in random_words]
+    random.shuffle(data[country_id]['words'])
+    random_words = data[country_id]['words'][: FROM_EACH_TYPE]
+    random_words = [addType(entity, 'word') for entity in random_words]
 
-  all_entities = random_labels + random_places + random_orgs + random_people + random_media + random_words
-  response = build_json_response(all_entities)
-  return response
+    all_entities = random_labels + random_places + random_orgs + random_people + random_media + random_words
+    response = build_json_response(all_entities)
+    return response
 
 
 # /////////////////////////////////////////////////////////////////////////
 def getEntities(collection_id, tag_set):
 
-  entities = mc_admin.sentenceFieldCount('*',[
-      'tags_id_media:{}'.format(collection_id),
-      'publish_date:NOW to NOW-3MONTH'
-      ],
-      tag_sets_id=tag_set,
-      sample_size=5000)
+    entities = mc_admin.sentenceFieldCount('*',[
+          'tags_id_media:{}'.format(collection_id),
+          'publish_date:NOW to NOW-3MONTH'
+          ],
+          tag_sets_id=tag_set,
+          sample_size=5000)
 
-  return entities
+    return entities
 
 
 # /////////////////////////////////////////////////////////////////////////
 @app.route('/entity/<int:entity_id>')
 def entity(entity_id):
-  entity = mc_admin.tag(entity_id)
-  return jsonify(entity)
+    entity = mc_admin.tag(entity_id)
+    return jsonify(entity)
 
 
 # /////////////////////////////////////////////////////////////////////////
 @app.route('/getTopWords/<int:collection_id>')
 def getTopWords(collection_id):
-  word = mc_admin.wordCount('*', [
-    'tags_id_media:{0}'.format(collection_id),
-    'publish_date:NOW to NOW-3MONTH'
-    ],
-    num_words=100,
-    sample_size=5000)
+    word = mc_admin.wordCount('*', [
+       'tags_id_media:{0}'.format(collection_id),
+       'publish_date:NOW to NOW-3MONTH'
+       ],
+       num_words=100,
+       sample_size=5000)
 
-  return word
+    return word
 
 
 # /////////////////////////////////////////////////////////////////////////
 @app.route('/media/<int:media_id>')
 def media(media_id):
-  data = mc_admin.media( media_id )
-  return jsonify(data)
+    data = mc_admin.media( media_id )
+    return jsonify(data)
 
 
 # /////////////////////////////////////////////////////////////////////////
-@app.route('/getBiggestMedia/<int:collection_id>')  
+@app.route('/getBiggestMedia/<int:collection_id>')    
 def getBiggestMedia(collection_id):
-  media = mc_admin.mediaList(rows=10, tags_id=collection_id, sort='num_stories')
+    media = mc_admin.mediaList(rows=10, tags_id=collection_id, sort='num_stories')
 
-  return media
+    return media
 
 
 # /////////////////////////////////////////////////////////////////////////
 @app.route('/getGlobeData/<int:collection_id>')
 def getGlobeData(collection_id):
-  lat_long_mag = []
+    lat_long_mag = []
 
-  geo_tags = mc_admin.sentenceFieldCount('tags_id_media:{0}'.format(collection_id), tag_sets_id=1011)
-  country_tags = [t for t in geo_tags if int(t['tag'].split('_')[1]) in COUNTRY_GEONAMES_ID_TO_APLHA3.keys()]
-  for t in country_tags:
-    try:
-      alpha3 = COUNTRY_GEONAMES_ID_TO_APLHA3[int(t['tag'].split('_')[1])]
-      latlong = COUNTRY_ALPHA_TO_LAT_LONG[alpha3]
-      lat_long_mag.append(latlong['lat'])
-      lat_long_mag.append(latlong['long'])
-      lat_long_mag.append(t['count'])
-      logger.info(t)
-    except Exception, e:
-      logger.error('Failed on country lookup for {0}'.format(t))
-      country_tags.remove(t)
-  
-  data = [['seriesA', lat_long_mag]]
-  return jsonify(data)
+    geo_tags = mc_admin.sentenceFieldCount('tags_id_media:{0}'.format(collection_id), tag_sets_id=1011)
+    country_tags = [t for t in geo_tags if int(t['tag'].split('_')[1]) in COUNTRY_GEONAMES_ID_TO_APLHA3.keys()]
+    for t in country_tags:
+       try:
+          alpha3 = COUNTRY_GEONAMES_ID_TO_APLHA3[int(t['tag'].split('_')[1])]
+          latlong = COUNTRY_ALPHA_TO_LAT_LONG[alpha3]
+          lat_long_mag.append(latlong['lat'])
+          lat_long_mag.append(latlong['long'])
+          lat_long_mag.append(t['count'])
+          logger.info(t)
+       except Exception, e:
+          logger.error('Failed on country lookup for {0}'.format(t))
+          country_tags.remove(t)
+    
+    data = [['seriesA', lat_long_mag]]
+    return jsonify(data)
 
 
 # /////////////////////////////////////////////////////////////////////////
@@ -311,35 +311,35 @@ def projects(name):
 # /////////////////////////////////////////////////////////////////////////
 @app.route('/sentences/<int:collection_id>/<string:type>/<entity>')
 def sentences(collection_id, type, entity):
-  sample_size = 2000
+    sample_size = 2000
 
-  if(entity.isdigit()):
-    # Media Type
-    if(type == 'media'):
-      sentenceList = mc_admin.sentenceList('*', [
-        'tags_id_media:{0}'.format(str(collection_id)),
-        'media_id:{0}'.format(entity),
-        'publish_date:NOW to NOW-3MONTH'], 
-        rows=sample_size, sort=mc_admin.SORT_RANDOM)
-    # Entity Type
+    if(entity.isdigit()):
+       # Media Type
+       if(type == 'media'):
+          sentenceList = mc_admin.sentenceList('*', [
+             'tags_id_media:{0}'.format(str(collection_id)),
+             'media_id:{0}'.format(entity),
+             'publish_date:NOW to NOW-3MONTH'], 
+             rows=sample_size, sort=mc_admin.SORT_RANDOM)
+       # Entity Type
+       else:
+          sentenceList = mc_admin.sentenceList('*', [
+             'tags_id_media:{0}'.format(str(collection_id)),
+             'tags_id_stories:{0}'.format(entity),
+             'publish_date:NOW to NOW-3MONTH'], 
+             rows=sample_size, sort=mc_admin.SORT_RANDOM)
     else:
-      sentenceList = mc_admin.sentenceList('*', [
-        'tags_id_media:{0}'.format(str(collection_id)),
-        'tags_id_stories:{0}'.format(entity),
-        'publish_date:NOW to NOW-3MONTH'], 
-        rows=sample_size, sort=mc_admin.SORT_RANDOM)
-  else:
-    # Word Type
-    sentenceList = mc_admin.sentenceList(entity, [
-      'tags_id_media:{0}'.format(str(collection_id)),
-      'publish_date:NOW to NOW-3MONTH'], 
-      rows=sample_size, sort=mc_admin.SORT_RANDOM)
-  
-  return jsonify(sentenceList)
+       # Word Type
+       sentenceList = mc_admin.sentenceList(entity, [
+          'tags_id_media:{0}'.format(str(collection_id)),
+          'publish_date:NOW to NOW-3MONTH'], 
+          rows=sample_size, sort=mc_admin.SORT_RANDOM)
+    
+    return jsonify(sentenceList)
 
 
 # /////////////////////////////////////////////////////////////////////////
 init()
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5000)
+       app.run(debug=True, port=5000)

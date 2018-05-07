@@ -18,60 +18,58 @@ CLIFF_PEOPLE_TAG_SET = 2389             # one tag for each perosn mentioned in s
 
 # /////////////////////////////////////////////////////////////////////////
 def getEntities(collection_id, tag_set):
-
-  entities = mc_admin.sentenceFieldCount('*',[
-      'tags_id_media:{}'.format(collection_id),
-      'publish_date:NOW to NOW-3MONTH'
-      ],
-      tag_sets_id=tag_set,
-      sample_size=5000)
-
-  return entities
+    entities = mc_admin.sentenceFieldCount('*',
+                                           ['tags_id_media:{}'.format(collection_id),
+                                            'publish_date:NOW to NOW-3MONTH'],
+                                           tag_sets_id=tag_set,
+                                           sample_size=5000)
+    return entities
 
 
 # /////////////////////////////////////////////////////////////////////////
 def getTopWords(collection_id):
-  word = mc_admin.wordCount('*', [
-    'tags_id_media:{0}'.format(collection_id),
-    'publish_date:NOW to NOW-3MONTH'
-    ],
-    num_words=100,
-    sample_size=5000)
-
-  return word
+    word = mc_admin.wordCount('*',
+                              ['tags_id_media:{0}'.format(collection_id), 'publish_date:NOW to NOW-3MONTH'],
+                              num_words=100,
+                              sample_size=5000)
+    return word
 
 
 # /////////////////////////////////////////////////////////////////////////
 def getBiggestMedia(collection_id):
-  media = mc_admin.mediaList(rows=10, tags_id=collection_id, sort='num_stories')
+    media = mc_admin.mediaList(rows=10, tags_id=collection_id, sort='num_stories')
+    return media
 
-  return media
-
+logger.info('Starting to generate local country data files')
 
 # /////////////////////////////////////////////////////////////////////////
 with open('whitelist.json') as f:
     whitelist = json.load(f)
     for item in whitelist:
-    	with open('cache/{0}.json'.format( item['country_name'] ), 'w') as out:
-    		
-			data = { 'name': item['country_name'], 'id': item['id'] }
+        logger.info('{}: {}'.format(item['country_name'], item['id']))
 
-			logger.info('Getting Media for {0}...'.format(item['country_name']))
-			data['media'] = getBiggestMedia(item['id'])
+        with open('cache/{0}.json'.format( item['country_name'] ), 'w') as out:
+            
+            data = { 'name': item['country_name'], 'id': item['id'] }
 
-			logger.info('Getting Words for {0}...'.format(item['country_name']))
-			data['words'] = getTopWords(item['id'])
+            logger.info('  Getting Media for {0}...'.format(item['country_name']))
+            data['media'] = getBiggestMedia(item['id'])
 
-			logger.info('Getting NYT Labels for {0}...'.format(item['country_name']))
-			data['labels'] = getEntities(item['id'], NYT_LABELS_TAG_SET)
+            logger.info('  Getting Words for {0}...'.format(item['country_name']))
+            data['words'] = getTopWords(item['id'])
 
-			logger.info('Getting Places for {0}...'.format(item['country_name']))
-			data['places'] = getEntities(item['id'], GEO_TAG_SET)
+            logger.info('  Getting NYT Labels for {0}...'.format(item['country_name']))
+            data['labels'] = getEntities(item['id'], NYT_LABELS_TAG_SET)
 
-			logger.info('Getting Organizations for {0}...'.format(item['country_name']))
-			data['orgs']   = getEntities(item['id'], CLIFF_ORGS_TAG_SET)
+            logger.info('  etting Places for {0}...'.format(item['country_name']))
+            data['places'] = getEntities(item['id'], GEO_TAG_SET)
 
-			logger.info('Getting People for {0}...'.format(item['country_name']))
-			data['people'] = getEntities(item['id'], CLIFF_PEOPLE_TAG_SET)
+            logger.info('  Getting Organizations for {0}...'.format(item['country_name']))
+            data['orgs']   = getEntities(item['id'], CLIFF_ORGS_TAG_SET)
 
-			out.write(json.dumps(data))
+            logger.info('  Getting People for {0}...'.format(item['country_name']))
+            data['people'] = getEntities(item['id'], CLIFF_PEOPLE_TAG_SET)
+
+            out.write(json.dumps(data))
+
+logger.info('Done')
