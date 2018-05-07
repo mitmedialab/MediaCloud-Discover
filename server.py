@@ -54,19 +54,19 @@ def loadCountryCache():
     whitelist = json.load(f)
     for item in whitelist:
       filename = 'cache/{0}.json'.format( item['country_name'] )
-      with open(filename, 'r') as country_json:
-        try:
-          logger.debug('Loading cache from {0}...'.format(filename))
-          
-          country_data = json.load(country_json)
-          data[country_data['id']] = country_data
+      try:
+        with open(filename, 'r') as country_json:
+            logger.debug('Loading cache from {0}...'.format(filename))
+            
+            country_data = json.load(country_json)
+            data[country_data['id']] = country_data
 
-          logger.debug('Cache file {0} loaded.'.format(filename))
-        # If JSON cannot be read, skip country
-        except (ValueError, KeyError) as e:
-          logger.error('Cannot read cache file {0}'.format(filename))
-          logger.error(e)
-          pass
+            logger.debug('Cache file {0} loaded.'.format(filename))
+      # If JSON cannot be read, skip country
+      except (ValueError, KeyError, IOError) as e:
+        logger.error('Cannot read cache file {0}'.format(filename))
+        logger.error(e)
+        pass
 
 
 # /////////////////////////////////////////////////////////////////////////
