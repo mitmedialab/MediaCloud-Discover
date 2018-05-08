@@ -3,4 +3,4 @@ venv
 *.pyc
 .idea
 cache/*
-
+logs/*.log
